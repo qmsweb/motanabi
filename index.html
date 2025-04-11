@@ -3,35 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة المحتوى الصحراوي</title>
+    <title>منصة رحلة المتنبي</title>
     
-    <!-- خطوط Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- ربط ملفات التصميم -->
+    <!-- ملفات التصميم -->
     <link rel="stylesheet" href="assets/css/navbar.css">
-    <link rel="stylesheet" href="assets/css/main.css">
     
     <style>
         :root {
             --primary-color: #d2b48c;
-            --secondary-color: #8b4513;
             --text-color: #5a3921;
             --light-bg: #f5e7d6;
-            --card-bg: #fff9f0;
         }
         
         body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             background-color: var(--light-bg);
             color: var(--text-color);
-            line-height: 1.6;
-            padding-top: 80px;
             margin: 0;
-            min-height: 100vh;
+            padding-top: 70px;
+            direction: rtl;
         }
         
         .container {
@@ -41,138 +37,69 @@
         }
         
         .section {
-            margin-bottom: 40px;
-        }
-        
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 30px;
         }
         
         .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--secondary-color);
-            margin: 0;
-        }
-        
-        .section-icon {
-            font-size: 28px;
-            color: var(--secondary-color);
-            margin-left: 15px;
-        }
-        
-        .view-all {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .view-all:hover {
+            font-size: 22px;
+            margin-bottom: 15px;
             color: var(--text-color);
-            text-decoration: underline;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 5px;
         }
         
         .horizontal-list {
             display: flex;
             overflow-x: auto;
-            gap: 20px;
-            padding: 15px 5px;
+            gap: 15px;
+            padding: 10px 0;
             scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) var(--light-bg);
+            scrollbar-color: transparent transparent;
         }
         
         .horizontal-list::-webkit-scrollbar {
-            height: 8px;
+            height: 5px;
         }
         
         .horizontal-list::-webkit-scrollbar-thumb {
-            background-color: var(--primary-color);
-            border-radius: 4px;
+            background-color: transparent;
         }
         
         .horizontal-list::-webkit-scrollbar-track {
-            background-color: var(--light-bg);
+            background-color: transparent;
         }
         
-        .media-card {
+        .item {
             flex: 0 0 auto;
             width: 180px;
-            background-color: var(--card-bg);
-            border-radius: 10px;
+            text-align: center;
+            background-color: white;
+            border-radius: 5px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid rgba(139, 69, 19, 0.1);
         }
         
-        .media-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .media-card img {
+        .item img {
             width: 100%;
             height: 240px;
             object-fit: cover;
-            border-bottom: 1px solid rgba(139, 69, 19, 0.1);
         }
         
-        .audio-card img {
+        .audio-item img {
             height: 180px;
         }
         
-        .media-info {
-            padding: 12px;
-        }
-        
-        .media-title {
-            font-weight: 600;
-            margin: 0 0 5px 0;
-            color: var(--text-color);
+        .item-title {
+            padding: 10px;
             font-size: 16px;
         }
         
-        .media-author {
-            font-size: 14px;
-            color: var(--secondary-color);
-            margin: 0;
-        }
-        
         @media (max-width: 768px) {
-            .media-card {
+            .item {
                 width: 150px;
             }
             
-            .media-card img {
+            .item img {
                 height: 200px;
-            }
-            
-            .audio-card img {
-                height: 150px;
-            }
-            
-            .section-title {
-                font-size: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .media-card {
-                width: 130px;
-            }
-            
-            .media-card img {
-                height: 180px;
-            }
-            
-            .audio-card img {
-                height: 130px;
             }
         }
     </style>
@@ -188,51 +115,23 @@
     </script>
 
     <div class="container">
-        <!-- قسم المرئيات -->
         <div class="section">
-            <div class="section-header">
-                <div style="display: flex; align-items: center;">
-                    <i class="fas fa-video section-icon"></i>
-                    <h2 class="section-title">المرئيات</h2>
-                </div>
-                <a href="videos.html" class="view-all">عرض الكل</a>
-            </div>
+            <h2 class="section-title">المرئيات</h2>
             <div class="horizontal-list" id="videoList"></div>
         </div>
         
-        <!-- قسم الصوتيات -->
         <div class="section">
-            <div class="section-header">
-                <div style="display: flex; align-items: center;">
-                    <i class="fas fa-music section-icon"></i>
-                    <h2 class="section-title">الصوتيات</h2>
-                </div>
-                <a href="audios.html" class="view-all">عرض الكل</a>
-            </div>
+            <h2 class="section-title">الصوتيات</h2>
             <div class="horizontal-list" id="audioList"></div>
         </div>
         
-        <!-- قسم الكتب -->
         <div class="section">
-            <div class="section-header">
-                <div style="display: flex; align-items: center;">
-                    <i class="fas fa-book section-icon"></i>
-                    <h2 class="section-title">الكتب</h2>
-                </div>
-                <a href="books.html" class="view-all">عرض الكل</a>
-            </div>
+            <h2 class="section-title">الكتب</h2>
             <div class="horizontal-list" id="bookGrid"></div>
         </div>
         
-        <!-- قسم الأشعار -->
         <div class="section">
-            <div class="section-header">
-                <div style="display: flex; align-items: center;">
-                    <i class="fas fa-pen-fancy section-icon"></i>
-                    <h2 class="section-title">الأشعار</h2>
-                </div>
-                <a href="poems.html" class="view-all">عرض الكل</a>
-            </div>
+            <h2 class="section-title">الأشعار</h2>
             <div class="horizontal-list" id="bookList"></div>
         </div>
     </div>
@@ -257,85 +156,67 @@
         const db = firebase.database(app);
 
         // دوال تحميل المحتوى
-        function createMediaCard(item, type, id) {
-            const card = document.createElement('div');
-            card.className = `media-card ${type}-card`;
-            
-            card.innerHTML = `
+        function createItem(item, type, id) {
+            const div = document.createElement('div');
+            div.className = 'item ' + type + '-item';
+            div.innerHTML = `
                 <a href="${type}.html?id=${id}">
                     <img src="${item.image}" alt="${item.title}">
-                    <div class="media-info">
-                        <h3 class="media-title">${item.title}</h3>
-                        <p class="media-author">${item.author || 'مجهول'}</p>
-                    </div>
+                    <div class="item-title">${item.title}</div>
                 </a>
             `;
-            
-            return card;
+            return div;
         }
 
         function loadContent() {
             // تحميل المرئيات
             db.ref("mtnbi_video").once("value", snapshot => {
-                const videoList = document.getElementById('videoList');
                 const videos = snapshot.val();
-                
                 if (videos) {
                     Object.entries(videos).forEach(([id, video]) => {
-                        videoList.appendChild(createMediaCard(video, 'video', id));
+                        document.getElementById('videoList').appendChild(createItem(video, 'video', id));
                     });
                 }
             });
             
             // تحميل الصوتيات
             db.ref("mtnbi_sound").once("value", snapshot => {
-                const audioList = document.getElementById('audioList');
                 const audios = snapshot.val();
-                
                 if (audios) {
                     Object.entries(audios).forEach(([id, audio]) => {
-                        audioList.appendChild(createMediaCard(audio, 'audio', id));
+                        document.getElementById('audioList').appendChild(createItem(audio, 'audio', id));
                     });
                 }
             });
             
             // تحميل الكتب
             db.ref("mtnbi_book").once("value", snapshot => {
-                const bookGrid = document.getElementById('bookGrid');
                 const books = snapshot.val();
-                
                 if (books) {
                     Object.entries(books).forEach(([id, book]) => {
-                        bookGrid.appendChild(createMediaCard(book, 'book', id));
+                        document.getElementById('bookGrid').appendChild(createItem(book, 'book', id));
                     });
                 }
             });
             
             // تحميل الأشعار
             db.ref("mtnbi_sh3er").once("value", snapshot => {
-                const bookList = document.getElementById('bookList');
                 const poems = snapshot.val();
-                
                 if (poems) {
                     Object.entries(poems).forEach(([id, poem]) => {
-                        const card = document.createElement('div');
-                        card.className = 'media-card';
-                        
-                        card.innerHTML = `
+                        const div = document.createElement('div');
+                        div.className = 'item';
+                        div.innerHTML = `
                             <a href="sher.html?id=${id}">
-                                <div class="media-info" style="height: 100%; display: flex; align-items: center;">
-                                    <h3 class="media-title">${poem.title}</h3>
-                                </div>
+                                <div class="item-title">${poem.title}</div>
                             </a>
                         `;
-                        
-                        bookList.appendChild(card);
+                        document.getElementById('bookList').appendChild(div);
                     });
                 }
             });
         }
 
-        // تحميل المحتوى عند بدء التشغيل
         window.addEventListener('DOMContentLoaded', loadContent);
     </script>
 </body>
