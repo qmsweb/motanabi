@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>المتنبي شورتس</title>
+    <title>ريلز إنستجرام</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -44,32 +44,20 @@
             overflow: hidden;
         }
         
-        .video-wrapper {
+        .video-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             background-color: #000;
-        }
-        
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 375px;
-            height: 100%;
-            max-height: 667px;
-            overflow: hidden;
+            z-index: 1;
         }
         
         .video-container video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* لمنع فتح مشغل الفيديو في iOS */
             -webkit-touch-callout: none;
             -webkit-user-select: none;
         }
@@ -105,26 +93,50 @@
             display: flex;
         }
         
-        .seek-bar {
+        .seek-container {
             position: absolute;
-            bottom: 0;
+            bottom: 70px;
             left: 0;
+            width: 100%;
+            padding: 0 15px;
+            z-index: 10;
+        }
+        
+        .seek-bar {
             width: 100%;
             height: 4px;
             background: rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            z-index: 10;
+            position: relative;
         }
         
         .seek-progress {
             height: 100%;
             background: #f00;
             width: 0%;
+            position: relative;
+        }
+        
+        .seek-handle {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            right: 0;
+            display: none;
+        }
+        
+        .seek-bar:hover .seek-handle,
+        .seek-bar:active .seek-handle {
+            display: block;
         }
         
         .logo {
             position: absolute;
-            top: 20px;
+            top: 30px;
             right: 20px;
             z-index: 10;
         }
@@ -138,7 +150,7 @@
         .controls {
             position: absolute;
             right: 15px;
-            bottom: 80px;
+            bottom: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -167,7 +179,7 @@
         .user-info {
             position: absolute;
             left: 15px;
-            bottom: 80px;
+            bottom: 100px;
             z-index: 10;
             max-width: 70%;
             text-shadow: 0 0 5px rgba(0,0,0,0.7);
@@ -210,21 +222,10 @@
             transition: width 0.1s linear;
         }
 
-        /* للشاشات الكبيرة */
-        @media (min-width: 768px) {
-            .video-container {
-                border-radius: 10px;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            }
-        }
-
         /* إصلاحات خاصة بـ iOS */
         @supports (-webkit-touch-callout: none) {
             .video-container video {
                 -webkit-transform: translateZ(0);
-            }
-            .reels-container {
-                -webkit-overflow-scrolling: auto;
             }
         }
     </style>
@@ -239,23 +240,25 @@
             <div class="logo">
                 <i class="fab fa-instagram"></i>
             </div>
-            <div class="video-wrapper">
-                <div class="video-container">
-                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video1">
-                        <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-                    </video>
+            <div class="video-container">
+                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video1">
+                    <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                </video>
+                <div class="seek-container">
                     <div class="seek-bar" id="seekBar1">
-                        <div class="seek-progress" id="seekProgress1"></div>
+                        <div class="seek-progress" id="seekProgress1">
+                            <div class="seek-handle"></div>
+                        </div>
                     </div>
-                    <div class="video-controls">
-                        <button class="play-pause-btn" id="playPauseBtn1">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                    </div>
+                </div>
+                <div class="video-controls">
+                    <button class="play-pause-btn" id="playPauseBtn1">
+                        <i class="fas fa-pause"></i>
+                    </button>
                 </div>
             </div>
             <div class="user-info">
-                <div class="username">@جاسم</div>
+                <div class="username">@فلان</div>
                 <div class="description">هذا هو الفيديو الأول في الريلز الخاص بي #تحدي #سباحة</div>
                 <div class="music">
                     <i class="fas fa-music"></i>
@@ -289,19 +292,21 @@
             <div class="logo">
                 <i class="fab fa-instagram"></i>
             </div>
-            <div class="video-wrapper">
-                <div class="video-container">
-                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video2">
-                        <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-woman-playing-the-piano-4326-large.mp4" type="video/mp4">
-                    </video>
+            <div class="video-container">
+                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video2">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-woman-playing-the-piano-4326-large.mp4" type="video/mp4">
+                </video>
+                <div class="seek-container">
                     <div class="seek-bar" id="seekBar2">
-                        <div class="seek-progress" id="seekProgress2"></div>
+                        <div class="seek-progress" id="seekProgress2">
+                            <div class="seek-handle"></div>
+                        </div>
                     </div>
-                    <div class="video-controls">
-                        <button class="play-pause-btn" id="playPauseBtn2">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                    </div>
+                </div>
+                <div class="video-controls">
+                    <button class="play-pause-btn" id="playPauseBtn2">
+                        <i class="fas fa-pause"></i>
+                    </button>
                 </div>
             </div>
             <div class="user-info">
@@ -339,19 +344,21 @@
             <div class="logo">
                 <i class="fab fa-instagram"></i>
             </div>
-            <div class="video-wrapper">
-                <div class="video-container">
-                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video3">
-                        <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-tasting-coffee-1732-large.mp4" type="video/mp4">
-                    </video>
+            <div class="video-container">
+                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video3">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-tasting-coffee-1732-large.mp4" type="video/mp4">
+                </video>
+                <div class="seek-container">
                     <div class="seek-bar" id="seekBar3">
-                        <div class="seek-progress" id="seekProgress3"></div>
+                        <div class="seek-progress" id="seekProgress3">
+                            <div class="seek-handle"></div>
+                        </div>
                     </div>
-                    <div class="video-controls">
-                        <button class="play-pause-btn" id="playPauseBtn3">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                    </div>
+                </div>
+                <div class="video-controls">
+                    <button class="play-pause-btn" id="playPauseBtn3">
+                        <i class="fas fa-pause"></i>
+                    </button>
                 </div>
             </div>
             <div class="user-info">
@@ -389,19 +396,21 @@
             <div class="logo">
                 <i class="fab fa-instagram"></i>
             </div>
-            <div class="video-wrapper">
-                <div class="video-container">
-                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video4">
-                        <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1232-large.mp4" type="video/mp4">
-                    </video>
+            <div class="video-container">
+                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video4">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1232-large.mp4" type="video/mp4">
+                </video>
+                <div class="seek-container">
                     <div class="seek-bar" id="seekBar4">
-                        <div class="seek-progress" id="seekProgress4"></div>
+                        <div class="seek-progress" id="seekProgress4">
+                            <div class="seek-handle"></div>
+                        </div>
                     </div>
-                    <div class="video-controls">
-                        <button class="play-pause-btn" id="playPauseBtn4">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                    </div>
+                </div>
+                <div class="video-controls">
+                    <button class="play-pause-btn" id="playPauseBtn4">
+                        <i class="fas fa-pause"></i>
+                    </button>
                 </div>
             </div>
             <div class="user-info">
@@ -439,19 +448,21 @@
             <div class="logo">
                 <i class="fab fa-instagram"></i>
             </div>
-            <div class="video-wrapper">
-                <div class="video-container">
-                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video5">
-                        <source src="https://assets.mixkit.co/videos/preview/mixkit-man-under-multicolored-lights-1237-large.mp4" type="video/mp4">
-                    </video>
+            <div class="video-container">
+                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video5">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-man-under-multicolored-lights-1237-large.mp4" type="video/mp4">
+                </video>
+                <div class="seek-container">
                     <div class="seek-bar" id="seekBar5">
-                        <div class="seek-progress" id="seekProgress5"></div>
+                        <div class="seek-progress" id="seekProgress5">
+                            <div class="seek-handle"></div>
+                        </div>
                     </div>
-                    <div class="video-controls">
-                        <button class="play-pause-btn" id="playPauseBtn5">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                    </div>
+                </div>
+                <div class="video-controls">
+                    <button class="play-pause-btn" id="playPauseBtn5">
+                        <i class="fas fa-pause"></i>
+                    </button>
                 </div>
             </div>
             <div class="user-info">
@@ -484,6 +495,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // منع انطفاء الشاشة
+            let wakeLock = null;
+            const requestWakeLock = async () => {
+                try {
+                    if ('wakeLock' in navigator) {
+                        wakeLock = await navigator.wakeLock.request('screen');
+                        wakeLock.addEventListener('release', () => {
+                            console.log('تم تحرير Wake Lock');
+                        });
+                    }
+                } catch (err) {
+                    console.error('فشل في تنشيط Wake Lock:', err);
+                }
+            };
+            
+            // إعادة طلب Wake Lock عندما تعود الصفحة للظهور
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && wakeLock === null) {
+                    requestWakeLock();
+                }
+            });
+            
+            // طلب Wake Lock عند تحميل الصفحة
+            requestWakeLock();
+            
             const reelsContainer = document.getElementById('reelsContainer');
             const videos = [
                 document.getElementById('video1'),
@@ -524,6 +560,7 @@
             let currentReel = 0;
             let isScrolling = false;
             let lastScrollTime = 0;
+            let isSeeking = false;
             
             // إصلاح خاص لـ iOS لمنع فتح مشغل الفيديو
             function preventVideoFullscreen() {
@@ -553,10 +590,7 @@
                     });
                     
                     // Set up seek bar
-                    seekBars[index].addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        seekVideo(index, e);
-                    });
+                    setupSeekBar(index);
                     
                     // Show controls on hover/touch
                     video.addEventListener('click', function(e) {
@@ -567,7 +601,9 @@
                     
                     // Update progress bars
                     video.addEventListener('timeupdate', function() {
-                        updateProgressBars(index);
+                        if (!isSeeking) {
+                            updateProgressBars(index);
+                        }
                     });
                     
                     video.addEventListener('ended', function() {
@@ -580,6 +616,50 @@
                             video.play();
                         }
                     });
+                });
+            }
+            
+            function setupSeekBar(index) {
+                const seekBar = seekBars[index];
+                const video = videos[index];
+                let isDragging = false;
+                
+                seekBar.addEventListener('mousedown', function(e) {
+                    isDragging = true;
+                    seekVideo(index, e);
+                });
+                
+                seekBar.addEventListener('touchstart', function(e) {
+                    isDragging = true;
+                    seekVideo(index, e.touches[0]);
+                });
+                
+                document.addEventListener('mousemove', function(e) {
+                    if (isDragging) {
+                        seekVideo(index, e);
+                    }
+                });
+                
+                document.addEventListener('touchmove', function(e) {
+                    if (isDragging) {
+                        seekVideo(index, e.touches[0]);
+                    }
+                });
+                
+                document.addEventListener('mouseup', function() {
+                    isDragging = false;
+                    isSeeking = false;
+                });
+                
+                document.addEventListener('touchend', function() {
+                    isDragging = false;
+                    isSeeking = false;
+                });
+                
+                seekBar.addEventListener('click', function(e) {
+                    if (!isDragging) {
+                        seekVideo(index, e);
+                    }
                 });
             }
             
@@ -699,7 +779,6 @@
             }
             
             function playVideo(index) {
-                videos[index].currentTime = 0;
                 videos[index].play().catch(e => console.error("فشل تشغيل الفيديو:", e));
                 playPauseBtns[index].innerHTML = '<i class="fas fa-pause"></i>';
                 updateProgressBars(index);
@@ -719,10 +798,16 @@
             }
             
             function seekVideo(index, e) {
+                isSeeking = true;
                 const seekBar = seekBars[index];
                 const seekBarRect = seekBar.getBoundingClientRect();
-                const seekPosition = (e.clientX - seekBarRect.left) / seekBarRect.width;
+                let seekPosition = (e.clientX - seekBarRect.left) / seekBarRect.width;
+                
+                // التأكد من أن النسبة بين 0 و1
+                seekPosition = Math.max(0, Math.min(1, seekPosition));
+                
                 videos[index].currentTime = seekPosition * videos[index].duration;
+                updateProgressBars(index);
             }
             
             function updateProgressBars(index) {
