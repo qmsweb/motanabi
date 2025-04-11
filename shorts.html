@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ريلز إنستجرام</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            touch-action: none;
+        }
+        
+        .reels-container {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .reel {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            overflow: hidden;
+        }
+        
+        .video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 375px; /* عرض الهاتف */
+            height: 100%;
+            max-height: 667px; /* ارتفاع الهاتف */
+            overflow: hidden;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        
+        .logo i {
+            color: white;
+            font-size: 30px;
+        }
+        
+        .controls {
+            position: absolute;
+            right: 15px;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            z-index: 10;
+        }
+        
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .control-btn span {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .user-info {
+            position: absolute;
+            left: 15px;
+            bottom: 80px;
+            z-index: 10;
+            max-width: 70%;
+        }
+        
+        .user-info .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .user-info .description {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .music {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .music i {
+            margin-left: 5px;
+        }
+        
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.3);
+            z-index: 20;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: white;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* للشاشات الكبيرة */
+        @media (min-width: 768px) {
+            .video-container {
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reels-container" id="reelsContainer">
+        <!-- Reel 1 -->
+        <div class="reel">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress1"></div>
+            </div>
+            <div class="logo">
+                <i class="fab fa-instagram"></i>
+            </div>
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <video loop id="video1">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-woman-in-a-pool-1259-large.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="username">@user1</div>
+                <div class="description">هذا هو الفيديو الأول في الريلز الخاص بي #تحدي #سباحة</div>
+                <div class="music">
+                    <i class="fas fa-music"></i>
+                    <span>الصوت الأصلي - user1</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="control-btn">
+                    <i class="fas fa-heart"></i>
+                    <span>15K</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-comment"></i>
+                    <span>1.2K</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-share"></i>
+                    <span>مشاركة</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Reel 2 -->
+        <div class="reel">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress2"></div>
+            </div>
+            <div class="logo">
+                <i class="fab fa-instagram"></i>
+            </div>
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <video loop id="video2">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-woman-playing-the-piano-4326-large.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="username">@music_lover</div>
+                <div class="description">عزف البيانو في وقت الغروب 🎹 #موسيقى #عزف</div>
+                <div class="music">
+                    <i class="fas fa-music"></i>
+                    <span>الصوت الأصلي - piano_melody</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="control-btn">
+                    <i class="fas fa-heart"></i>
+                    <span>8.5K</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-comment"></i>
+                    <span>543</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-share"></i>
+                    <span>مشاركة</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Reel 3 -->
+        <div class="reel">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress3"></div>
+            </div>
+            <div class="logo">
+                <i class="fab fa-instagram"></i>
+            </div>
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <video loop id="video3">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-tasting-coffee-1732-large.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="username">@coffee_addict</div>
+                <div class="description">تجربة جديدة لمذاق القهوة الإيطالية ☕ #قهوة #صباح</div>
+                <div class="music">
+                    <i class="fas fa-music"></i>
+                    <span>الصوت الأصلي - morning_vibes</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="control-btn">
+                    <i class="fas fa-heart"></i>
+                    <span>23K</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-comment"></i>
+                    <span>2.1K</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-share"></i>
+                    <span>مشاركة</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Reel 4 -->
+        <div class="reel">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress4"></div>
+            </div>
+            <div class="logo">
+                <i class="fab fa-instagram"></i>
+            </div>
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <video loop id="video4">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1232-large.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="username">@dancer_girl</div>
+                <div class="description">رقص تحت الأضواء النيونية 💃 #رقص #فن</div>
+                <div class="music">
+                    <i class="fas fa-music"></i>
+                    <span>الصوت الأصلي - dance_beat</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="control-btn">
+                    <i class="fas fa-heart"></i>
+                    <span>12K</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-comment"></i>
+                    <span>876</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-share"></i>
+                    <span>مشاركة</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Reel 5 -->
+        <div class="reel">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress5"></div>
+            </div>
+            <div class="logo">
+                <i class="fab fa-instagram"></i>
+            </div>
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <video loop id="video5">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-man-under-multicolored-lights-1237-large.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="username">@artist_vision</div>
+                <div class="description">جلسة تصوير فنية تحت الأضواء الملونة 📸 #فن #تصوير</div>
+                <div class="music">
+                    <i class="fas fa-music"></i>
+                    <span>الصوت الأصلي - artistic_vibes</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="control-btn">
+                    <i class="fas fa-heart"></i>
+                    <span>9.3K</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-comment"></i>
+                    <span>1.5K</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-share"></i>
+                    <span>مشاركة</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reelsContainer = document.getElementById('reelsContainer');
+            const videos = [
+                document.getElementById('video1'),
+                document.getElementById('video2'),
+                document.getElementById('video3'),
+                document.getElementById('video4'),
+                document.getElementById('video5')
+            ];
+            const progressBars = [
+                document.getElementById('progress1'),
+                document.getElementById('progress2'),
+                document.getElementById('progress3'),
+                document.getElementById('progress4'),
+                document.getElementById('progress5')
+            ];
+            
+            let currentReel = 0;
+            let isScrolling = false;
+            let lastScrollTime = 0;
+            
+            // Initialize the first video
+            playVideo(0);
+            
+            // Handle scroll events
+            reelsContainer.addEventListener('scroll', function() {
+                if (!isScrolling) {
+                    const now = Date.now();
+                    if (now - lastScrollTime > 100) { // Debounce scroll events
+                        updateActiveVideo();
+                        lastScrollTime = now;
+                    }
+                }
+            });
+            
+            // Handle wheel events for desktop
+            reelsContainer.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                
+                if (isScrolling) return;
+                
+                isScrolling = true;
+                
+                if (e.deltaY > 0) {
+                    scrollToNextReel();
+                } else {
+                    scrollToPrevReel();
+                }
+                
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 800);
+            });
+            
+            // Handle touch events for mobile
+            let touchStartY = 0;
+            let touchEndY = 0;
+            
+            reelsContainer.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: false });
+            
+            reelsContainer.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            reelsContainer.addEventListener('touchend', function(e) {
+                touchEndY = e.changedTouches[0].clientY;
+                handleSwipe();
+            }, { passive: false });
+            
+            function handleSwipe() {
+                if (isScrolling) return;
+                
+                const diff = touchStartY - touchEndY;
+                
+                if (Math.abs(diff) > 50) { // Minimum swipe distance
+                    isScrolling = true;
+                    
+                    if (diff > 0) {
+                        scrollToNextReel();
+                    } else {
+                        scrollToPrevReel();
+                    }
+                    
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 800);
+                }
+            }
+            
+            function scrollToNextReel() {
+                if (currentReel < videos.length - 1) {
+                    currentReel++;
+                    scrollToReel(currentReel);
+                }
+            }
+            
+            function scrollToPrevReel() {
+                if (currentReel > 0) {
+                    currentReel--;
+                    scrollToReel(currentReel);
+                }
+            }
+            
+            function scrollToReel(index) {
+                const reelHeight = window.innerHeight;
+                reelsContainer.scrollTo({
+                    top: index * reelHeight,
+                    behavior: 'smooth'
+                });
+                
+                playVideo(index);
+            }
+            
+            function updateActiveVideo() {
+                const reelHeight = window.innerHeight;
+                const scrollPosition = reelsContainer.scrollTop;
+                const newReel = Math.round(scrollPosition / reelHeight);
+                
+                if (newReel !== currentReel) {
+                    pauseVideo(currentReel);
+                    currentReel = newReel;
+                    playVideo(currentReel);
+                }
+            }
+            
+            function playVideo(index) {
+                videos[index].currentTime = 0;
+                videos[index].play();
+                updateProgressBar(index);
+            }
+            
+            function pauseVideo(index) {
+                videos[index].pause();
+            }
+            
+            // Update progress bar for current video
+            function updateProgressBar(index) {
+                const video = videos[index];
+                const progressBar = progressBars[index];
+                
+                // Reset progress bar
+                progressBar.style.width = '0%';
+                
+                video.ontimeupdate = function() {
+                    const percent = (video.currentTime / video.duration) * 100;
+                    progressBar.style.width = percent + '%';
+                };
+                
+                video.onended = function() {
+                    progressBar.style.width = '100%';
+                    if (index < videos.length - 1) {
+                        setTimeout(() => {
+                            scrollToNextReel();
+                        }, 500);
+                    } else {
+                        video.currentTime = 0;
+                        video.play();
+                    }
+                };
+            }
+            
+            // Initialize all videos
+            videos.forEach((video, index) => {
+                video.load();
+                video.addEventListener('loadedmetadata', function() {
+                    if (index === 0) {
+                        playVideo(0);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
