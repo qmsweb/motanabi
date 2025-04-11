@@ -1,18 +1,22 @@
-/* تنسيقات عامة للـ NavBar */
+/* تنسيقات عامة لشريط التنقل */
 .navbar {
-  background-color: #333;
-  overflow: hidden;
-  width: 100%;
+  background-color: #2c3e50; /* لون الخلفية */
+  color: white;
+  padding: 10px 0;
   position: fixed;
+  width: 100%;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* تنسيقات القائمة المنسدلة */
@@ -22,11 +26,11 @@
 }
 
 .dropbtn {
-  background-color: #4CAF50;
+  background-color: #3498db;
   color: white;
+  border: none;
   padding: 10px 15px;
   font-size: 16px;
-  border: none;
   cursor: pointer;
   border-radius: 4px;
 }
@@ -34,12 +38,11 @@
 .dropdown-content {
   display: none;
   position: absolute;
-  right: 0;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  text-align: right;
+  right: 0; /* لجعل القائمة تفتح من اليمين إلى اليسار */
 }
 
 .dropdown-content a {
@@ -47,6 +50,7 @@
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  text-align: right; /* محاذاة النص لليمين */
 }
 
 .dropdown-content a:hover {
@@ -57,15 +61,13 @@
   display: block;
 }
 
-.dropdown:hover .dropbtn {
-  background-color: #3e8e41;
-}
-
 /* تنسيقات الشعار */
 .logo img {
   height: 40px;
   width: auto;
 }
 
-/* أيقونات Font Awesome */
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+/* تأثيرات عند التحويم (Hover) */
+.dropbtn:hover {
+  background-color: #2980b9;
+}
