@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البحث في المنصة</title>
+    
+    <!-- خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #d2b48c;
+            --text-color: #000000;
+            --light-bg: #f5e7d6;
+            --card-bg: #ffffff;
+            --input-bg: #ffffff;
+        }
+        
+        /* تنسيقات NavBar */
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .logo {
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .back-btn {
+            font-size: 20px;
+            color: var(--text-color);
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        /* تنسيقات الصفحة */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 90px;
+            direction: rtl;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* تنسيقات مربع البحث */
+        .search-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--input-bg);
+            border-radius: 30px;
+            padding: 10px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px;
+            font-size: 18px;
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-color);
+            outline: none;
+        }
+        
+        .search-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        
+        /* تنسيقات نتائج البحث */
+        .results-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+        
+        .results-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .horizontal-list {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+        
+        .horizontal-list::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .item {
+            flex: 0 0 auto;
+            width: 180px;
+            text-align: center;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .audio-item img {
+            height: 180px;
+        }
+        
+        .item-title {
+            padding: 12px;
+            font-size: 16px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 30px 0 15px;
+        }
+        
+        .section-icon {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--text-color);
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding-top: 80px;
+            }
+            
+            .item {
+                width: 150px;
+            }
+            
+            .item img {
+                height: 180px;
+            }
+            
+            .search-input {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .item {
+                width: 130px;
+            }
+            
+            .item img {
+                height: 160px;
+            }
+            
+            .search-box {
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NavBar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- زر العودة -->
+            <div class="back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            
+            <!-- الشعار في الوسط -->
+            <div class="logo">
+                <img src="assets/images/logo.png" alt="شعار الموقع">
+            </div>
+            
+            <!-- مساحة فارغة للمحاذاة -->
+            <div style="width: 48px;"></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- مربع البحث -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="ابحث عن المرئيات، الصوتيات، الكتب..." id="searchInput">
+                <button class="search-button" id="searchButton">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- نتائج البحث -->
+        <div class="results-container" id="searchResults">
+            <!-- سيتم عرض النتائج هنا ديناميكيًا -->
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+    <script>
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDErdK7mjrXUtBYR28U7JIpbFi5RHWM9zM",
+            authDomain: "momentschat.firebaseapp.com",
+            databaseURL: "https://momentschat.firebaseio.com",
+            projectId: "momentschat",
+            storageBucket: "momentschat.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "1:866549697398:android:024dd3bf3b81d1adf78857"
+        };
+        
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database(app);
+
+        // عناصر DOM
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const searchResults = document.getElementById('searchResults');
+
+        // دالة البحث
+        function performSearch(query) {
+            if (!query || query.trim() === '') {
+                searchResults.innerHTML = '<p class="results-title">الرجاء إدخال كلمة بحث</p>';
+                return;
+            }
+
+            searchResults.innerHTML = '<p class="results-title">جارٍ البحث...</p>';
+
+            // البحث في جميع الأقسام
+            Promise.all([
+                searchInCategory('mtnbi_video', 'video', 'مرئيات'),
+                searchInCategory('mtnbi_sound', 'audio', 'صوتيات'),
+                searchInCategory('mtnbi_book', 'book', 'كتب'),
+                searchInCategory('mtnbi_sh3er', 'sher', 'أشعار')
+            ]).then(() => {
+                if (searchResults.innerHTML.includes('جارٍ البحث')) {
+                    searchResults.innerHTML = '<p class="results-title">لا توجد نتائج مطابقة لبحثك</p>';
+                }
+            });
+        }
+
+        // البحث في قسم معين
+        function searchInCategory(category, type, categoryName) {
+            return db.ref(category).once("value").then(snapshot => {
+                const items = snapshot.val();
+                let hasResults = false;
+                const query = searchInput.value.toLowerCase();
+
+                if (items) {
+                    const results = Object.entries(items)
+                        .filter(([id, item]) => 
+                            item.title.toLowerCase().includes(query) || 
+                            (item.description && item.description.toLowerCase().includes(query))
+                        )
+                        .map(([id, item]) => {
+                            hasResults = true;
+                            return createMediaItem(item.image, item.title, `${type}.html?id=${id}`);
+                        });
+
+                    if (hasResults) {
+                        const section = document.createElement('div');
+                        section.innerHTML = `
+                            <div class="section-title">
+                                <img src="assets/icons/${type}.png" alt="${categoryName}" class="section-icon">
+                                <h2 class="section-heading">${categoryName}</h2>
+                            </div>
+                            <div class="horizontal-list" id="${type}Results"></div>
+                        `;
+                        
+                        if (searchResults.innerHTML.includes('جارٍ البحث')) {
+                            searchResults.innerHTML = '';
+                        }
+                        
+                        searchResults.appendChild(section);
+                        
+                        const list = document.getElementById(`${type}Results`);
+                        results.forEach(item => list.appendChild(item));
+                    }
+                }
+            });
+        }
+
+        // إنشاء عنصر وسائط
+        function createMediaItem(image, title, link) {
+            const div = document.createElement("div");
+            div.className = "item";
+            const a = document.createElement("a");
+            a.href = link;
+            a.innerHTML = `
+                <img src="${image}" alt="${title}">
+                <div class="item-title">${title}</div>
+            `;
+            div.appendChild(a);
+            return div;
+        }
+
+        // أحداث البحث
+        searchButton.addEventListener('click', () => performSearch(searchInput.value));
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch(searchInput.value);
+            }
+        });
+    </script>
+</body>
+</html>
