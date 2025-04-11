@@ -1,0 +1,11 @@
+<!-- ربط ملف CSS -->
+<link rel="stylesheet" href="/includes/navbar.css">
+
+<!-- تضمين الـ NavBar -->
+<script>
+  fetch('/includes/navbar.html')
+    .then(response => response.text())
+    .then(data => {
+      document.querySelector('body').insertAdjacentHTML('afterbegin', data);
+    });
+</script>
