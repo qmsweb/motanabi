@@ -19,6 +19,8 @@
             --card-bg: #ffffff;
             --input-bg: #ffffff;
             --border-radius: 12px;
+            --image-ratio: 3/4; /* نسبة أبعاد الصور */
+            --audio-ratio: 1/1; /* نسبة أبعاد الصوتيات */
         }
         
         /* تنسيقات عامة */
@@ -189,6 +191,8 @@
             transition: all 0.3s ease;
             text-decoration: none;
             color: inherit;
+            display: flex;
+            flex-direction: column;
         }
         
         .item:hover {
@@ -196,15 +200,29 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
         
-        .item-image {
+        .item-image-container {
+            position: relative;
             width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-top: calc(100% / (var(--image-ratio)));
+            overflow: hidden;
         }
         
-        .audio-item .item-image {
-            height: 160px;
+        .audio-item .item-image-container {
+            padding-top: calc(100% / (var(--audio-ratio)));
+        }
+        
+        .poem-item .item-image-container {
+            display: none;
+        }
+        
+        .item-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         
         .item-title {
@@ -213,6 +231,17 @@
             font-weight: 600;
             line-height: 1.4;
             text-align: right;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .poem-item .item-title {
+            min-height: 80px;
+            align-items: center;
+            justify-content: right;
+            padding: 15px;
         }
         
         /* تحسينات للهواتف الذكية */
@@ -239,12 +268,13 @@
                 gap: 12px;
             }
             
-            .item-image {
-                height: 160px;
+            .item-title {
+                font-size: 14px;
+                padding: 10px;
             }
             
-            .audio-item .item-image {
-                height: 140px;
+            .poem-item .item-title {
+                min-height: 70px;
             }
             
             .section-title {
@@ -270,17 +300,14 @@
                 gap: 10px;
             }
             
-            .item-image {
-                height: 140px;
-            }
-            
-            .audio-item .item-image {
-                height: 120px;
-            }
-            
             .item-title {
+                padding: 8px;
+                font-size: 13px;
+            }
+            
+            .poem-item .item-title {
+                min-height: 60px;
                 padding: 10px;
-                font-size: 14px;
             }
             
             .results-title {
@@ -372,7 +399,7 @@
                 searchInCategory('mtnbi_video', 'video', 'مرئيات'),
                 searchInCategory('mtnbi_sound', 'audio', 'صوتيات'),
                 searchInCategory('mtnbi_book', 'book', 'كتب'),
-                searchInCategory('mtnbi_sh3er', 'sher', 'أشعار')
+                searchInCategory('mtnbi_sh3er', 'poem', 'أشعار')
             ]).then(() => {
                 const hasResults = searchResults.querySelector('.category-section');
                 
@@ -439,10 +466,18 @@
             div.className = `item ${type}-item`;
             div.href = `${type}.html?id=${id}`;
             
-            div.innerHTML = `
-                <img src="${item.image}" alt="${item.title}" class="item-image">
-                <div class="item-title">${item.title}</div>
-            `;
+            if (type === 'poem') {
+                div.innerHTML = `
+                    <div class="item-title">${item.title}</div>
+                `;
+            } else {
+                div.innerHTML = `
+                    <div class="item-image-container">
+                        <img src="${item.image}" alt="${item.title}" class="item-image">
+                    </div>
+                    <div class="item-title">${item.title}</div>
+                `;
+            }
             
             return div;
         }
