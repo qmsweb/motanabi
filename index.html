@@ -3,343 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة رحلة المتنبي</title>
-    
-    <!-- خط Cairo -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <title>صفحة بسيطة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* تنسيقات NavBar */
-        :root {
-            --primary-color: #d2b48c;
-            --text-color: #000000;
-            --light-bg: #f5e7d6;
-        }
-        
-        .navbar {
-            background-color: var(--primary-color);
-            padding: 15px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .navbar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        /* تنسيقات القائمة المنسدلة */
-        .dropdown {
-            position: relative;
-        }
-        
-        .dropbtn {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
-        
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            left: 0;
-            z-index: 1;
-            border: 1px solid #ddd;
-        }
-        
-        .dropdown-content a {
-            color: var(--text-color);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: right;
-        }
-        
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        
-        /* تنسيقات الشعار */
-        .logo {
-            flex-grow: 1;
-            text-align: center;
-        }
-        
-        .logo img {
-            height: 40px;
-            width: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        
-        /* تنسيقات أيقونة البحث */
-        .search-icon {
-            font-size: 20px;
-            color: var(--text-color);
-            padding: 5px 10px;
-        }
-        
-        /* تنسيقات الصفحة الرئيسية */
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-color);
+            background-color: #f5f5f5;
             margin: 0;
-            padding-top: 90px; /* زيادة المسافة من الأعلى */
-            direction: rtl;
-        }
-        
-        a {
-            color: #000 !important;
-            text-decoration: none !important;
-        }
-        
-        .container {
-            max-width: 100%;
-            padding: 0 15px;
-        }
-        
-        .section {
-            margin-bottom: 25px;
-        }
-        
-        .section-header {
+            padding: 0;
             display: flex;
+            justify-content: center;
             align-items: center;
-            padding: 0 10px;
-            margin-bottom: 15px;
-        }
-        
-        .section-icon {
-            width: 24px;
-            height: 24px;
-            margin-left: 8px;
-        }
-        
-        .section-title {
-            font-size: 20px;
-            color: var(--text-color);
-            margin: 0;
-            font-weight: 700;
-        }
-        
-        .horizontal-list {
-            display: flex;
-            overflow-x: auto;
-            gap: 12px;
-            padding: 5px 10px;
-            scrollbar-width: none;
-        }
-        
-        .horizontal-list::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .item {
-            flex: 0 0 auto;
-            width: 160px;
+            height: 100vh;
             text-align: center;
-            background-color: white;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid #e0e0e0;
         }
         
-        .item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 80%;
         }
         
-        .audio-item img {
-            height: 160px;
+        .main-text {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
         
-        .item-title {
-            padding: 8px;
-            font-size: 15px;
-            color: #000;
-        }
-        
-        @media (max-width: 768px) {
-            .item {
-                width: 140px;
-            }
-            
-            .item img {
-                height: 180px;
-            }
-            
-            .audio-item img {
-                height: 140px;
-            }
-            
-            body {
-                padding-top: 80px;
-            }
+        .sub-text {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+            max-width: 80%;
         }
     </style>
 </head>
 <body>
-    <!-- NavBar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <!-- أيقونة البحث في اليسار -->
-            <div class="search-icon">
-                <i class="fas fa-search"></i>
-            </div>
-            
-            <!-- الشعار في الوسط -->
-            <div class="logo">
-                <img src="assets/images/logo.png" alt="شعار الموقع">
-            </div>
-            
-            <!-- القائمة المنسدلة في اليمين -->
-            <div class="dropdown">
-                <button class="dropbtn">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a href="index.html">الرئيسية</a>
-                    <a href="about.html">من نحن</a>
-                    <a href="contact.html">اتصل بنا</a>
-                </div>
-            </div>
+    <div class="content">
+        <div class="main-text">
+          الموقع قيد الصيانة، انتظرونا قريبًا
         </div>
-    </nav>
-
-    <div class="container">
-        <div class="section">
-            <div class="section-header">
-                <img src="assets/icons/video.png" alt="مرئيات" class="section-icon">
-                <h2 class="section-title">المرئيات</h2>
-            </div>
-            <div class="horizontal-list" id="videoList"></div>
-        </div>
-        
-        <div class="section">
-            <div class="section-header">
-                <img src="assets/icons/audio.png" alt="صوتيات" class="section-icon">
-                <h2 class="section-title">الصوتيات</h2>
-            </div>
-            <div class="horizontal-list" id="audioList"></div>
-        </div>
-        
-        <div class="section">
-            <div class="section-header">
-                <img src="assets/icons/book.png" alt="كتب" class="section-icon">
-                <h2 class="section-title">الكتب</h2>
-            </div>
-            <div class="horizontal-list" id="bookGrid"></div>
-        </div>
-        
-        <div class="section">
-            <div class="section-header">
-                <img src="assets/icons/poem.png" alt="أشعار" class="section-icon">
-                <h2 class="section-title">الأشعار</h2>
-            </div>
-            <div class="horizontal-list" id="bookList"></div>
-        </div>
+        <div class="sub-text">
+نعتذر على الإزعاج        </div>
     </div>
-
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
-
-    <script>
-        // إعداد Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDErdK7mjrXUtBYR28U7JIpbFi5RHWM9zM",
-            authDomain: "momentschat.firebaseapp.com",
-            databaseURL: "https://momentschat.firebaseio.com",
-            projectId: "momentschat",
-            storageBucket: "momentschat.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "1:866549697398:android:024dd3bf3b81d1adf78857"
-        };
-        
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.database(app);
-
-        // دوال تحميل المحتوى
-        function createItem(item, type, id) {
-            const div = document.createElement('div');
-            div.className = 'item ' + type + '-item';
-            div.innerHTML = `
-                <a href="${type}.html?id=${id}">
-                    <img src="${item.image}" alt="${item.title}">
-                    <div class="item-title">${item.title}</div>
-                </a>
-            `;
-            return div;
-        }
-
-        function loadContent() {
-            // تحميل المرئيات
-            db.ref("mtnbi_video").once("value", snapshot => {
-                const videos = snapshot.val();
-                if (videos) {
-                    Object.entries(videos).forEach(([id, video]) => {
-                        document.getElementById('videoList').appendChild(createItem(video, 'video', id));
-                    });
-                }
-            });
-            
-            // تحميل الصوتيات
-            db.ref("mtnbi_sound").once("value", snapshot => {
-                const audios = snapshot.val();
-                if (audios) {
-                    Object.entries(audios).forEach(([id, audio]) => {
-                        document.getElementById('audioList').appendChild(createItem(audio, 'audio', id));
-                    });
-                }
-            });
-            
-            // تحميل الكتب
-            db.ref("mtnbi_book").once("value", snapshot => {
-                const books = snapshot.val();
-                if (books) {
-                    Object.entries(books).forEach(([id, book]) => {
-                        document.getElementById('bookGrid').appendChild(createItem(book, 'book', id));
-                    });
-                }
-            });
-            
-            // تحميل الأشعار
-            db.ref("mtnbi_sh3er").once("value", snapshot => {
-                const poems = snapshot.val();
-                if (poems) {
-                    Object.entries(poems).forEach(([id, poem]) => {
-                        const div = document.createElement('div');
-                        div.className = 'item';
-                        div.innerHTML = `
-                            <a href="sher.html?id=${id}">
-                                <div class="item-title">${poem.title}</div>
-                            </a>
-                        `;
-                        document.getElementById('bookList').appendChild(div);
-                    });
-                }
-            });
-        }
-
-        window.addEventListener('DOMContentLoaded', loadContent);
-    </script>
 </body>
 </html>
