@@ -86,11 +86,12 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            transition: opacity 0.3s;
         }
         
-        .video-container:hover .play-pause-btn,
-        .video-container:active .play-pause-btn {
+        .show-controls .play-pause-btn {
             display: flex;
+            opacity: 1;
         }
         
         .seek-container {
@@ -129,8 +130,7 @@
             display: none;
         }
         
-        .seek-bar:hover .seek-handle,
-        .seek-bar:active .seek-handle {
+        .show-controls .seek-handle {
             display: block;
         }
         
@@ -156,6 +156,11 @@
             align-items: center;
             gap: 20px;
             z-index: 10;
+            transition: opacity 0.3s;
+        }
+        
+        .show-controls .controls {
+            opacity: 1;
         }
         
         .control-btn {
@@ -183,6 +188,11 @@
             z-index: 10;
             max-width: 70%;
             text-shadow: 0 0 5px rgba(0,0,0,0.7);
+            transition: opacity 0.3s;
+        }
+        
+        .show-controls .user-info {
+            opacity: 1;
         }
         
         .user-info .username {
@@ -258,7 +268,7 @@
                 </div>
             </div>
             <div class="user-info">
-                <div class="username">@فلان</div>
+                <div class="username">@user1</div>
                 <div class="description">هذا هو الفيديو الأول في الريلز الخاص بي #تحدي #سباحة</div>
                 <div class="music">
                     <i class="fas fa-music"></i>
@@ -294,7 +304,7 @@
             </div>
             <div class="video-container">
                 <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video2">
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-woman-playing-the-piano-4326-large.mp4" type="video/mp4">
+                    <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
                 </video>
                 <div class="seek-container">
                     <div class="seek-bar" id="seekBar2">
@@ -346,7 +356,7 @@
             </div>
             <div class="video-container">
                 <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video3">
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-tasting-coffee-1732-large.mp4" type="video/mp4">
+                    <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
                 </video>
                 <div class="seek-container">
                     <div class="seek-bar" id="seekBar3">
@@ -501,6 +511,7 @@
                 try {
                     if ('wakeLock' in navigator) {
                         wakeLock = await navigator.wakeLock.request('screen');
+                        console.log('تم تفعيل Wake Lock');
                         wakeLock.addEventListener('release', () => {
                             console.log('تم تحرير Wake Lock');
                         });
@@ -556,11 +567,24 @@
                 document.getElementById('playPauseBtn4'),
                 document.getElementById('playPauseBtn5')
             ];
+            const reelElements = document.querySelectorAll('.reel');
             
             let currentReel = 0;
             let isScrolling = false;
             let lastScrollTime = 0;
             let isSeeking = false;
+            let controlsTimeout;
+            let isDragging = false;
+            
+            // إظهار/إخفاء عناصر التحكم
+            function showControls(reelIndex) {
+                clearTimeout(controlsTimeout);
+                reelElements[reelIndex].classList.add('show-controls');
+                
+                controlsTimeout = setTimeout(() => {
+                    reelElements[reelIndex].classList.remove('show-controls');
+                }, 5000);
+            }
             
             // إصلاح خاص لـ iOS لمنع فتح مشغل الفيديو
             function preventVideoFullscreen() {
@@ -587,6 +611,7 @@
                     playPauseBtns[index].addEventListener('click', function(e) {
                         e.stopPropagation();
                         togglePlayPause(index);
+                        showControls(index);
                     });
                     
                     // Set up seek bar
@@ -597,6 +622,7 @@
                         e.preventDefault();
                         e.stopPropagation();
                         togglePlayPause(index);
+                        showControls(index);
                     }, false);
                     
                     // Update progress bars
@@ -622,16 +648,19 @@
             function setupSeekBar(index) {
                 const seekBar = seekBars[index];
                 const video = videos[index];
-                let isDragging = false;
                 
                 seekBar.addEventListener('mousedown', function(e) {
                     isDragging = true;
+                    isSeeking = true;
                     seekVideo(index, e);
+                    showControls(index);
                 });
                 
                 seekBar.addEventListener('touchstart', function(e) {
                     isDragging = true;
+                    isSeeking = true;
                     seekVideo(index, e.touches[0]);
+                    showControls(index);
                 });
                 
                 document.addEventListener('mousemove', function(e) {
@@ -659,6 +688,7 @@
                 seekBar.addEventListener('click', function(e) {
                     if (!isDragging) {
                         seekVideo(index, e);
+                        showControls(index);
                     }
                 });
             }
@@ -666,6 +696,7 @@
             // Play first video when metadata is loaded
             videos[0].addEventListener('loadedmetadata', function() {
                 playVideo(0);
+                showControls(0);
             });
             
             // Handle scroll events
@@ -709,16 +740,20 @@
             }, { passive: false });
             
             reelsContainer.addEventListener('touchmove', function(e) {
+                if (isDragging) return;
                 e.preventDefault();
             }, { passive: false });
             
             reelsContainer.addEventListener('touchend', function(e) {
+                if (isDragging) return;
+                
                 touchEndY = e.changedTouches[0].clientY;
                 const touchDuration = Date.now() - touchStartTime;
                 
                 // إذا كانت مدة اللمس قصيرة، اعتبرها نقرة وليس سحباً
                 if (touchDuration < 200 && Math.abs(touchStartY - touchEndY) < 10) {
                     togglePlayPause(currentReel);
+                    showControls(currentReel);
                 } else {
                     handleSwipe();
                 }
@@ -764,6 +799,7 @@
                 });
                 
                 playVideo(index);
+                showControls(index);
             }
             
             function updateActiveVideo() {
@@ -775,6 +811,7 @@
                     pauseVideo(currentReel);
                     currentReel = newReel;
                     playVideo(currentReel);
+                    showControls(currentReel);
                 }
             }
             
@@ -798,7 +835,6 @@
             }
             
             function seekVideo(index, e) {
-                isSeeking = true;
                 const seekBar = seekBars[index];
                 const seekBarRect = seekBar.getBoundingClientRect();
                 let seekPosition = (e.clientX - seekBarRect.left) / seekBarRect.width;
@@ -820,6 +856,15 @@
             // Initialize
             preventVideoFullscreen();
             initVideos();
+            
+            // إظهار التحكم عند تحريك الشاشة
+            reelsContainer.addEventListener('touchstart', function() {
+                showControls(currentReel);
+            });
+            
+            reelsContainer.addEventListener('mousemove', function() {
+                showControls(currentReel);
+            });
         });
     </script>
 </body>
