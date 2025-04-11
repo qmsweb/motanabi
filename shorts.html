@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ريلز إنستجرام</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>المتنبي شورتس</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,13 +16,14 @@
         }
         
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
             background-color: #000;
             color: white;
             overflow: hidden;
             height: 100vh;
             width: 100vw;
             touch-action: none;
+            -webkit-overflow-scrolling: touch;
         }
         
         .reels-container {
@@ -66,6 +69,9 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            /* لمنع فتح مشغل الفيديو في iOS */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
         }
         
         .video-controls {
@@ -94,7 +100,8 @@
             cursor: pointer;
         }
         
-        .video-container:hover .play-pause-btn {
+        .video-container:hover .play-pause-btn,
+        .video-container:active .play-pause-btn {
             display: flex;
         }
         
@@ -125,6 +132,7 @@
         .logo i {
             color: white;
             font-size: 30px;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
         
         .controls {
@@ -147,11 +155,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
         
         .control-btn span {
             font-size: 12px;
             margin-top: 5px;
+            text-shadow: 0 0 3px rgba(0,0,0,0.7);
         }
         
         .user-info {
@@ -160,6 +170,7 @@
             bottom: 80px;
             z-index: 10;
             max-width: 70%;
+            text-shadow: 0 0 5px rgba(0,0,0,0.7);
         }
         
         .user-info .username {
@@ -199,10 +210,21 @@
             transition: width 0.1s linear;
         }
 
+        /* للشاشات الكبيرة */
         @media (min-width: 768px) {
             .video-container {
                 border-radius: 10px;
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        /* إصلاحات خاصة بـ iOS */
+        @supports (-webkit-touch-callout: none) {
+            .video-container video {
+                -webkit-transform: translateZ(0);
+            }
+            .reels-container {
+                -webkit-overflow-scrolling: auto;
             }
         }
     </style>
@@ -219,8 +241,8 @@
             </div>
             <div class="video-wrapper">
                 <div class="video-container">
-                    <video loop id="video1">
-                        <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video1">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-woman-in-a-pool-1259-large.mp4" type="video/mp4">
                     </video>
                     <div class="seek-bar" id="seekBar1">
                         <div class="seek-progress" id="seekProgress1"></div>
@@ -269,8 +291,8 @@
             </div>
             <div class="video-wrapper">
                 <div class="video-container">
-                    <video loop id="video2">
-                        <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video2">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-woman-playing-the-piano-4326-large.mp4" type="video/mp4">
                     </video>
                     <div class="seek-bar" id="seekBar2">
                         <div class="seek-progress" id="seekProgress2"></div>
@@ -319,7 +341,7 @@
             </div>
             <div class="video-wrapper">
                 <div class="video-container">
-                    <video loop id="video3">
+                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video3">
                         <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-tasting-coffee-1732-large.mp4" type="video/mp4">
                     </video>
                     <div class="seek-bar" id="seekBar3">
@@ -369,7 +391,7 @@
             </div>
             <div class="video-wrapper">
                 <div class="video-container">
-                    <video loop id="video4">
+                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video4">
                         <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1232-large.mp4" type="video/mp4">
                     </video>
                     <div class="seek-bar" id="seekBar4">
@@ -419,7 +441,7 @@
             </div>
             <div class="video-wrapper">
                 <div class="video-container">
-                    <video loop id="video5">
+                    <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video5">
                         <source src="https://assets.mixkit.co/videos/preview/mixkit-man-under-multicolored-lights-1237-large.mp4" type="video/mp4">
                     </video>
                     <div class="seek-bar" id="seekBar5">
@@ -503,53 +525,63 @@
             let isScrolling = false;
             let lastScrollTime = 0;
             
+            // إصلاح خاص لـ iOS لمنع فتح مشغل الفيديو
+            function preventVideoFullscreen() {
+                const allVideos = document.querySelectorAll('video');
+                allVideos.forEach(video => {
+                    video.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }, false);
+                    
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', '');
+                    video.setAttribute('x-webkit-airplay', 'allow');
+                });
+            }
+            
             // Initialize all videos
-            videos.forEach((video, index) => {
-                // Load video
-                video.load();
-                
-                // Set up play/pause button
-                playPauseBtns[index].addEventListener('click', function() {
-                    togglePlayPause(index);
+            function initVideos() {
+                videos.forEach((video, index) => {
+                    // Load video
+                    video.load();
+                    
+                    // Set up play/pause button
+                    playPauseBtns[index].addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        togglePlayPause(index);
+                    });
+                    
+                    // Set up seek bar
+                    seekBars[index].addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        seekVideo(index, e);
+                    });
+                    
+                    // Show controls on hover/touch
+                    video.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        togglePlayPause(index);
+                    }, false);
+                    
+                    // Update progress bars
+                    video.addEventListener('timeupdate', function() {
+                        updateProgressBars(index);
+                    });
+                    
+                    video.addEventListener('ended', function() {
+                        if (index < videos.length - 1) {
+                            setTimeout(() => {
+                                scrollToReel(index + 1);
+                            }, 500);
+                        } else {
+                            video.currentTime = 0;
+                            video.play();
+                        }
+                    });
                 });
-                
-                // Set up seek bar
-                seekBars[index].addEventListener('click', function(e) {
-                    seekVideo(index, e);
-                });
-                
-                // Show controls on hover/touch
-                video.parentElement.addEventListener('mouseenter', function() {
-                    playPauseBtns[index].style.display = 'flex';
-                });
-                
-                video.parentElement.addEventListener('mouseleave', function() {
-                    if (!video.paused) {
-                        playPauseBtns[index].style.display = 'none';
-                    }
-                });
-                
-                // Touch events for mobile
-                video.parentElement.addEventListener('touchstart', function() {
-                    togglePlayPause(index);
-                }, { passive: true });
-                
-                // Update progress bars
-                video.addEventListener('timeupdate', function() {
-                    updateProgressBars(index);
-                });
-                
-                video.addEventListener('ended', function() {
-                    if (index < videos.length - 1) {
-                        setTimeout(() => {
-                            scrollToReel(index + 1);
-                        }, 500);
-                    } else {
-                        video.currentTime = 0;
-                        video.play();
-                    }
-                });
-            });
+            }
             
             // Play first video when metadata is loaded
             videos[0].addEventListener('loadedmetadata', function() {
@@ -589,9 +621,11 @@
             // Handle touch events for mobile
             let touchStartY = 0;
             let touchEndY = 0;
+            let touchStartTime = 0;
             
             reelsContainer.addEventListener('touchstart', function(e) {
                 touchStartY = e.touches[0].clientY;
+                touchStartTime = Date.now();
             }, { passive: false });
             
             reelsContainer.addEventListener('touchmove', function(e) {
@@ -600,7 +634,14 @@
             
             reelsContainer.addEventListener('touchend', function(e) {
                 touchEndY = e.changedTouches[0].clientY;
-                handleSwipe();
+                const touchDuration = Date.now() - touchStartTime;
+                
+                // إذا كانت مدة اللمس قصيرة، اعتبرها نقرة وليس سحباً
+                if (touchDuration < 200 && Math.abs(touchStartY - touchEndY) < 10) {
+                    togglePlayPause(currentReel);
+                } else {
+                    handleSwipe();
+                }
             }, { passive: false });
             
             function handleSwipe() {
@@ -659,7 +700,7 @@
             
             function playVideo(index) {
                 videos[index].currentTime = 0;
-                videos[index].play();
+                videos[index].play().catch(e => console.error("فشل تشغيل الفيديو:", e));
                 playPauseBtns[index].innerHTML = '<i class="fas fa-pause"></i>';
                 updateProgressBars(index);
             }
@@ -671,11 +712,9 @@
             
             function togglePlayPause(index) {
                 if (videos[index].paused) {
-                    videos[index].play();
-                    playPauseBtns[index].innerHTML = '<i class="fas fa-pause"></i>';
+                    playVideo(index);
                 } else {
-                    videos[index].pause();
-                    playPauseBtns[index].innerHTML = '<i class="fas fa-play"></i>';
+                    pauseVideo(index);
                 }
             }
             
@@ -692,6 +731,10 @@
                 progressBars[index].style.width = percent + '%';
                 seekProgresses[index].style.width = percent + '%';
             }
+            
+            // Initialize
+            preventVideoFullscreen();
+            initVideos();
         });
     </script>
 </body>
