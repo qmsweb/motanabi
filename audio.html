@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تشغيل الصوت</title>
+    
+    <!-- خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #d2b48c;
+            --text-color: #000000;
+            --light-bg: #f5e7d6;
+        }
+        
+        /* تنسيقات NavBar */
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .logo {
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .back-btn {
+            font-size: 20px;
+            color: var(--text-color);
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        /* تنسيقات الصفحة */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 90px;
+            direction: rtl;
+            min-height: 100vh;
+        }
+        
+        a {
+            color: #000 !important;
+            text-decoration: none !important;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .audio-player {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .audio-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        audio {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding-top: 80px;
+            }
+            
+            .audio-title {
+                font-size: 18px;
+            }
+            
+            .audio-player {
+                padding: 15px;
+            }
+        }
+    </style>
+    <meta property="og:title" content="جارٍ تحميل العنوان...">
+    <meta property="og:image" content="">
+    <meta property="og:description" content="استمع إلى الصوت الآن!">
+    <meta property="og:type" content="website">
+</head>
+<body>
+    <!-- NavBar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- زر العودة -->
+            <div class="back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            
+            <!-- الشعار في الوسط -->
+            <div class="logo">
+                <img src="assets/images/logo.png" alt="شعار الموقع">
+            </div>
+            
+            <!-- مساحة فارغة للمحاذاة -->
+            <div style="width: 48px;"></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="audio-player">
+            <div class="audio-title" id="audioTitle">جارٍ تحميل الصوت...</div>
+            <audio id="audioPlayer" controls>
+                <source id="audioSource" src="" type="audio/mp3">
+                متصفحك لا يدعم تشغيل الصوت.
+            </audio>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+    <script>
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDErdK7mjrXUtBYR28U7JIpbFi5RHWM9zM",
+            authDomain: "momentschat.firebaseapp.com",
+            databaseURL: "https://momentschat.firebaseio.com",
+            projectId: "momentschat",
+            storageBucket: "momentschat.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "1:866549697398:android:024dd3bf3b81d1adf78857"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // تحميل الصوت عند فتح الصفحة
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const audioId = urlParams.get('id');
+
+            if (audioId) {
+                const audioRef = db.ref(`mtnbi_sound/${audioId}`);
+                audioRef.once("value").then(snapshot => {
+                    if (snapshot.exists()) {
+                        const audioData = snapshot.val();
+                        const audioTitle = document.getElementById("audioTitle");
+                        const audioSource = document.getElementById("audioSource");
+                        const audioPlayer = document.getElementById("audioPlayer");
+
+                        const title = audioData.title || "بدون عنوان";
+                        const imageUrl = audioData.image || "";
+                        const artist = audioData.artist || "";
+
+                        // استخدام Media Session API
+                        if ('mediaSession' in navigator) {
+                            navigator.mediaSession.metadata = new MediaMetadata({
+                                title: title,
+                                artist: artist,
+                                artwork: [
+                                    { src: imageUrl, sizes: '512x512', type: 'image/png' }
+                                ]
+                            });
+
+                            navigator.mediaSession.setActionHandler('play', () => {
+                                audioPlayer.play();
+                            });
+
+                            navigator.mediaSession.setActionHandler('pause', () => {
+                                audioPlayer.pause();
+                            });
+                        }
+
+                        // تحديث عنوان الصفحة
+                        document.title = title;
+                        audioTitle.innerText = title;
+
+                        // تحديث رابط الصوت
+                        audioSource.src = audioData.link;
+                        audioPlayer.load();
+
+                        // تحديث وسوم Open Graph
+                        document.querySelector('meta[property="og:title"]').setAttribute("content", title);
+                        document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl);
+                        document.querySelector('meta[property="og:description"]').setAttribute("content", "استمع إلى الصوت الآن!");
+                    } else {
+                        document.getElementById("audioTitle").innerText = "خطأ: الصوت غير موجود.";
+                        document.title = "خطأ: الصوت غير موجود.";
+                    }
+                }).catch(error => {
+                    console.error("خطأ في تحميل البيانات:", error);
+                    document.getElementById("audioTitle").innerText = "حدث خطأ أثناء تحميل الصوت.";
+                    document.title = "حدث خطأ أثناء تحميل الصوت.";
+                });
+            } else {
+                alert("المعرف غير موجود في الرابط!");
+            }
+        });
+    </script>
+</body>
+</html>
