@@ -56,9 +56,9 @@
         .video-container {
             position: relative;
             width: 100%;
-            max-width: 375px; /* عرض الهاتف */
+            max-width: 375px;
             height: 100%;
-            max-height: 667px; /* ارتفاع الهاتف */
+            max-height: 667px;
             overflow: hidden;
         }
         
@@ -66,6 +66,53 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        
+        .video-controls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .play-pause-btn {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .video-container:hover .play-pause-btn {
+            display: flex;
+        }
+        
+        .seek-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .seek-progress {
+            height: 100%;
+            background: #f00;
+            width: 0%;
         }
         
         .logo {
@@ -152,7 +199,6 @@
             transition: width 0.1s linear;
         }
 
-        /* للشاشات الكبيرة */
         @media (min-width: 768px) {
             .video-container {
                 border-radius: 10px;
@@ -176,11 +222,19 @@
                     <video loop id="video1">
                         <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
                     </video>
+                    <div class="seek-bar" id="seekBar1">
+                        <div class="seek-progress" id="seekProgress1"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="play-pause-btn" id="playPauseBtn1">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="user-info">
                 <div class="username">@user1</div>
-                <div class="description">هذا هو الفيديو الأول في الريلز الخاص بي #تحدي #أرنب</div>
+                <div class="description">هذا هو الفيديو الأول في الريلز الخاص بي #تحدي #سباحة</div>
                 <div class="music">
                     <i class="fas fa-music"></i>
                     <span>الصوت الأصلي - user1</span>
@@ -216,8 +270,16 @@
             <div class="video-wrapper">
                 <div class="video-container">
                     <video loop id="video2">
-                        <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-woman-playing-the-piano-4326-large.mp4" type="video/mp4">
+                        <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
                     </video>
+                    <div class="seek-bar" id="seekBar2">
+                        <div class="seek-progress" id="seekProgress2"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="play-pause-btn" id="playPauseBtn2">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="user-info">
@@ -260,6 +322,14 @@
                     <video loop id="video3">
                         <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-tasting-coffee-1732-large.mp4" type="video/mp4">
                     </video>
+                    <div class="seek-bar" id="seekBar3">
+                        <div class="seek-progress" id="seekProgress3"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="play-pause-btn" id="playPauseBtn3">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="user-info">
@@ -302,6 +372,14 @@
                     <video loop id="video4">
                         <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1232-large.mp4" type="video/mp4">
                     </video>
+                    <div class="seek-bar" id="seekBar4">
+                        <div class="seek-progress" id="seekProgress4"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="play-pause-btn" id="playPauseBtn4">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="user-info">
@@ -344,6 +422,14 @@
                     <video loop id="video5">
                         <source src="https://assets.mixkit.co/videos/preview/mixkit-man-under-multicolored-lights-1237-large.mp4" type="video/mp4">
                     </video>
+                    <div class="seek-bar" id="seekBar5">
+                        <div class="seek-progress" id="seekProgress5"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="play-pause-btn" id="playPauseBtn5">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="user-info">
@@ -391,19 +477,90 @@
                 document.getElementById('progress4'),
                 document.getElementById('progress5')
             ];
+            const seekBars = [
+                document.getElementById('seekBar1'),
+                document.getElementById('seekBar2'),
+                document.getElementById('seekBar3'),
+                document.getElementById('seekBar4'),
+                document.getElementById('seekBar5')
+            ];
+            const seekProgresses = [
+                document.getElementById('seekProgress1'),
+                document.getElementById('seekProgress2'),
+                document.getElementById('seekProgress3'),
+                document.getElementById('seekProgress4'),
+                document.getElementById('seekProgress5')
+            ];
+            const playPauseBtns = [
+                document.getElementById('playPauseBtn1'),
+                document.getElementById('playPauseBtn2'),
+                document.getElementById('playPauseBtn3'),
+                document.getElementById('playPauseBtn4'),
+                document.getElementById('playPauseBtn5')
+            ];
             
             let currentReel = 0;
             let isScrolling = false;
             let lastScrollTime = 0;
             
-            // Initialize the first video
-            playVideo(0);
+            // Initialize all videos
+            videos.forEach((video, index) => {
+                // Load video
+                video.load();
+                
+                // Set up play/pause button
+                playPauseBtns[index].addEventListener('click', function() {
+                    togglePlayPause(index);
+                });
+                
+                // Set up seek bar
+                seekBars[index].addEventListener('click', function(e) {
+                    seekVideo(index, e);
+                });
+                
+                // Show controls on hover/touch
+                video.parentElement.addEventListener('mouseenter', function() {
+                    playPauseBtns[index].style.display = 'flex';
+                });
+                
+                video.parentElement.addEventListener('mouseleave', function() {
+                    if (!video.paused) {
+                        playPauseBtns[index].style.display = 'none';
+                    }
+                });
+                
+                // Touch events for mobile
+                video.parentElement.addEventListener('touchstart', function() {
+                    togglePlayPause(index);
+                }, { passive: true });
+                
+                // Update progress bars
+                video.addEventListener('timeupdate', function() {
+                    updateProgressBars(index);
+                });
+                
+                video.addEventListener('ended', function() {
+                    if (index < videos.length - 1) {
+                        setTimeout(() => {
+                            scrollToReel(index + 1);
+                        }, 500);
+                    } else {
+                        video.currentTime = 0;
+                        video.play();
+                    }
+                });
+            });
+            
+            // Play first video when metadata is loaded
+            videos[0].addEventListener('loadedmetadata', function() {
+                playVideo(0);
+            });
             
             // Handle scroll events
             reelsContainer.addEventListener('scroll', function() {
                 if (!isScrolling) {
                     const now = Date.now();
-                    if (now - lastScrollTime > 100) { // Debounce scroll events
+                    if (now - lastScrollTime > 100) {
                         updateActiveVideo();
                         lastScrollTime = now;
                     }
@@ -451,7 +608,7 @@
                 
                 const diff = touchStartY - touchEndY;
                 
-                if (Math.abs(diff) > 50) { // Minimum swipe distance
+                if (Math.abs(diff) > 50) {
                     isScrolling = true;
                     
                     if (diff > 0) {
@@ -468,15 +625,13 @@
             
             function scrollToNextReel() {
                 if (currentReel < videos.length - 1) {
-                    currentReel++;
-                    scrollToReel(currentReel);
+                    scrollToReel(currentReel + 1);
                 }
             }
             
             function scrollToPrevReel() {
                 if (currentReel > 0) {
-                    currentReel--;
-                    scrollToReel(currentReel);
+                    scrollToReel(currentReel - 1);
                 }
             }
             
@@ -505,48 +660,38 @@
             function playVideo(index) {
                 videos[index].currentTime = 0;
                 videos[index].play();
-                updateProgressBar(index);
+                playPauseBtns[index].innerHTML = '<i class="fas fa-pause"></i>';
+                updateProgressBars(index);
             }
             
             function pauseVideo(index) {
                 videos[index].pause();
+                playPauseBtns[index].innerHTML = '<i class="fas fa-play"></i>';
             }
             
-            // Update progress bar for current video
-            function updateProgressBar(index) {
+            function togglePlayPause(index) {
+                if (videos[index].paused) {
+                    videos[index].play();
+                    playPauseBtns[index].innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    videos[index].pause();
+                    playPauseBtns[index].innerHTML = '<i class="fas fa-play"></i>';
+                }
+            }
+            
+            function seekVideo(index, e) {
+                const seekBar = seekBars[index];
+                const seekBarRect = seekBar.getBoundingClientRect();
+                const seekPosition = (e.clientX - seekBarRect.left) / seekBarRect.width;
+                videos[index].currentTime = seekPosition * videos[index].duration;
+            }
+            
+            function updateProgressBars(index) {
                 const video = videos[index];
-                const progressBar = progressBars[index];
-                
-                // Reset progress bar
-                progressBar.style.width = '0%';
-                
-                video.ontimeupdate = function() {
-                    const percent = (video.currentTime / video.duration) * 100;
-                    progressBar.style.width = percent + '%';
-                };
-                
-                video.onended = function() {
-                    progressBar.style.width = '100%';
-                    if (index < videos.length - 1) {
-                        setTimeout(() => {
-                            scrollToNextReel();
-                        }, 500);
-                    } else {
-                        video.currentTime = 0;
-                        video.play();
-                    }
-                };
+                const percent = (video.currentTime / video.duration) * 100;
+                progressBars[index].style.width = percent + '%';
+                seekProgresses[index].style.width = percent + '%';
             }
-            
-            // Initialize all videos
-            videos.forEach((video, index) => {
-                video.load();
-                video.addEventListener('loadedmetadata', function() {
-                    if (index === 0) {
-                        playVideo(0);
-                    }
-                });
-            });
         });
     </script>
 </body>
