@@ -18,12 +18,20 @@
             --light-bg: #f5e7d6;
             --card-bg: #ffffff;
             --input-bg: #ffffff;
+            --border-radius: 12px;
+        }
+        
+        /* تنسيقات عامة */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         /* تنسيقات NavBar */
         .navbar {
             background-color: var(--primary-color);
-            padding: 15px 0;
+            padding: 12px 0;
             position: fixed;
             width: 100%;
             top: 0;
@@ -47,7 +55,7 @@
         }
         
         .logo img {
-            height: 40px;
+            height: 36px;
             width: auto;
             display: block;
             margin: 0 auto;
@@ -58,6 +66,8 @@
             color: var(--text-color);
             padding: 5px 10px;
             cursor: pointer;
+            background: none;
+            border: none;
         }
         
         /* تنسيقات الصفحة */
@@ -66,42 +76,45 @@
             background-color: var(--light-bg);
             color: var(--text-color);
             margin: 0;
-            padding-top: 90px;
+            padding-top: 80px;
             direction: rtl;
             min-height: 100vh;
         }
         
-        .container {
-            max-width: 100%;
-            padding: 0 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 15px;
         }
         
         /* تنسيقات مربع البحث */
         .search-container {
             width: 100%;
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 0 15px;
+            margin: 20px auto 30px;
         }
         
         .search-box {
             display: flex;
             align-items: center;
             background-color: var(--input-bg);
-            border-radius: 30px;
+            border-radius: var(--border-radius);
             padding: 10px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: var(--primary-color);
         }
         
         .search-input {
             flex: 1;
             border: none;
             background: transparent;
-            padding: 10px;
+            padding: 12px 15px;
             font-size: 18px;
             font-family: 'Cairo', sans-serif;
             color: var(--text-color);
@@ -114,116 +127,165 @@
             color: var(--text-color);
             font-size: 20px;
             cursor: pointer;
-            padding: 5px 10px;
+            padding: 8px;
+            margin-right: 5px;
         }
         
         /* تنسيقات نتائج البحث */
         .results-container {
             width: 100%;
-            max-width: 1200px;
             margin: 30px auto;
-            padding: 0 15px;
         }
         
         .results-title {
             font-size: 22px;
-            margin-bottom: 20px;
+            margin: 30px 0 20px;
             color: var(--text-color);
-            border-bottom: 2px solid var(--primary-color);
             padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
         }
         
-        .horizontal-list {
-            display: flex;
-            overflow-x: auto;
-            gap: 15px;
-            padding: 10px 0;
-            scrollbar-width: none;
-        }
-        
-        .horizontal-list::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .item {
-            flex: 0 0 auto;
-            width: 180px;
+        .no-results {
             text-align: center;
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            padding: 40px 20px;
+            font-size: 18px;
+            color: #666;
         }
         
-        .item:hover {
-            transform: translateY(-5px);
+        .category-section {
+            margin-bottom: 40px;
         }
         
-        .item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .audio-item img {
-            height: 180px;
-        }
-        
-        .item-title {
-            padding: 12px;
-            font-size: 16px;
-            color: var(--text-color);
-            font-weight: 600;
-        }
-        
-        .section-title {
+        .section-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin: 30px 0 15px;
+            margin-bottom: 15px;
         }
         
         .section-icon {
             width: 24px;
             height: 24px;
+            margin-left: 10px;
         }
         
-        .section-heading {
+        .section-title {
             font-size: 20px;
+            font-weight: 600;
             color: var(--text-color);
-            margin: 0;
         }
         
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .item {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .item-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .audio-item .item-image {
+            height: 160px;
+        }
+        
+        .item-title {
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.4;
+            text-align: right;
+        }
+        
+        /* تحسينات للهواتف الذكية */
         @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 32px;
+            }
+            
             body {
-                padding-top: 80px;
-            }
-            
-            .item {
-                width: 150px;
-            }
-            
-            .item img {
-                height: 180px;
+                padding-top: 70px;
             }
             
             .search-input {
                 font-size: 16px;
+                padding: 10px 12px;
+            }
+            
+            .items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            
+            .item-image {
+                height: 160px;
+            }
+            
+            .audio-item .item-image {
+                height: 140px;
+            }
+            
+            .section-title {
+                font-size: 18px;
             }
         }
         
         @media (max-width: 480px) {
-            .item {
-                width: 130px;
-            }
-            
-            .item img {
-                height: 160px;
+            .main-container {
+                padding: 15px 10px;
             }
             
             .search-box {
                 padding: 8px 15px;
+            }
+            
+            .search-input {
+                font-size: 15px;
+            }
+            
+            .items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+            }
+            
+            .item-image {
+                height: 140px;
+            }
+            
+            .audio-item .item-image {
+                height: 120px;
+            }
+            
+            .item-title {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .results-title {
+                font-size: 20px;
+                margin: 25px 0 15px;
             }
         }
     </style>
@@ -232,37 +294,36 @@
     <!-- NavBar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <!-- زر العودة -->
-            <div class="back-btn" onclick="window.history.back()">
+            <button class="back-btn" onclick="window.history.back()">
                 <i class="fas fa-arrow-right"></i>
-            </div>
+            </button>
             
-            <!-- الشعار في الوسط -->
             <div class="logo">
                 <img src="assets/images/logo.png" alt="شعار الموقع">
             </div>
             
-            <!-- مساحة فارغة للمحاذاة -->
-            <div style="width: 48px;"></div>
+            <div style="width: 44px;"></div>
         </div>
     </nav>
 
-    <div class="container">
+    <main class="main-container">
         <!-- مربع البحث -->
         <div class="search-container">
             <div class="search-box">
-                <input type="text" class="search-input" placeholder="ابحث عن المرئيات، الصوتيات، الكتب..." id="searchInput">
                 <button class="search-button" id="searchButton">
                     <i class="fas fa-search"></i>
                 </button>
+                <input type="text" class="search-input" placeholder="ابحث عن المرئيات، الصوتيات، الكتب..." id="searchInput">
             </div>
         </div>
         
         <!-- نتائج البحث -->
         <div class="results-container" id="searchResults">
-            <!-- سيتم عرض النتائج هنا ديناميكيًا -->
+            <div class="no-results">
+                <p>اكتب كلمة البحث في الحقل أعلاه للعثور على المحتوى المطلوب</p>
+            </div>
         </div>
-    </div>
+    </main>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
@@ -280,7 +341,7 @@
         };
         
         const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.database(app);
+        const db = firebase.database();
 
         // عناصر DOM
         const searchInput = document.getElementById('searchInput');
@@ -289,12 +350,22 @@
 
         // دالة البحث
         function performSearch(query) {
-            if (!query || query.trim() === '') {
-                searchResults.innerHTML = '<p class="results-title">الرجاء إدخال كلمة بحث</p>';
+            const searchTerm = query.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                searchResults.innerHTML = `
+                    <div class="no-results">
+                        <p>اكتب كلمة البحث في الحقل أعلاه للعثور على المحتوى المطلوب</p>
+                    </div>
+                `;
                 return;
             }
 
-            searchResults.innerHTML = '<p class="results-title">جارٍ البحث...</p>';
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <p><i class="fas fa-spinner fa-spin"></i> جاري البحث عن "${searchTerm}"...</p>
+                </div>
+            `;
 
             // البحث في جميع الأقسام
             Promise.all([
@@ -303,8 +374,15 @@
                 searchInCategory('mtnbi_book', 'book', 'كتب'),
                 searchInCategory('mtnbi_sh3er', 'sher', 'أشعار')
             ]).then(() => {
-                if (searchResults.innerHTML.includes('جارٍ البحث')) {
-                    searchResults.innerHTML = '<p class="results-title">لا توجد نتائج مطابقة لبحثك</p>';
+                const hasResults = searchResults.querySelector('.category-section');
+                
+                if (!hasResults) {
+                    searchResults.innerHTML = `
+                        <div class="no-results">
+                            <p>لا توجد نتائج مطابقة لـ "${searchTerm}"</p>
+                            <p>حاول استخدام كلمات بحث أخرى</p>
+                        </div>
+                    `;
                 }
             });
         }
@@ -313,54 +391,59 @@
         function searchInCategory(category, type, categoryName) {
             return db.ref(category).once("value").then(snapshot => {
                 const items = snapshot.val();
+                const query = searchInput.value.trim().toLowerCase();
                 let hasResults = false;
-                const query = searchInput.value.toLowerCase();
 
                 if (items) {
                     const results = Object.entries(items)
                         .filter(([id, item]) => 
-                            item.title.toLowerCase().includes(query) || 
+                            item.title && item.title.toLowerCase().includes(query) || 
                             (item.description && item.description.toLowerCase().includes(query))
                         )
                         .map(([id, item]) => {
                             hasResults = true;
-                            return createMediaItem(item.image, item.title, `${type}.html?id=${id}`);
+                            return createMediaItem(item, type, id);
                         });
 
                     if (hasResults) {
                         const section = document.createElement('div');
+                        section.className = 'category-section';
                         section.innerHTML = `
-                            <div class="section-title">
+                            <div class="section-header">
                                 <img src="assets/icons/${type}.png" alt="${categoryName}" class="section-icon">
-                                <h2 class="section-heading">${categoryName}</h2>
+                                <h3 class="section-title">${categoryName}</h3>
                             </div>
-                            <div class="horizontal-list" id="${type}Results"></div>
+                            <div class="items-grid" id="${type}Results"></div>
                         `;
                         
-                        if (searchResults.innerHTML.includes('جارٍ البحث')) {
-                            searchResults.innerHTML = '';
+                        // إزالة رسالة "جارٍ البحث" إذا كانت موجودة
+                        const loadingMsg = searchResults.querySelector('.no-results');
+                        if (loadingMsg) {
+                            searchResults.removeChild(loadingMsg);
                         }
                         
                         searchResults.appendChild(section);
                         
-                        const list = document.getElementById(`${type}Results`);
-                        results.forEach(item => list.appendChild(item));
+                        const grid = document.getElementById(`${type}Results`);
+                        results.forEach(item => grid.appendChild(item));
                     }
                 }
+            }).catch(error => {
+                console.error(`Error searching in ${category}:`, error);
             });
         }
 
         // إنشاء عنصر وسائط
-        function createMediaItem(image, title, link) {
-            const div = document.createElement("div");
-            div.className = "item";
-            const a = document.createElement("a");
-            a.href = link;
-            a.innerHTML = `
-                <img src="${image}" alt="${title}">
-                <div class="item-title">${title}</div>
+        function createMediaItem(item, type, id) {
+            const div = document.createElement('a');
+            div.className = `item ${type}-item`;
+            div.href = `${type}.html?id=${id}`;
+            
+            div.innerHTML = `
+                <img src="${item.image}" alt="${item.title}" class="item-image">
+                <div class="item-title">${item.title}</div>
             `;
-            div.appendChild(a);
+            
             return div;
         }
 
