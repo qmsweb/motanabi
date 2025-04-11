@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة رحلة المتنبي</title>
+    <title>المنصة الصحراوية</title>
     
     <!-- خط Cairo -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
     <style>
         :root {
             --primary-color: #d2b48c;
-            --text-color: #5a3921;
+            --text-color: #000; /* تغيير لون النص إلى أسود */
             --light-bg: #f5e7d6;
         }
         
@@ -26,80 +26,87 @@
             background-color: var(--light-bg);
             color: var(--text-color);
             margin: 0;
-            padding-top: 70px;
+            padding-top: 60px; /* تقليل المسافة من الأعلى */
             direction: rtl;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 100%; /* تمديد العرض ليشمل الشاشة */
+            padding: 0 10px; /* تقليل المسافة الجانبية */
         }
         
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 20px; /* تقليل المسافة بين الأقسام */
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            padding: 0 10px; /* محاذاة مع المحتوى */
+            margin-bottom: 10px;
+        }
+        
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: 8px;
         }
         
         .section-title {
-            font-size: 22px;
-            margin-bottom: 15px;
+            font-size: 20px;
             color: var(--text-color);
-            border-bottom: 1px solid var(--primary-color);
-            padding-bottom: 5px;
+            margin: 0;
+            font-weight: 700;
         }
         
         .horizontal-list {
             display: flex;
             overflow-x: auto;
-            gap: 15px;
-            padding: 10px 0;
-            scrollbar-width: thin;
-            scrollbar-color: transparent transparent;
+            gap: 12px;
+            padding: 5px 10px; /* تقليل المساحة الداخلية */
+            scrollbar-width: none; /* إخفاء شريط التمرير */
         }
         
         .horizontal-list::-webkit-scrollbar {
-            height: 5px;
-        }
-        
-        .horizontal-list::-webkit-scrollbar-thumb {
-            background-color: transparent;
-        }
-        
-        .horizontal-list::-webkit-scrollbar-track {
-            background-color: transparent;
+            display: none;
         }
         
         .item {
             flex: 0 0 auto;
-            width: 180px;
+            width: 160px;
             text-align: center;
             background-color: white;
-            border-radius: 5px;
+            border-radius: 6px;
             overflow: hidden;
         }
         
         .item img {
             width: 100%;
-            height: 240px;
+            height: 200px;
             object-fit: cover;
         }
         
         .audio-item img {
-            height: 180px;
+            height: 160px;
         }
         
         .item-title {
-            padding: 10px;
-            font-size: 16px;
+            padding: 8px;
+            font-size: 15px;
+            color: #000; /* لون النص أسود */
         }
         
         @media (max-width: 768px) {
             .item {
-                width: 150px;
+                width: 140px;
             }
             
             .item img {
-                height: 200px;
+                height: 180px;
+            }
+            
+            .audio-item img {
+                height: 140px;
             }
         }
     </style>
@@ -116,22 +123,34 @@
 
     <div class="container">
         <div class="section">
-            <h2 class="section-title">المرئيات</h2>
+            <div class="section-header">
+                <img src="assets/icons/video.png" alt="مرئيات" class="section-icon">
+                <h2 class="section-title">المرئيات</h2>
+            </div>
             <div class="horizontal-list" id="videoList"></div>
         </div>
         
         <div class="section">
-            <h2 class="section-title">الصوتيات</h2>
+            <div class="section-header">
+                <img src="assets/icons/audio.png" alt="صوتيات" class="section-icon">
+                <h2 class="section-title">الصوتيات</h2>
+            </div>
             <div class="horizontal-list" id="audioList"></div>
         </div>
         
         <div class="section">
-            <h2 class="section-title">الكتب</h2>
+            <div class="section-header">
+                <img src="assets/icons/book.png" alt="كتب" class="section-icon">
+                <h2 class="section-title">الكتب</h2>
+            </div>
             <div class="horizontal-list" id="bookGrid"></div>
         </div>
         
         <div class="section">
-            <h2 class="section-title">الأشعار</h2>
+            <div class="section-header">
+                <img src="assets/icons/poem.png" alt="أشعار" class="section-icon">
+                <h2 class="section-title">الأشعار</h2>
+            </div>
             <div class="horizontal-list" id="bookList"></div>
         </div>
     </div>
