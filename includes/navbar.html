@@ -1,11 +1,21 @@
-<!-- ربط ملف CSS -->
-<link rel="stylesheet" href="/includes/navbar.css">
+<!-- شريط التنقل الرئيسي -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- أيقونة القائمة المنسدلة (اليسار) -->
+    <div class="dropdown">
+      <button class="dropbtn">
+        ☰ <!-- أيقونة القائمة (يمكن استبدالها بـ Font Awesome) -->
+      </button>
+      <div class="dropdown-content">
+        <a href="/">الرئيسية</a>
+        <a href="/about">من نحن</a>
+        <a href="/contact">اتصل بنا</a>
+      </div>
+    </div>
 
-<!-- تضمين الـ NavBar -->
-<script>
-  fetch('/includes/navbar.html')
-    .then(response => response.text())
-    .then(data => {
-      document.querySelector('body').insertAdjacentHTML('afterbegin', data);
-    });
-</script>
+    <!-- الشعار (اليمين) -->
+    <div class="logo">
+      <img src="/images/logo.png" alt="شعار الموقع" width="120">
+    </div>
+  </div>
+</nav>
