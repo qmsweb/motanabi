@@ -95,20 +95,24 @@
             margin-bottom: 20px;
         }
         
+        /* إصلاح مشغل الفيديو */
         #player {
             width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* نسبة 16:9 */
-            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
             background-color: #000;
         }
         
-        #player video {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
+        .plyr {
+            border-radius: 0;
+        }
+        
+        @media (min-width: 768px) {
+            #player {
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
         }
         
         .video-info {
@@ -146,54 +150,6 @@
             background-color: #c0a57b;
         }
         
-        .share-options {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            background-color: white;
-            padding: 20px;
-            border-radius: 15px 15px 0 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 1001;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .share-options.show {
-            display: flex;
-            animation: slideUp 0.3s ease-out;
-        }
-        
-        .share-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            transition: background-color 0.2s;
-        }
-        
-        .share-option:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-        
-        .overlay.show {
-            display: block;
-        }
-        
         #videoTitle {
             margin: 15px 0 10px 0;
             font-size: 22px;
@@ -206,35 +162,6 @@
             font-size: 16px;
             color: var(--secondary-text);
             line-height: 1.6;
-        }
-        
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-        
-        @media (min-width: 768px) {
-            .video-container {
-                max-width: 800px;
-            }
-            
-            #player {
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-            
-            .share-options {
-                max-width: 400px;
-                margin: 0 auto;
-                bottom: 50%;
-                transform: translateY(50%);
-                border-radius: 15px;
-            }
         }
     </style>
 </head>
@@ -260,7 +187,7 @@
     <div class="container">
         <div class="video-container">
             <div id="player">
-                <video playsinline controls autoplay allowfullscreen>
+                <video playsinline controls>
                     <source src="" type="video/mp4" />
                 </video>
             </div>
@@ -277,31 +204,6 @@
             <h1 id="videoTitle">جاري تحميل الفيديو...</h1>
             <p id="videoDescription"></p>
         </div>
-    </div>
-
-    <!-- عناصر المشاركة -->
-    <div class="overlay" id="shareOverlay"></div>
-    
-    <div class="share-options" id="shareOptions">
-        <div class="share-option" onclick="shareVia('whatsapp')">
-            <i class="fab fa-whatsapp" style="color: #25D366; font-size: 24px;"></i>
-            <span>مشاركة عبر واتساب</span>
-        </div>
-        <div class="share-option" onclick="shareVia('telegram')">
-            <i class="fab fa-telegram" style="color: #0088cc; font-size: 24px;"></i>
-            <span>مشاركة عبر تيليجرام</span>
-        </div>
-        <div class="share-option" onclick="shareVia('facebook')">
-            <i class="fab fa-facebook" style="color: #1877F2; font-size: 24px;"></i>
-            <span>مشاركة عبر فيسبوك</span>
-        </div>
-        <div class="share-option" onclick="copyLink()">
-            <i class="fas fa-link" style="font-size: 24px;"></i>
-            <span>نسخ الرابط</span>
-        </div>
-        <button class="share-btn" onclick="closeShareOptions()" style="margin-top: 10px; justify-content: center;">
-            إلغاء
-        </button>
     </div>
 
     <!-- Scripts -->
@@ -327,92 +229,43 @@
         const urlParams = new URLSearchParams(window.location.search);
         const videoId = urlParams.get('id');
         let currentVideoData = null;
-
-        // عناصر المشاركة
-        const shareButton = document.getElementById('shareButton');
-        const shareOverlay = document.getElementById('shareOverlay');
-        const shareOptions = document.getElementById('shareOptions');
-
-        // فتح/إغلاق خيارات المشاركة
-        shareButton.addEventListener('click', () => {
-            shareOverlay.classList.add('show');
-            shareOptions.classList.add('show');
-        });
-
-        function closeShareOptions() {
-            shareOverlay.classList.remove('show');
-            shareOptions.classList.remove('show');
-        }
-
-        shareOverlay.addEventListener('click', closeShareOptions);
-
-        // وظائف المشاركة
-        function getCurrentPageURL() {
-            return window.location.href;
-        }
-
-        function shareVia(platform) {
-            const url = getCurrentPageURL();
-            const title = currentVideoData?.title || 'فيديو رائع';
-            
-            switch(platform) {
-                case 'whatsapp':
-                    window.open(`https://wa.me/?text=${encodeURIComponent(title + '\n' + url)}`, '_blank');
-                    break;
-                case 'telegram':
-                    window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`, '_blank');
-                    break;
-                case 'facebook':
-                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-                    break;
-            }
-            
-            closeShareOptions();
-        }
-
-        function copyLink() {
-            const url = getCurrentPageURL();
-            navigator.clipboard.writeText(url).then(() => {
-                alert('تم نسخ الرابط بنجاح!');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                // طريقة بديلة لنسخ الرابط
-                const textarea = document.createElement('textarea');
-                textarea.value = url;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                alert('تم نسخ الرابط بنجاح!');
-            });
-            
-            closeShareOptions();
-        }
+        let player = null;
 
         // تحميل بيانات الفيديو
         if (videoId) {
             db.ref(`mtnbi_video/${videoId}`).once("value").then((snapshot) => {
                 if (snapshot.exists()) {
                     currentVideoData = snapshot.val();
-                    const videoSource = document.querySelector('#player video source');
+                    const videoElement = document.querySelector('#player video');
                     const videoTitle = document.getElementById('videoTitle');
                     const videoDescription = document.getElementById('videoDescription');
 
                     // تحديث الرابط والعنوان والوصف
-                    videoSource.src = currentVideoData.vidlink;
+                    videoElement.src = currentVideoData.vidlink;
                     videoTitle.innerText = currentVideoData.title || "بدون عنوان";
                     videoDescription.innerText = currentVideoData.description || "لا يوجد وصف متاح";
 
-                    // تحميل الفيديو
-                    const player = new Plyr('#player video', {
-                        fullscreen: {
-                            enabled: true,
-                            fallback: true,
-                            iosNative: true
-                        }
+                    // تهيئة مشغل الفيديو
+                    player = new Plyr(videoElement, {
+                        controls: [
+                            'play-large',
+                            'play',
+                            'progress',
+                            'current-time',
+                            'mute',
+                            'volume',
+                            'captions',
+                            'settings',
+                            'pip',
+                            'airplay',
+                            'fullscreen'
+                        ],
+                        fullscreen: { enabled: true, fallback: true, iosNative: true },
+                        ratio: '16:9'
                     });
                     
-                    document.querySelector('#player video').load();
+                    // إعادة تحميل الفيديو بعد تغيير المصدر
+                    videoElement.load();
                 } else {
                     document.getElementById('videoTitle').innerText = "خطأ 404: الفيديو غير موجود";
                     document.getElementById('videoDescription').innerText = "عذراً، الفيديو الذي تبحث عنه غير متوفر أو تم حذفه.";
@@ -426,6 +279,29 @@
             document.getElementById('videoTitle').innerText = "معرف الفيديو غير صحيح";
             document.getElementById('videoDescription').innerText = "الرابط الذي استخدمته لا يحتوي على معرف فيديو صالح.";
         }
+
+        // وظائف المشاركة
+        document.getElementById('shareButton').addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: currentVideoData?.title || 'فيديو رائع',
+                    text: currentVideoData?.description || '',
+                    url: window.location.href
+                }).catch(err => {
+                    console.log('Error sharing:', err);
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                const tempInput = document.createElement('input');
+                document.body.appendChild(tempInput);
+                tempInput.value = url;
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                alert('تم نسخ رابط الفيديو! يمكنك الآن مشاركته.');
+            }
+        });
     </script>
 </body>
 </html>
