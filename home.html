@@ -164,7 +164,7 @@
         }
         
         .quote-text {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: #000000;
             margin-bottom: 10px;
@@ -172,7 +172,7 @@
         }
         
         .quote-author {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--text-color);
             font-style: italic;
         }
@@ -214,6 +214,7 @@
         /* تنسيقات باقي الأقسام */
         .section {
             margin-bottom: 25px;
+            position: relative;
         }
         
         .section-header {
@@ -242,6 +243,7 @@
             gap: 12px;
             padding: 5px 10px;
             scrollbar-width: none;
+            min-height: 240px;
         }
         
         .horizontal-list::-webkit-scrollbar {
@@ -274,6 +276,21 @@
             color: #000;
         }
         
+        .loading-icon {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-size: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             .item {
                 width: 140px;
@@ -292,15 +309,19 @@
             }
             
             .quote-text {
-                font-size: 16px;
+                font-size: 15px;
             }
             
             .quote-author {
-                font-size: 14px;
+                font-size: 13px;
             }
             
             .quotes-slider {
                 min-height: 140px;
+            }
+            
+            .horizontal-list {
+                min-height: 200px;
             }
         }
     </style>
@@ -345,7 +366,7 @@
                 <h2 class="quotes-title">مختارات اليوم</h2>
             </div>
             <div class="quotes-slider" id="quotesSlider">
-                <!-- سيتم ملؤه ديناميكيًا -->
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
             </div>
             <div class="quote-nav" id="quoteNav">
                 <!-- سيتم ملؤه ديناميكيًا -->
@@ -358,7 +379,9 @@
                 <img src="assets/icons/video.png" alt="مرئيات" class="section-icon">
                 <h2 class="section-title">المرئيات</h2>
             </div>
-            <div class="horizontal-list" id="videoList"></div>
+            <div class="horizontal-list" id="videoList">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
         </div>
         
         <div class="section">
@@ -366,7 +389,9 @@
                 <img src="assets/icons/audio.png" alt="صوتيات" class="section-icon">
                 <h2 class="section-title">الصوتيات</h2>
             </div>
-            <div class="horizontal-list" id="audioList"></div>
+            <div class="horizontal-list" id="audioList">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
         </div>
         
         <div class="section">
@@ -374,7 +399,9 @@
                 <img src="assets/icons/book.png" alt="كتب" class="section-icon">
                 <h2 class="section-title">الكتب</h2>
             </div>
-            <div class="horizontal-list" id="bookGrid"></div>
+            <div class="horizontal-list" id="bookGrid">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
         </div>
         
         <div class="section">
@@ -382,7 +409,9 @@
                 <img src="assets/icons/poem.png" alt="أشعار" class="section-icon">
                 <h2 class="section-title">الأشعار</h2>
             </div>
-            <div class="horizontal-list" id="bookList"></div>
+            <div class="horizontal-list" id="bookList">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
         </div>
     </div>
 
@@ -608,10 +637,20 @@
             return div;
         }
 
+        // دالة لإزالة أيقونة التحميل
+        function removeLoadingIcon(elementId) {
+            const element = document.getElementById(elementId);
+            const loadingIcon = element.querySelector('.loading-icon');
+            if (loadingIcon) {
+                loadingIcon.remove();
+            }
+        }
+
         // دالة رئيسية لتحميل المحتوى
         async function loadContent() {
             // تحميل الاقتباسات أولاً
             await loadQuotes();
+            removeLoadingIcon('quotesSlider');
             
             // تحميل المحتوى من Firebase إذا كان متاحاً
             if (db) {
@@ -626,6 +665,7 @@
                             videoList.appendChild(createItem(video, 'video', id));
                         });
                     }
+                    removeLoadingIcon('videoList');
                     
                     // تحميل الصوتيات
                     const audioSnapshot = await db.ref("mtnbi_sound").once("value");
@@ -637,6 +677,7 @@
                             audioList.appendChild(createItem(audio, 'audio', id));
                         });
                     }
+                    removeLoadingIcon('audioList');
                     
                     // تحميل الكتب
                     const bookSnapshot = await db.ref("mtnbi_book").once("value");
@@ -648,6 +689,7 @@
                             bookGrid.appendChild(createItem(book, 'book', id));
                         });
                     }
+                    removeLoadingIcon('bookGrid');
                     
                     // تحميل الأشعار
                     const poemSnapshot = await db.ref("mtnbi_sh3er").once("value");
@@ -666,9 +708,22 @@
                             bookList.appendChild(div);
                         });
                     }
+                    removeLoadingIcon('bookList');
                 } catch (error) {
                     console.error("Error loading content from Firebase:", error);
+                    
+                    // إزالة أيقونات التحميل في حالة الخطأ
+                    removeLoadingIcon('videoList');
+                    removeLoadingIcon('audioList');
+                    removeLoadingIcon('bookGrid');
+                    removeLoadingIcon('bookList');
                 }
+            } else {
+                // إزالة أيقونات التحميل إذا لم يكن Firebase متاحاً
+                removeLoadingIcon('videoList');
+                removeLoadingIcon('audioList');
+                removeLoadingIcon('bookGrid');
+                removeLoadingIcon('bookList');
             }
         }
 
