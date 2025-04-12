@@ -345,7 +345,7 @@
                 <h2 class="quotes-title">مختارات اليوم</h2>
             </div>
             <div class="quotes-slider" id="quotesSlider">
-                <!-- سيتم ملؤه ديناميكيًا من ملف quote.html -->
+                <!-- سيتم ملؤه ديناميكيًا -->
             </div>
             <div class="quote-nav" id="quoteNav">
                 <!-- سيتم ملؤه ديناميكيًا -->
@@ -402,8 +402,14 @@
             appId: "1:866549697398:android:024dd3bf3b81d1adf78857"
         };
         
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.database(app);
+        // Initialize Firebase
+        let db;
+        try {
+            const app = firebase.initializeApp(firebaseConfig);
+            db = firebase.database(app);
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
 
         // متغيرات السلايدر
         let currentQuote = 0;
@@ -411,24 +417,51 @@
         let dots = [];
         let slideInterval;
 
-        // دالة لجلب المحتوى من ملف quote.html
+        // دالة لتحميل الاقتباسات (النسخة المعدلة)
         async function loadQuotes() {
+            const quotesSlider = document.getElementById('quotesSlider');
+            const quoteNav = document.getElementById('quoteNav');
+            
+            // اقتباسات افتراضية في حالة فشل التحميل
+            const defaultQuotes = [
+                {
+                    text: "وما نيل المطالب بالتمني ولكن تؤخذ الدنيا غلابا",
+                    author: "أحمد شوقي"
+                },
+                {
+                    text: "إذا الشعب يوما أراد الحياة فلا بد أن يستجيب القدر",
+                    author: "أبو القاسم الشابي"
+                },
+                {
+                    text: "أنا الذي نظر الأعمى إلى أدبي وأسمعت كلماتي من به صمم",
+                    author: "المتنبي"
+                },
+                {
+                    text: "العلم في الصغر كالنقش على الحجر",
+                    author: "مثل عربي"
+                }
+            ];
+
             try {
+                // محاولة جلب الاقتباسات من ملف quote.html
                 const response = await fetch('quote.html');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch quotes');
+                }
+                
                 const text = await response.text();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
                 
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const quotesElements = Array.from(doc.querySelectorAll('.quote'));
+                const quoteElements = tempDiv.querySelectorAll('.quote');
                 
-                if (quotesElements.length > 0) {
-                    const quotesSlider = document.getElementById('quotesSlider');
-                    const quoteNav = document.getElementById('quoteNav');
-                    
+                if (quoteElements.length > 0) {
+                    // استخدام الاقتباسات من الملف
                     quotesSlider.innerHTML = '';
                     quoteNav.innerHTML = '';
                     
-                    quotesElements.forEach((quote, index) => {
+                    quoteElements.forEach((quote, index) => {
                         quotesSlider.appendChild(quote.cloneNode(true));
                         
                         const dot = document.createElement('span');
@@ -436,20 +469,14 @@
                         dot.addEventListener('click', () => showQuote(index));
                         quoteNav.appendChild(dot);
                     });
-                    
-                    initSlider();
+                } else {
+                    // إذا كان الملف موجوداً ولكن لا يحتوي على اقتباسات
+                    throw new Error('No quotes found in file');
                 }
             } catch (error) {
                 console.error('Error loading quotes:', error);
-                // اقتباسات افتراضية في حالة الخطأ
-                const defaultQuotes = [
-                    {text: "وما نيل المطالب بالتمني ولكن تؤخذ الدنيا غلابا", author: "أحمد شوقي"},
-                    {text: "إذا الشعب يوما أراد الحياة فلا بد أن يستجيب القدر", author: "أبو القاسم الشابي"}
-                ];
                 
-                const quotesSlider = document.getElementById('quotesSlider');
-                const quoteNav = document.getElementById('quoteNav');
-                
+                // استخدام الاقتباسات الافتراضية
                 quotesSlider.innerHTML = '';
                 quoteNav.innerHTML = '';
                 
@@ -467,139 +494,195 @@
                     dot.addEventListener('click', () => showQuote(index));
                     quoteNav.appendChild(dot);
                 });
-                
-                initSlider();
             }
+            
+            // تهيئة السلايدر بعد تحميل الاقتباسات
+            initSlider();
         }
-        
+
+        // دالة لتهيئة السلايدر
         function initSlider() {
             quotes = document.querySelectorAll('#quotesSlider .quote');
             dots = document.querySelectorAll('#quoteNav .quote-dot');
             
             if (quotes.length > 0) {
+                // إظهار أول اقتباس
                 showQuote(0);
+                
+                // بدء التبديل التلقائي
                 startSlideInterval();
             }
         }
         
         function showQuote(index) {
+            // إيقاف المؤقت المؤقت قبل التغيير
             clearInterval(slideInterval);
             
+            // إخفاء جميع الاقتباسات
             quotes.forEach(quote => quote.classList.remove('active'));
+            
+            // إلغاء تنشيط جميع النقاط
             dots.forEach(dot => dot.classList.remove('active'));
             
+            // إظهار الاقتباس المحدد
             quotes[index].classList.add('active');
+            
+            // تنشيط النقطة المقابلة
             dots[index].classList.add('active');
+            
+            // تحديث المؤشر الحالي
             currentQuote = index;
             
+            // إعادة تشغيل المؤقت
             startSlideInterval();
         }
         
         function startSlideInterval() {
-            slideInterval = setInterval(nextQuote, 5000);
+            // التأكد من إيقاف أي مؤقت سابق
+            clearInterval(slideInterval);
+            
+            // بدء مؤقت جديد للتبديل التلقائي
+            slideInterval = setInterval(() => {
+                nextQuote();
+            }, 5000);
         }
         
         function nextQuote() {
-            let nextIndex = (currentQuote + 1) % quotes.length;
+            const nextIndex = (currentQuote + 1) % quotes.length;
             showQuote(nextIndex);
         }
 
         // دالة لتحميل صفحة البحث
         async function loadSearchPage() {
+            const searchContainer = document.getElementById('searchContainer');
+            const mainContent = document.getElementById('mainContent');
+            
             try {
                 const response = await fetch('search.html');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load search page');
+                }
+                
                 const html = await response.text();
-                document.getElementById('searchContainer').innerHTML = html;
-                document.getElementById('searchContainer').style.display = 'block';
-                document.getElementById('mainContent').style.display = 'none';
+                searchContainer.innerHTML = html;
+                searchContainer.style.display = 'block';
+                mainContent.style.display = 'none';
             } catch (error) {
                 console.error('Error loading search page:', error);
-                document.getElementById('searchContainer').innerHTML = '<p>حدث خطأ أثناء تحميل صفحة البحث</p>';
-                document.getElementById('searchContainer').style.display = 'block';
+                searchContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h3>حدث خطأ في تحميل صفحة البحث</h3>
+                        <button onclick="hideSearch()" style="
+                            background-color: var(--primary-color);
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            margin-top: 15px;
+                        ">
+                            العودة
+                        </button>
+                    </div>
+                `;
+                searchContainer.style.display = 'block';
             }
         }
 
-        // دالة لإخفاء البحث
+        // دالة لإخفاء صفحة البحث
         function hideSearch() {
             document.getElementById('searchContainer').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
         }
 
-        // دوال تحميل المحتوى
+        // دالة لإنشاء عنصر في القوائم
         function createItem(item, type, id) {
             const div = document.createElement('div');
             div.className = 'item ' + type + '-item';
             div.innerHTML = `
                 <a href="${type}.html?id=${id}">
-                    <img src="${item.image}" alt="${item.title}">
-                    <div class="item-title">${item.title}</div>
+                    <img src="${item.image || 'assets/images/default.jpg'}" alt="${item.title || 'عنصر بدون عنوان'}">
+                    <div class="item-title">${item.title || 'عنصر بدون عنوان'}</div>
                 </a>
             `;
             return div;
         }
 
-        function loadContent() {
-            // تحميل المرئيات
-            db.ref("mtnbi_video").once("value", snapshot => {
-                const videos = snapshot.val();
-                if (videos) {
-                    Object.entries(videos).forEach(([id, video]) => {
-                        document.getElementById('videoList').appendChild(createItem(video, 'video', id));
-                    });
-                }
-            });
+        // دالة رئيسية لتحميل المحتوى
+        async function loadContent() {
+            // تحميل الاقتباسات أولاً
+            await loadQuotes();
             
-            // تحميل الصوتيات
-            db.ref("mtnbi_sound").once("value", snapshot => {
-                const audios = snapshot.val();
-                if (audios) {
-                    Object.entries(audios).forEach(([id, audio]) => {
-                        document.getElementById('audioList').appendChild(createItem(audio, 'audio', id));
-                    });
+            // تحميل المحتوى من Firebase إذا كان متاحاً
+            if (db) {
+                try {
+                    // تحميل المرئيات
+                    const videoSnapshot = await db.ref("mtnbi_video").once("value");
+                    const videos = videoSnapshot.val();
+                    if (videos) {
+                        const videoList = document.getElementById('videoList');
+                        videoList.innerHTML = '';
+                        Object.entries(videos).forEach(([id, video]) => {
+                            videoList.appendChild(createItem(video, 'video', id));
+                        });
+                    }
+                    
+                    // تحميل الصوتيات
+                    const audioSnapshot = await db.ref("mtnbi_sound").once("value");
+                    const audios = audioSnapshot.val();
+                    if (audios) {
+                        const audioList = document.getElementById('audioList');
+                        audioList.innerHTML = '';
+                        Object.entries(audios).forEach(([id, audio]) => {
+                            audioList.appendChild(createItem(audio, 'audio', id));
+                        });
+                    }
+                    
+                    // تحميل الكتب
+                    const bookSnapshot = await db.ref("mtnbi_book").once("value");
+                    const books = bookSnapshot.val();
+                    if (books) {
+                        const bookGrid = document.getElementById('bookGrid');
+                        bookGrid.innerHTML = '';
+                        Object.entries(books).forEach(([id, book]) => {
+                            bookGrid.appendChild(createItem(book, 'book', id));
+                        });
+                    }
+                    
+                    // تحميل الأشعار
+                    const poemSnapshot = await db.ref("mtnbi_sh3er").once("value");
+                    const poems = poemSnapshot.val();
+                    if (poems) {
+                        const bookList = document.getElementById('bookList');
+                        bookList.innerHTML = '';
+                        Object.entries(poems).forEach(([id, poem]) => {
+                            const div = document.createElement('div');
+                            div.className = 'item';
+                            div.innerHTML = `
+                                <a href="poem.html?id=${id}">
+                                    <div class="item-title">${poem.title || 'شعر بدون عنوان'}</div>
+                                </a>
+                            `;
+                            bookList.appendChild(div);
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error loading content from Firebase:", error);
                 }
-            });
-            
-            // تحميل الكتب
-            db.ref("mtnbi_book").once("value", snapshot => {
-                const books = snapshot.val();
-                if (books) {
-                    Object.entries(books).forEach(([id, book]) => {
-                        document.getElementById('bookGrid').appendChild(createItem(book, 'book', id));
-                    });
-                }
-            });
-            
-            // تحميل الأشعار
-            db.ref("mtnbi_sh3er").once("value", snapshot => {
-                const poems = snapshot.val();
-                if (poems) {
-                    Object.entries(poems).forEach(([id, poem]) => {
-                        const div = document.createElement('div');
-                        div.className = 'item';
-                        div.innerHTML = `
-                            <a href="poem.html?id=${id}">
-                                <div class="item-title">${poem.title}</div>
-                            </a>
-                        `;
-                        document.getElementById('bookList').appendChild(div);
-                    });
-                }
-            });
-            
-            // تحميل الاقتباسات
-            loadQuotes();
+            }
         }
 
-        // تهيئة الصفحة
+        // عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', () => {
+            // تحميل المحتوى الرئيسي
             loadContent();
             
             // إضافة حدث النقر على أيقونة البحث
             document.getElementById('searchBtn').addEventListener('click', loadSearchPage);
-            
-            // يمكنك إضافة زر إغلاق في صفحة البحث يتصل بهذه الدالة
-            // document.getElementById('closeSearch').addEventListener('click', hideSearch);
         });
+
+        // جعل دالة hideSearch متاحة globally للاستخدام من ملف search.html
+        window.hideSearch = hideSearch;
     </script>
 </body>
 </html>
