@@ -113,7 +113,7 @@
             padding: 0 1px;
         }
         
-        /* تنسيقات سلايد بار الاقتباسات */
+        /* تنسيقات سلايد بار الاقتباسات - معدل ليكون ثابت الارتفاع */
         .quotes-section {
             margin-bottom: 25px;
             padding: 0 10px;
@@ -145,7 +145,7 @@
             padding: 20px;
             overflow: hidden;
             position: relative;
-            min-height: 150px;
+            height: 180px; /* ارتفاع ثابت */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -157,6 +157,10 @@
             display: none;
             animation: fadeIn 1.5s;
             width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         
         .quote.active {
@@ -199,16 +203,6 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-        }
-        
-        /* تنسيقات صفحة البحث */
-        #searchContainer {
-            display: none;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            margin: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         /* تنسيقات باقي الأقسام */
@@ -300,7 +294,7 @@
             }
             
             .quotes-slider {
-                min-height: 140px;
+                height: 160px; /* ارتفاع ثابت للجوال */
             }
         }
     </style>
@@ -309,10 +303,10 @@
     <!-- NavBar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <!-- أيقونة البحث -->
-            <div class="search-icon" id="searchBtn">
+            <!-- أيقونة البحث مع رابط لصفحة البحث -->
+            <a href="search.html" class="search-icon">
                 <i class="fas fa-search"></i>
-            </div>
+            </a>
             
             <!-- الشعار في الوسط -->
             <div class="logo">
@@ -332,9 +326,6 @@
             </div>
         </div>
     </nav>
-
-    <!-- حاوية البحث -->
-    <div id="searchContainer"></div>
 
     <!-- المحتوى الرئيسي -->
     <div class="container" id="mainContent">
@@ -417,12 +408,12 @@
         let dots = [];
         let slideInterval;
 
-        // دالة لتحميل الاقتباسات (النسخة المعدلة)
+        // دالة لتحميل الاقتباسات
         async function loadQuotes() {
             const quotesSlider = document.getElementById('quotesSlider');
             const quoteNav = document.getElementById('quoteNav');
             
-            // اقتباسات افتراضية في حالة فشل التحميل
+            // اقتباسات افتراضية
             const defaultQuotes = [
                 {
                     text: "وما نيل المطالب بالتمني ولكن تؤخذ الدنيا غلابا",
@@ -443,7 +434,6 @@
             ];
 
             try {
-                // محاولة جلب الاقتباسات من ملف quote.html
                 const response = await fetch('quote.html');
                 
                 if (!response.ok) {
@@ -457,7 +447,6 @@
                 const quoteElements = tempDiv.querySelectorAll('.quote');
                 
                 if (quoteElements.length > 0) {
-                    // استخدام الاقتباسات من الملف
                     quotesSlider.innerHTML = '';
                     quoteNav.innerHTML = '';
                     
@@ -470,7 +459,6 @@
                         quoteNav.appendChild(dot);
                     });
                 } else {
-                    // إذا كان الملف موجوداً ولكن لا يحتوي على اقتباسات
                     throw new Error('No quotes found in file');
                 }
             } catch (error) {
@@ -496,7 +484,6 @@
                 });
             }
             
-            // تهيئة السلايدر بعد تحميل الاقتباسات
             initSlider();
         }
 
@@ -506,42 +493,26 @@
             dots = document.querySelectorAll('#quoteNav .quote-dot');
             
             if (quotes.length > 0) {
-                // إظهار أول اقتباس
                 showQuote(0);
-                
-                // بدء التبديل التلقائي
                 startSlideInterval();
             }
         }
         
         function showQuote(index) {
-            // إيقاف المؤقت المؤقت قبل التغيير
             clearInterval(slideInterval);
             
-            // إخفاء جميع الاقتباسات
             quotes.forEach(quote => quote.classList.remove('active'));
-            
-            // إلغاء تنشيط جميع النقاط
             dots.forEach(dot => dot.classList.remove('active'));
             
-            // إظهار الاقتباس المحدد
             quotes[index].classList.add('active');
-            
-            // تنشيط النقطة المقابلة
             dots[index].classList.add('active');
-            
-            // تحديث المؤشر الحالي
             currentQuote = index;
             
-            // إعادة تشغيل المؤقت
             startSlideInterval();
         }
         
         function startSlideInterval() {
-            // التأكد من إيقاف أي مؤقت سابق
             clearInterval(slideInterval);
-            
-            // بدء مؤقت جديد للتبديل التلقائي
             slideInterval = setInterval(() => {
                 nextQuote();
             }, 5000);
@@ -550,49 +521,6 @@
         function nextQuote() {
             const nextIndex = (currentQuote + 1) % quotes.length;
             showQuote(nextIndex);
-        }
-
-        // دالة لتحميل صفحة البحث
-        async function loadSearchPage() {
-            const searchContainer = document.getElementById('searchContainer');
-            const mainContent = document.getElementById('mainContent');
-            
-            try {
-                const response = await fetch('search.html');
-                
-                if (!response.ok) {
-                    throw new Error('Failed to load search page');
-                }
-                
-                const html = await response.text();
-                searchContainer.innerHTML = html;
-                searchContainer.style.display = 'block';
-                mainContent.style.display = 'none';
-            } catch (error) {
-                console.error('Error loading search page:', error);
-                searchContainer.innerHTML = `
-                    <div style="text-align: center; padding: 20px;">
-                        <h3>حدث خطأ في تحميل صفحة البحث</h3>
-                        <button onclick="hideSearch()" style="
-                            background-color: var(--primary-color);
-                            border: none;
-                            padding: 10px 20px;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            margin-top: 15px;
-                        ">
-                            العودة
-                        </button>
-                    </div>
-                `;
-                searchContainer.style.display = 'block';
-            }
-        }
-
-        // دالة لإخفاء صفحة البحث
-        function hideSearch() {
-            document.getElementById('searchContainer').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
         }
 
         // دالة لإنشاء عنصر في القوائم
@@ -610,10 +538,8 @@
 
         // دالة رئيسية لتحميل المحتوى
         async function loadContent() {
-            // تحميل الاقتباسات أولاً
             await loadQuotes();
             
-            // تحميل المحتوى من Firebase إذا كان متاحاً
             if (db) {
                 try {
                     // تحميل المرئيات
@@ -673,16 +599,7 @@
         }
 
         // عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            // تحميل المحتوى الرئيسي
-            loadContent();
-            
-            // إضافة حدث النقر على أيقونة البحث
-            document.getElementById('searchBtn').addEventListener('click', loadSearchPage);
-        });
-
-        // جعل دالة hideSearch متاحة globally للاستخدام من ملف search.html
-        window.hideSearch = hideSearch;
+        document.addEventListener('DOMContentLoaded', loadContent);
     </script>
 </body>
 </html>
