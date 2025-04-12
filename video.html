@@ -118,7 +118,9 @@
         .video-info {
             width: 100%;
             max-width: 800px;
-            padding: 0 15px;
+            padding: 0 20px; /* زيادة المسافة الجانبية للنص */
+            margin-top: 15px;
+            box-sizing: border-box;
         }
         
         .video-actions {
@@ -128,7 +130,8 @@
             margin: 15px 0;
             width: 100%;
             max-width: 800px;
-            padding: 0 15px;
+            padding: 0 20px; /* زيادة المسافة الجانبية */
+            box-sizing: border-box;
         }
         
         .share-btn {
@@ -150,6 +153,55 @@
             background-color: #c0a57b;
         }
         
+        /* قائمة المشاركة */
+        .share-options {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1001;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .share-options.show {
+            display: flex;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            transition: background-color 0.2s;
+        }
+        
+        .share-option:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .overlay.show {
+            display: block;
+        }
+        
         #videoTitle {
             margin: 15px 0 10px 0;
             font-size: 22px;
@@ -162,6 +214,30 @@
             font-size: 16px;
             color: var(--secondary-text);
             line-height: 1.6;
+            padding: 0 5px; /* مسافة داخلية للنص */
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .video-info, .video-actions {
+                padding: 0 25px; /* مسافة أكبر للشاشات الكبيرة */
+            }
+            
+            .share-options {
+                max-width: 400px;
+                margin: 0 auto;
+                bottom: 50%;
+                transform: translateY(50%);
+                border-radius: 15px;
+            }
         }
     </style>
 </head>
@@ -206,6 +282,35 @@
         </div>
     </div>
 
+    <!-- عناصر المشاركة -->
+    <div class="overlay" id="shareOverlay"></div>
+    
+    <div class="share-options" id="shareOptions">
+        <div class="share-option" onclick="shareVia('whatsapp')">
+            <i class="fab fa-whatsapp" style="color: #25D366; font-size: 24px;"></i>
+            <span>مشاركة عبر واتساب</span>
+        </div>
+        <div class="share-option" onclick="shareVia('telegram')">
+            <i class="fab fa-telegram" style="color: #0088cc; font-size: 24px;"></i>
+            <span>مشاركة عبر تيليجرام</span>
+        </div>
+        <div class="share-option" onclick="shareVia('x')">
+            <i class="fab fa-x-twitter" style="color: #000; font-size: 24px;"></i>
+            <span>مشاركة عبر X</span>
+        </div>
+        <div class="share-option" onclick="shareVia('facebook')">
+            <i class="fab fa-facebook" style="color: #1877F2; font-size: 24px;"></i>
+            <span>مشاركة عبر فيسبوك</span>
+        </div>
+        <div class="share-option" onclick="copyLink()">
+            <i class="fas fa-link" style="font-size: 24px;"></i>
+            <span>نسخ الرابط</span>
+        </div>
+        <button class="share-btn" onclick="closeShareOptions()" style="margin-top: 10px; justify-content: center;">
+            إلغاء
+        </button>
+    </div>
+
     <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
@@ -230,6 +335,71 @@
         const videoId = urlParams.get('id');
         let currentVideoData = null;
         let player = null;
+
+        // عناصر المشاركة
+        const shareButton = document.getElementById('shareButton');
+        const shareOverlay = document.getElementById('shareOverlay');
+        const shareOptions = document.getElementById('shareOptions');
+
+        // فتح/إغلاق خيارات المشاركة
+        shareButton.addEventListener('click', () => {
+            shareOverlay.classList.add('show');
+            shareOptions.classList.add('show');
+        });
+
+        function closeShareOptions() {
+            shareOverlay.classList.remove('show');
+            shareOptions.classList.remove('show');
+        }
+
+        shareOverlay.addEventListener('click', closeShareOptions);
+
+        // وظائف المشاركة
+        function getCurrentPageURL() {
+            return window.location.href;
+        }
+
+        function shareVia(platform) {
+            const url = getCurrentPageURL();
+            const title = currentVideoData?.title || 'فيديو رائع';
+            const text = currentVideoData?.description || 'شاهد هذا الفيديو الرائع';
+            
+            switch(platform) {
+                case 'whatsapp':
+                    window.open(`https://wa.me/?text=${encodeURIComponent(title + '\n\n' + text + '\n\n' + url)}`, '_blank');
+                    break;
+                case 'telegram':
+                    window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title + '\n\n' + text)}`, '_blank');
+                    break;
+                case 'x':
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title + '\n\n' + url)}`, '_blank');
+                    break;
+                case 'facebook':
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title)}`, '_blank');
+                    break;
+            }
+            
+            closeShareOptions();
+        }
+
+        function copyLink() {
+            const url = getCurrentPageURL();
+            navigator.clipboard.writeText(url).then(() => {
+                alert('تم نسخ الرابط بنجاح!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // طريقة بديلة لنسخ الرابط
+                const textarea = document.createElement('textarea');
+                textarea.value = url;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('تم نسخ الرابط بنجاح!');
+            });
+            
+            closeShareOptions();
+        }
 
         // تحميل بيانات الفيديو
         if (videoId) {
@@ -279,29 +449,6 @@
             document.getElementById('videoTitle').innerText = "معرف الفيديو غير صحيح";
             document.getElementById('videoDescription').innerText = "الرابط الذي استخدمته لا يحتوي على معرف فيديو صالح.";
         }
-
-        // وظائف المشاركة
-        document.getElementById('shareButton').addEventListener('click', function() {
-            if (navigator.share) {
-                navigator.share({
-                    title: currentVideoData?.title || 'فيديو رائع',
-                    text: currentVideoData?.description || '',
-                    url: window.location.href
-                }).catch(err => {
-                    console.log('Error sharing:', err);
-                });
-            } else {
-                // Fallback for browsers that don't support Web Share API
-                const url = window.location.href;
-                const tempInput = document.createElement('input');
-                document.body.appendChild(tempInput);
-                tempInput.value = url;
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-                alert('تم نسخ رابط الفيديو! يمكنك الآن مشاركته.');
-            }
-        });
     </script>
 </body>
 </html>
