@@ -113,7 +113,7 @@
             padding: 0 1px;
         }
         
-        /* تنسيقات سلايد بار الاقتباسات - معدل ليكون ثابت الارتفاع */
+        /* تنسيقات سلايد بار الاقتباسات */
         .quotes-section {
             margin-bottom: 25px;
             padding: 0 10px;
@@ -205,6 +205,16 @@
             to { opacity: 1; }
         }
         
+        /* تنسيقات صفحة البحث */
+        #searchContainer {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            margin: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
         /* تنسيقات باقي الأقسام */
         .section {
             margin-bottom: 25px;
@@ -268,6 +278,22 @@
             color: #000;
         }
         
+        /* مؤشر التحميل */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--desert-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             .item {
                 width: 140px;
@@ -294,7 +320,7 @@
             }
             
             .quotes-slider {
-                height: 160px; /* ارتفاع ثابت للجوال */
+                height: 160px;
             }
         }
     </style>
@@ -336,11 +362,9 @@
                 <h2 class="quotes-title">مختارات اليوم</h2>
             </div>
             <div class="quotes-slider" id="quotesSlider">
-                <!-- سيتم ملؤه ديناميكيًا -->
+                <div class="loader"></div>
             </div>
-            <div class="quote-nav" id="quoteNav">
-                <!-- سيتم ملؤه ديناميكيًا -->
-            </div>
+            <div class="quote-nav" id="quoteNav"></div>
         </div>
         
         <!-- باقي الأقسام -->
@@ -349,7 +373,9 @@
                 <img src="assets/icons/video.png" alt="مرئيات" class="section-icon">
                 <h2 class="section-title">المرئيات</h2>
             </div>
-            <div class="horizontal-list" id="videoList"></div>
+            <div class="horizontal-list" id="videoList">
+                <div class="loader"></div>
+            </div>
         </div>
         
         <div class="section">
@@ -357,7 +383,9 @@
                 <img src="assets/icons/audio.png" alt="صوتيات" class="section-icon">
                 <h2 class="section-title">الصوتيات</h2>
             </div>
-            <div class="horizontal-list" id="audioList"></div>
+            <div class="horizontal-list" id="audioList">
+                <div class="loader"></div>
+            </div>
         </div>
         
         <div class="section">
@@ -365,7 +393,9 @@
                 <img src="assets/icons/book.png" alt="كتب" class="section-icon">
                 <h2 class="section-title">الكتب</h2>
             </div>
-            <div class="horizontal-list" id="bookGrid"></div>
+            <div class="horizontal-list" id="bookGrid">
+                <div class="loader"></div>
+            </div>
         </div>
         
         <div class="section">
@@ -373,7 +403,9 @@
                 <img src="assets/icons/poem.png" alt="أشعار" class="section-icon">
                 <h2 class="section-title">الأشعار</h2>
             </div>
-            <div class="horizontal-list" id="bookList"></div>
+            <div class="horizontal-list" id="bookList">
+                <div class="loader"></div>
+            </div>
         </div>
     </div>
 
@@ -398,8 +430,10 @@
         try {
             const app = firebase.initializeApp(firebaseConfig);
             db = firebase.database(app);
+            console.log("تم الاتصال بنجاح بـ Firebase");
         } catch (error) {
-            console.error("Firebase initialization error:", error);
+            console.error("خطأ في تهيئة Firebase:", error);
+            showError("حدث خطأ في الاتصال بقاعدة البيانات");
         }
 
         // متغيرات السلايدر
@@ -408,12 +442,25 @@
         let dots = [];
         let slideInterval;
 
-        // دالة لتحميل الاقتباسات
+        // دالة لعرض رسائل الخطأ
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.color = 'red';
+            errorDiv.style.textAlign = 'center';
+            errorDiv.style.padding = '10px';
+            errorDiv.style.margin = '10px';
+            errorDiv.style.border = '1px solid red';
+            errorDiv.style.borderRadius = '5px';
+            errorDiv.textContent = message;
+            document.getElementById('mainContent').prepend(errorDiv);
+        }
+
+        // دالة محسنة لجلب الاقتباسات
         async function loadQuotes() {
             const quotesSlider = document.getElementById('quotesSlider');
             const quoteNav = document.getElementById('quoteNav');
             
-            // اقتباسات افتراضية
+            // اقتباسات افتراضية احتياطية
             const defaultQuotes = [
                 {
                     text: "وما نيل المطالب بالتمني ولكن تؤخذ الدنيا غلابا",
@@ -434,37 +481,64 @@
             ];
 
             try {
-                const response = await fetch('quote.html');
+                // 1. جلب الملف مع إضافة طابع زمني لتجنب التخزين المؤقت
+                const response = await fetch('quote.html?t=' + new Date().getTime());
                 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch quotes');
+                    throw new Error(`خطأ في الشبكة: ${response.status}`);
+                }
+                
+                // 2. التحقق من نوع المحتوى
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('text/html')) {
+                    throw new Error('نوع الملف غير متوقع');
                 }
                 
                 const text = await response.text();
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = text;
                 
-                const quoteElements = tempDiv.querySelectorAll('.quote');
+                // 3. إنشاء عنصر مؤقت لتحليل HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
                 
-                if (quoteElements.length > 0) {
-                    quotesSlider.innerHTML = '';
-                    quoteNav.innerHTML = '';
-                    
-                    quoteElements.forEach((quote, index) => {
-                        quotesSlider.appendChild(quote.cloneNode(true));
-                        
-                        const dot = document.createElement('span');
-                        dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
-                        dot.addEventListener('click', () => showQuote(index));
-                        quoteNav.appendChild(dot);
-                    });
-                } else {
-                    throw new Error('No quotes found in file');
+                // 4. البحث عن الاقتباسات مع معالجة أكثر قوة
+                const quoteElements = doc.querySelectorAll('.quote');
+                
+                if (quoteElements.length === 0) {
+                    throw new Error('لم يتم العثور على اقتباسات في الملف');
                 }
-            } catch (error) {
-                console.error('Error loading quotes:', error);
                 
-                // استخدام الاقتباسات الافتراضية
+                // 5. مسح المحتوى الحالي
+                quotesSlider.innerHTML = '';
+                quoteNav.innerHTML = '';
+                
+                // 6. إضافة الاقتباسات الجديدة
+                quoteElements.forEach((quote, index) => {
+                    // نسخ العنصر مع جميع خصائصه
+                    const quoteClone = quote.cloneNode(true);
+                    
+                    // التأكد من وجود العناصر المطلوبة
+                    const quoteText = quoteClone.querySelector('.quote-text');
+                    const quoteAuthor = quoteClone.querySelector('.quote-author');
+                    
+                    if (!quoteText || !quoteAuthor) {
+                        console.warn('هيكل الاقتباس غير كامل', quoteClone);
+                        return;
+                    }
+                    
+                    quotesSlider.appendChild(quoteClone);
+                    
+                    // إضافة نقاط التنقل
+                    const dot = document.createElement('span');
+                    dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
+                    dot.addEventListener('click', () => showQuote(index));
+                    quoteNav.appendChild(dot);
+                });
+                
+            } catch (error) {
+                console.error('حدث خطأ في تحميل الاقتباسات:', error);
+                showError('حدث خطأ في تحميل الاقتباسات، جاري عرض اقتباسات افتراضية');
+                
+                // استخدام الاقتباسات الافتراضية في حالة الخطأ
                 quotesSlider.innerHTML = '';
                 quoteNav.innerHTML = '';
                 
@@ -484,6 +558,7 @@
                 });
             }
             
+            // تهيئة السلايدر بعد التحميل
             initSlider();
         }
 
@@ -495,6 +570,8 @@
             if (quotes.length > 0) {
                 showQuote(0);
                 startSlideInterval();
+            } else {
+                showError('لا توجد اقتباسات متاحة');
             }
         }
         
@@ -529,72 +606,58 @@
             div.className = 'item ' + type + '-item';
             div.innerHTML = `
                 <a href="${type}.html?id=${id}">
-                    <img src="${item.image || 'assets/images/default.jpg'}" alt="${item.title || 'عنصر بدون عنوان'}">
+                    <img src="${item.image || 'assets/images/default.jpg'}" 
+                         alt="${item.title || 'عنصر بدون عنوان'}"
+                         onerror="this.src='assets/images/default.jpg'">
                     <div class="item-title">${item.title || 'عنصر بدون عنوان'}</div>
                 </a>
             `;
             return div;
         }
 
+        // دالة لتحميل المحتوى من Firebase
+        async function loadFirebaseContent(refName, elementId, type) {
+            try {
+                const snapshot = await db.ref(refName).once('value');
+                const data = snapshot.val();
+                
+                const element = document.getElementById(elementId);
+                element.innerHTML = '';
+                
+                if (data) {
+                    Object.entries(data).forEach(([id, item]) => {
+                        element.appendChild(createItem(item, type, id));
+                    });
+                } else {
+                    element.innerHTML = '<p style="text-align:center;color:#666;">لا توجد بيانات متاحة</p>';
+                }
+            } catch (error) {
+                console.error(`خطأ في تحميل ${refName}:`, error);
+                document.getElementById(elementId).innerHTML = 
+                    `<p style="text-align:center;color:red;">حدث خطأ في تحميل البيانات</p>`;
+            }
+        }
+
         // دالة رئيسية لتحميل المحتوى
         async function loadContent() {
-            await loadQuotes();
-            
-            if (db) {
-                try {
-                    // تحميل المرئيات
-                    const videoSnapshot = await db.ref("mtnbi_video").once("value");
-                    const videos = videoSnapshot.val();
-                    if (videos) {
-                        const videoList = document.getElementById('videoList');
-                        videoList.innerHTML = '';
-                        Object.entries(videos).forEach(([id, video]) => {
-                            videoList.appendChild(createItem(video, 'video', id));
-                        });
-                    }
-                    
-                    // تحميل الصوتيات
-                    const audioSnapshot = await db.ref("mtnbi_sound").once("value");
-                    const audios = audioSnapshot.val();
-                    if (audios) {
-                        const audioList = document.getElementById('audioList');
-                        audioList.innerHTML = '';
-                        Object.entries(audios).forEach(([id, audio]) => {
-                            audioList.appendChild(createItem(audio, 'audio', id));
-                        });
-                    }
-                    
-                    // تحميل الكتب
-                    const bookSnapshot = await db.ref("mtnbi_book").once("value");
-                    const books = bookSnapshot.val();
-                    if (books) {
-                        const bookGrid = document.getElementById('bookGrid');
-                        bookGrid.innerHTML = '';
-                        Object.entries(books).forEach(([id, book]) => {
-                            bookGrid.appendChild(createItem(book, 'book', id));
-                        });
-                    }
-                    
-                    // تحميل الأشعار
-                    const poemSnapshot = await db.ref("mtnbi_sh3er").once("value");
-                    const poems = poemSnapshot.val();
-                    if (poems) {
-                        const bookList = document.getElementById('bookList');
-                        bookList.innerHTML = '';
-                        Object.entries(poems).forEach(([id, poem]) => {
-                            const div = document.createElement('div');
-                            div.className = 'item';
-                            div.innerHTML = `
-                                <a href="poem.html?id=${id}">
-                                    <div class="item-title">${poem.title || 'شعر بدون عنوان'}</div>
-                                </a>
-                            `;
-                            bookList.appendChild(div);
-                        });
-                    }
-                } catch (error) {
-                    console.error("Error loading content from Firebase:", error);
+            try {
+                // تحميل الاقتباسات أولاً
+                await loadQuotes();
+                
+                // تحميل المحتوى من Firebase إذا كان متاحاً
+                if (db) {
+                    await Promise.all([
+                        loadFirebaseContent("mtnbi_video", "videoList", "video"),
+                        loadFirebaseContent("mtnbi_sound", "audioList", "audio"),
+                        loadFirebaseContent("mtnbi_book", "bookGrid", "book"),
+                        loadFirebaseContent("mtnbi_sh3er", "bookList", "poem")
+                    ]);
+                } else {
+                    showError("تعذر الاتصال بقاعدة البيانات");
                 }
+            } catch (error) {
+                console.error("حدث خطأ غير متوقع:", error);
+                showError("حدث خطأ في تحميل المحتوى");
             }
         }
 
