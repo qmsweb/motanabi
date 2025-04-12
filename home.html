@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* تنسيقات NavBar */
         :root {
             --primary-color: #d2b48c;
             --text-color: #000000;
@@ -41,7 +40,6 @@
             padding: 0 15px;
         }
         
-        /* تنسيقات القائمة المنسدلة */
         .dropdown {
             position: relative;
         }
@@ -77,7 +75,6 @@
             display: block;
         }
         
-        /* تنسيقات الشعار */
         .logo {
             flex-grow: 1;
             text-align: center;
@@ -90,20 +87,19 @@
             margin: 0 auto;
         }
         
-        /* تنسيقات أيقونة البحث */
         .search-icon {
             font-size: 20px;
             color: var(--text-color);
             padding: 5px 10px;
+            cursor: pointer;
         }
         
-        /* تنسيقات الصفحة الرئيسية */
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--light-bg);
             color: var(--text-color);
             margin: 0;
-            padding-top: 90px; /* زيادة المسافة من الأعلى */
+            padding-top: 90px;
             direction: rtl;
         }
         
@@ -149,7 +145,7 @@
             padding: 20px;
             overflow: hidden;
             position: relative;
-            min-height: 150px; /* ارتفاع ثابت */
+            min-height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -169,8 +165,8 @@
         
         .quote-text {
             font-size: 18px;
-            font-weight: 700; /* عريض جداً */
-            color: #000000; /* أسود */
+            font-weight: 700;
+            color: #000000;
             margin-bottom: 10px;
             line-height: 1.6;
         }
@@ -203,6 +199,16 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+        
+        /* تنسيقات صفحة البحث */
+        #searchContainer {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            margin: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         /* تنسيقات باقي الأقسام */
@@ -294,7 +300,7 @@
             }
             
             .quotes-slider {
-                min-height: 140px; /* ارتفاع ثابت للجوال */
+                min-height: 140px;
             }
         }
     </style>
@@ -303,8 +309,8 @@
     <!-- NavBar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <!-- أيقونة البحث في اليسار -->
-            <div class="search-icon">
+            <!-- أيقونة البحث -->
+            <div class="search-icon" id="searchBtn">
                 <i class="fas fa-search"></i>
             </div>
             
@@ -327,7 +333,11 @@
         </div>
     </nav>
 
-    <div class="container">
+    <!-- حاوية البحث -->
+    <div id="searchContainer"></div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container" id="mainContent">
         <!-- قسم مختارات اليوم -->
         <div class="quotes-section">
             <div class="quotes-header">
@@ -335,28 +345,10 @@
                 <h2 class="quotes-title">مختارات اليوم</h2>
             </div>
             <div class="quotes-slider" id="quotesSlider">
-                <div class="quote active">
-                    <p class="quote-text">"وما نيل المطالب بالتمني ولكن تؤخذ الدنيا غلابا"</p>
-                    <p class="quote-author">— أحمد شوقي</p>
-                </div>
-                <div class="quote">
-                    <p class="quote-text">"إذا الشعب يوما أراد الحياة فلا بد أن يستجيب القدر"</p>
-                    <p class="quote-author">— أبو القاسم الشابي</p>
-                </div>
-                <div class="quote">
-                    <p class="quote-text">"أنا الذي نظر الأعمى إلى أدبي وأسمعت كلماتي من به صمم"</p>
-                    <p class="quote-author">— المتنبي</p>
-                </div>
-                <div class="quote">
-                    <p class="quote-text">"العلم في الصغر كالنقش على الحجر"</p>
-                    <p class="quote-author">— مثل عربي</p>
-                </div>
+                <!-- سيتم ملؤه ديناميكيًا من ملف quote.html -->
             </div>
             <div class="quote-nav" id="quoteNav">
-                <span class="quote-dot active"></span>
-                <span class="quote-dot"></span>
-                <span class="quote-dot"></span>
-                <span class="quote-dot"></span>
+                <!-- سيتم ملؤه ديناميكيًا -->
             </div>
         </div>
         
@@ -413,32 +405,125 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.database(app);
 
-        // سكربت السلايدر للاقتباسات
+        // متغيرات السلايدر
         let currentQuote = 0;
-        const quotes = document.querySelectorAll('.quote');
-        const dots = document.querySelectorAll('.quote-dot');
+        let quotes = [];
+        let dots = [];
+        let slideInterval;
+
+        // دالة لجلب المحتوى من ملف quote.html
+        async function loadQuotes() {
+            try {
+                const response = await fetch('quote.html');
+                const text = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const quotesElements = Array.from(doc.querySelectorAll('.quote'));
+                
+                if (quotesElements.length > 0) {
+                    const quotesSlider = document.getElementById('quotesSlider');
+                    const quoteNav = document.getElementById('quoteNav');
+                    
+                    quotesSlider.innerHTML = '';
+                    quoteNav.innerHTML = '';
+                    
+                    quotesElements.forEach((quote, index) => {
+                        quotesSlider.appendChild(quote.cloneNode(true));
+                        
+                        const dot = document.createElement('span');
+                        dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
+                        dot.addEventListener('click', () => showQuote(index));
+                        quoteNav.appendChild(dot);
+                    });
+                    
+                    initSlider();
+                }
+            } catch (error) {
+                console.error('Error loading quotes:', error);
+                // اقتباسات افتراضية في حالة الخطأ
+                const defaultQuotes = [
+                    {text: "وما نيل المطالب بالتمني ولكن تؤخذ الدنيا غلابا", author: "أحمد شوقي"},
+                    {text: "إذا الشعب يوما أراد الحياة فلا بد أن يستجيب القدر", author: "أبو القاسم الشابي"}
+                ];
+                
+                const quotesSlider = document.getElementById('quotesSlider');
+                const quoteNav = document.getElementById('quoteNav');
+                
+                quotesSlider.innerHTML = '';
+                quoteNav.innerHTML = '';
+                
+                defaultQuotes.forEach((quote, index) => {
+                    const quoteDiv = document.createElement('div');
+                    quoteDiv.className = 'quote' + (index === 0 ? ' active' : '');
+                    quoteDiv.innerHTML = `
+                        <p class="quote-text">"${quote.text}"</p>
+                        <p class="quote-author">— ${quote.author}</p>
+                    `;
+                    quotesSlider.appendChild(quoteDiv);
+                    
+                    const dot = document.createElement('span');
+                    dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
+                    dot.addEventListener('click', () => showQuote(index));
+                    quoteNav.appendChild(dot);
+                });
+                
+                initSlider();
+            }
+        }
+        
+        function initSlider() {
+            quotes = document.querySelectorAll('#quotesSlider .quote');
+            dots = document.querySelectorAll('#quoteNav .quote-dot');
+            
+            if (quotes.length > 0) {
+                showQuote(0);
+                startSlideInterval();
+            }
+        }
         
         function showQuote(index) {
+            clearInterval(slideInterval);
+            
             quotes.forEach(quote => quote.classList.remove('active'));
             dots.forEach(dot => dot.classList.remove('active'));
             
             quotes[index].classList.add('active');
             dots[index].classList.add('active');
             currentQuote = index;
+            
+            startSlideInterval();
+        }
+        
+        function startSlideInterval() {
+            slideInterval = setInterval(nextQuote, 5000);
         }
         
         function nextQuote() {
             let nextIndex = (currentQuote + 1) % quotes.length;
             showQuote(nextIndex);
         }
-        
-        // تغيير الاقتباس كل 5 ثواني
-        setInterval(nextQuote, 5000);
-        
-        // إضافة event listeners للنقاط
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => showQuote(index));
-        });
+
+        // دالة لتحميل صفحة البحث
+        async function loadSearchPage() {
+            try {
+                const response = await fetch('search.html');
+                const html = await response.text();
+                document.getElementById('searchContainer').innerHTML = html;
+                document.getElementById('searchContainer').style.display = 'block';
+                document.getElementById('mainContent').style.display = 'none';
+            } catch (error) {
+                console.error('Error loading search page:', error);
+                document.getElementById('searchContainer').innerHTML = '<p>حدث خطأ أثناء تحميل صفحة البحث</p>';
+                document.getElementById('searchContainer').style.display = 'block';
+            }
+        }
+
+        // دالة لإخفاء البحث
+        function hideSearch() {
+            document.getElementById('searchContainer').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+        }
 
         // دوال تحميل المحتوى
         function createItem(item, type, id) {
@@ -500,9 +585,21 @@
                     });
                 }
             });
+            
+            // تحميل الاقتباسات
+            loadQuotes();
         }
 
-        window.addEventListener('DOMContentLoaded', loadContent);
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent();
+            
+            // إضافة حدث النقر على أيقونة البحث
+            document.getElementById('searchBtn').addEventListener('click', loadSearchPage);
+            
+            // يمكنك إضافة زر إغلاق في صفحة البحث يتصل بهذه الدالة
+            // document.getElementById('closeSearch').addEventListener('click', hideSearch);
+        });
     </script>
 </body>
 </html>
