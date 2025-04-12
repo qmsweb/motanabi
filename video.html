@@ -72,7 +72,7 @@
             background-color: var(--light-bg);
             color: var(--text-color);
             margin: 0;
-            padding-top: 77px;
+            padding-top: 90px;
             direction: rtl;
             min-height: 100vh;
         }
@@ -207,6 +207,10 @@
             font-size: 22px;
             color: var(--text-color);
             font-weight: 700;
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
         
         #videoDescription {
@@ -214,7 +218,10 @@
             font-size: 16px;
             color: var(--secondary-text);
             line-height: 1.6;
-            padding: 0 5px; /* مسافة داخلية للنص */
+            padding: 0 20px;
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
         }
         
         @keyframes slideUp {
@@ -269,6 +276,8 @@
             </div>
         </div>
         
+        <h1 id="videoTitle">جاري تحميل الفيديو...</h1>
+        
         <div class="video-actions">
             <button class="share-btn" id="shareButton">
                 <i class="fas fa-share-alt"></i>
@@ -276,10 +285,7 @@
             </button>
         </div>
         
-        <div class="video-info">
-            <h1 id="videoTitle">جاري تحميل الفيديو...</h1>
-            <p id="videoDescription"></p>
-        </div>
+        <p id="videoDescription"></p>
     </div>
 
     <!-- عناصر المشاركة -->
