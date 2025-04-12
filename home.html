@@ -149,7 +149,10 @@
             padding: 20px;
             overflow: hidden;
             position: relative;
-            min-height: 120px;
+            min-height: 150px; /* ارتفاع ثابت */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .quote {
@@ -157,6 +160,7 @@
             padding: 10px;
             display: none;
             animation: fadeIn 1.5s;
+            width: 100%;
         }
         
         .quote.active {
@@ -165,8 +169,8 @@
         
         .quote-text {
             font-size: 18px;
-            font-weight: 600;
-            color: var(--desert-color);
+            font-weight: 700; /* عريض جداً */
+            color: #000000; /* أسود */
             margin-bottom: 10px;
             line-height: 1.6;
         }
@@ -287,6 +291,10 @@
             
             .quote-author {
                 font-size: 14px;
+            }
+            
+            .quotes-slider {
+                min-height: 140px; /* ارتفاع ثابت للجوال */
             }
         }
     </style>
