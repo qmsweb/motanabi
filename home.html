@@ -18,7 +18,6 @@
             --light-bg: #f5e7d6;
             --desert-color: #a78a6f;
             --desert-light: #e3d5b8;
-            --error-color: #e74c3c;
         }
         
         .navbar {
@@ -62,7 +61,6 @@
             left: 0;
             z-index: 1;
             border: 1px solid #ddd;
-            border-radius: 4px;
         }
         
         .dropdown-content a {
@@ -71,11 +69,6 @@
             text-decoration: none;
             display: block;
             text-align: right;
-            transition: background-color 0.3s;
-        }
-        
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
         }
         
         .dropdown:hover .dropdown-content {
@@ -92,11 +85,6 @@
             width: auto;
             display: block;
             margin: 0 auto;
-            transition: transform 0.3s;
-        }
-        
-        .logo img:hover {
-            transform: scale(1.05);
         }
         
         .search-icon {
@@ -104,11 +92,6 @@
             color: var(--text-color);
             padding: 5px 10px;
             cursor: pointer;
-            transition: color 0.3s;
-        }
-        
-        .search-icon:hover {
-            color: var(--desert-color);
         }
         
         body {
@@ -126,14 +109,14 @@
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
+            max-width: 100%;
+            padding: 0 1px;
         }
         
         /* تنسيقات سلايد بار الاقتباسات */
         .quotes-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            padding: 0 10px;
         }
         
         .quotes-header {
@@ -162,29 +145,22 @@
             padding: 20px;
             overflow: hidden;
             position: relative;
-            height: 180px;
+            min-height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .quote {
             text-align: center;
             padding: 10px;
             display: none;
+            animation: fadeIn 1.5s;
             width: 100%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.5s ease-in-out;
-            opacity: 0;
         }
         
         .quote.active {
             display: block;
-            opacity: 1;
         }
         
         .quote-text {
@@ -214,12 +190,15 @@
             border-radius: 50%;
             margin: 0 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
         
         .quote-dot.active {
             background-color: var(--desert-color);
-            transform: scale(1.2);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         /* تنسيقات صفحة البحث */
@@ -228,18 +207,19 @@
             padding: 20px;
             background-color: white;
             border-radius: 8px;
-            margin: 20px 0;
+            margin: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         /* تنسيقات باقي الأقسام */
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .section-header {
             display: flex;
             align-items: center;
+            padding: 0 10px;
             margin-bottom: 15px;
         }
         
@@ -259,8 +239,8 @@
         .horizontal-list {
             display: flex;
             overflow-x: auto;
-            gap: 15px;
-            padding: 10px 5px;
+            gap: 12px;
+            padding: 5px 10px;
             scrollbar-width: none;
         }
         
@@ -273,22 +253,15 @@
             width: 160px;
             text-align: center;
             background-color: white;
-            border-radius: 8px;
+            border-radius: 6px;
             overflow: hidden;
             border: 1px solid #e0e0e0;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .item img {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-bottom: 1px solid #e0e0e0;
         }
         
         .audio-item img {
@@ -296,49 +269,12 @@
         }
         
         .item-title {
-            padding: 12px 8px;
+            padding: 8px;
             font-size: 15px;
             color: #000;
-            font-weight: 600;
         }
         
-        /* مؤشر التحميل */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--desert-color);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* رسائل الخطأ */
-        .error-message {
-            color: var(--error-color);
-            text-align: center;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid var(--error-color);
-            border-radius: 5px;
-            background-color: rgba(231, 76, 60, 0.1);
-        }
-        
-        /* التكيف مع الأجهزة المحمولة */
         @media (max-width: 768px) {
-            .navbar {
-                padding: 10px 0;
-            }
-            
-            body {
-                padding-top: 70px;
-            }
-            
             .item {
                 width: 140px;
             }
@@ -351,9 +287,8 @@
                 height: 140px;
             }
             
-            .quotes-slider {
-                height: 160px;
-                padding: 15px;
+            body {
+                padding-top: 80px;
             }
             
             .quote-text {
@@ -363,6 +298,10 @@
             .quote-author {
                 font-size: 14px;
             }
+            
+            .quotes-slider {
+                min-height: 140px;
+            }
         }
     </style>
 </head>
@@ -370,10 +309,10 @@
     <!-- NavBar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <!-- أيقونة البحث مع رابط لصفحة البحث -->
-            <a href="search.html" class="search-icon">
+            <!-- أيقونة البحث -->
+            <div class="search-icon" id="searchBtn">
                 <i class="fas fa-search"></i>
-            </a>
+            </div>
             
             <!-- الشعار في الوسط -->
             <div class="logo">
@@ -394,6 +333,9 @@
         </div>
     </nav>
 
+    <!-- حاوية البحث -->
+    <div id="searchContainer"></div>
+
     <!-- المحتوى الرئيسي -->
     <div class="container" id="mainContent">
         <!-- قسم مختارات اليوم -->
@@ -403,9 +345,11 @@
                 <h2 class="quotes-title">مختارات اليوم</h2>
             </div>
             <div class="quotes-slider" id="quotesSlider">
-                <div class="loader"></div>
+                <!-- سيتم ملؤه ديناميكيًا -->
             </div>
-            <div class="quote-nav" id="quoteNav"></div>
+            <div class="quote-nav" id="quoteNav">
+                <!-- سيتم ملؤه ديناميكيًا -->
+            </div>
         </div>
         
         <!-- باقي الأقسام -->
@@ -414,9 +358,7 @@
                 <img src="assets/icons/video.png" alt="مرئيات" class="section-icon">
                 <h2 class="section-title">المرئيات</h2>
             </div>
-            <div class="horizontal-list" id="videoList">
-                <div class="loader"></div>
-            </div>
+            <div class="horizontal-list" id="videoList"></div>
         </div>
         
         <div class="section">
@@ -424,9 +366,7 @@
                 <img src="assets/icons/audio.png" alt="صوتيات" class="section-icon">
                 <h2 class="section-title">الصوتيات</h2>
             </div>
-            <div class="horizontal-list" id="audioList">
-                <div class="loader"></div>
-            </div>
+            <div class="horizontal-list" id="audioList"></div>
         </div>
         
         <div class="section">
@@ -434,9 +374,7 @@
                 <img src="assets/icons/book.png" alt="كتب" class="section-icon">
                 <h2 class="section-title">الكتب</h2>
             </div>
-            <div class="horizontal-list" id="bookGrid">
-                <div class="loader"></div>
-            </div>
+            <div class="horizontal-list" id="bookGrid"></div>
         </div>
         
         <div class="section">
@@ -444,9 +382,7 @@
                 <img src="assets/icons/poem.png" alt="أشعار" class="section-icon">
                 <h2 class="section-title">الأشعار</h2>
             </div>
-            <div class="horizontal-list" id="bookList">
-                <div class="loader"></div>
-            </div>
+            <div class="horizontal-list" id="bookList"></div>
         </div>
     </div>
 
@@ -471,47 +407,22 @@
         try {
             const app = firebase.initializeApp(firebaseConfig);
             db = firebase.database(app);
-            console.log("تم الاتصال بنجاح بـ Firebase");
         } catch (error) {
-            console.error("خطأ في تهيئة Firebase:", error);
-            showError("حدث خطأ في الاتصال بقاعدة البيانات");
+            console.error("Firebase initialization error:", error);
         }
 
         // متغيرات السلايدر
         let currentQuote = 0;
         let quotes = [];
         let dots = [];
-        let slideInterval = null;
-        let isUpdating = false;
+        let slideInterval;
 
-        // دالة لعرض رسائل الخطأ
-        function showError(message, element = null) {
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message';
-            errorDiv.textContent = message;
-            
-            if (element) {
-                element.innerHTML = '';
-                element.appendChild(errorDiv);
-            } else {
-                document.getElementById('mainContent').prepend(errorDiv);
-            }
-            
-            // إزالة رسالة الخطأ بعد 5 ثواني
-            setTimeout(() => {
-                errorDiv.remove();
-            }, 5000);
-        }
-
-        // دالة محسنة لجلب الاقتباسات
+        // دالة لتحميل الاقتباسات (النسخة المعدلة)
         async function loadQuotes() {
-            if (isUpdating) return;
-            isUpdating = true;
-            
             const quotesSlider = document.getElementById('quotesSlider');
             const quoteNav = document.getElementById('quoteNav');
             
-            // اقتباسات افتراضية احتياطية
+            // اقتباسات افتراضية في حالة فشل التحميل
             const defaultQuotes = [
                 {
                     text: "وما نيل المطالب بالتمني ولكن تؤخذ الدنيا غلابا",
@@ -532,71 +443,38 @@
             ];
 
             try {
-                // إضافة مؤشر تحميل
-                quotesSlider.innerHTML = '<div class="loader"></div>';
-                
-                // جلب الملف مع إضافة طابع زمني لتجنب التخزين المؤقت
-                const response = await fetch('quote.html?t=' + new Date().getTime());
+                // محاولة جلب الاقتباسات من ملف quote.html
+                const response = await fetch('quote.html');
                 
                 if (!response.ok) {
-                    throw new Error(`خطأ في الشبكة: ${response.status}`);
-                }
-                
-                // التحقق من نوع المحتوى
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('text/html')) {
-                    throw new Error('نوع الملف غير متوقع');
+                    throw new Error('Failed to fetch quotes');
                 }
                 
                 const text = await response.text();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
                 
-                // إنشاء عنصر مؤقت لتحليل HTML
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
+                const quoteElements = tempDiv.querySelectorAll('.quote');
                 
-                // البحث عن الاقتباسات
-                const quoteElements = doc.querySelectorAll('.quote');
-                
-                if (quoteElements.length === 0) {
-                    throw new Error('لم يتم العثور على اقتباسات في الملف');
-                }
-                
-                // التحقق مما إذا كان التحديث ضرورياً
-                if (!shouldRefreshQuotes(quoteElements)) {
-                    isUpdating = false;
-                    return;
-                }
-                
-                // مسح المحتوى الحالي
-                quotesSlider.innerHTML = '';
-                
-                // إضافة الاقتباسات الجديدة
-                quoteElements.forEach((quote, index) => {
-                    const quoteClone = quote.cloneNode(true);
-                    quotesSlider.appendChild(quoteClone);
-                });
-                
-                // إنشاء نقاط التنقل فقط إذا لم تكن موجودة أو تغير العدد
-                if (dots.length !== quoteElements.length) {
+                if (quoteElements.length > 0) {
+                    // استخدام الاقتباسات من الملف
+                    quotesSlider.innerHTML = '';
                     quoteNav.innerHTML = '';
-                    quoteElements.forEach((_, index) => {
+                    
+                    quoteElements.forEach((quote, index) => {
+                        quotesSlider.appendChild(quote.cloneNode(true));
+                        
                         const dot = document.createElement('span');
-                        dot.className = 'quote-dot';
+                        dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
                         dot.addEventListener('click', () => showQuote(index));
                         quoteNav.appendChild(dot);
                     });
+                } else {
+                    // إذا كان الملف موجوداً ولكن لا يحتوي على اقتباسات
+                    throw new Error('No quotes found in file');
                 }
-                
-                // تحديث المتغيرات
-                quotes = document.querySelectorAll('#quotesSlider .quote');
-                dots = document.querySelectorAll('#quoteNav .quote-dot');
-                
-                // إعادة تهيئة السلايدر
-                initSlider();
-                
             } catch (error) {
-                console.error('حدث خطأ في تحميل الاقتباسات:', error);
-                showError('حدث خطأ في تحميل الاقتباسات، جاري عرض اقتباسات افتراضية');
+                console.error('Error loading quotes:', error);
                 
                 // استخدام الاقتباسات الافتراضية
                 quotesSlider.innerHTML = '';
@@ -604,7 +482,7 @@
                 
                 defaultQuotes.forEach((quote, index) => {
                     const quoteDiv = document.createElement('div');
-                    quoteDiv.className = 'quote';
+                    quoteDiv.className = 'quote' + (index === 0 ? ' active' : '');
                     quoteDiv.innerHTML = `
                         <p class="quote-text">"${quote.text}"</p>
                         <p class="quote-author">— ${quote.author}</p>
@@ -612,49 +490,33 @@
                     quotesSlider.appendChild(quoteDiv);
                     
                     const dot = document.createElement('span');
-                    dot.className = 'quote-dot';
+                    dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
                     dot.addEventListener('click', () => showQuote(index));
                     quoteNav.appendChild(dot);
                 });
-                
-                quotes = document.querySelectorAll('#quotesSlider .quote');
-                dots = document.querySelectorAll('#quoteNav .quote-dot');
-                initSlider();
-            } finally {
-                isUpdating = false;
-            }
-        }
-
-        // دالة للتحقق مما إذا كان يجب تحديث الاقتباسات
-        function shouldRefreshQuotes(newQuotes) {
-            if (!newQuotes || newQuotes.length === 0) return true;
-            if (quotes.length !== newQuotes.length) return true;
-            
-            for (let i = 0; i < newQuotes.length; i++) {
-                const newText = newQuotes[i].querySelector('.quote-text')?.textContent;
-                const currentText = quotes[i]?.querySelector('.quote-text')?.textContent;
-                
-                if (newText !== currentText) return true;
             }
             
-            return false;
+            // تهيئة السلايدر بعد تحميل الاقتباسات
+            initSlider();
         }
 
         // دالة لتهيئة السلايدر
         function initSlider() {
-            clearInterval(slideInterval);
+            quotes = document.querySelectorAll('#quotesSlider .quote');
+            dots = document.querySelectorAll('#quoteNav .quote-dot');
             
             if (quotes.length > 0) {
+                // إظهار أول اقتباس
                 showQuote(0);
+                
+                // بدء التبديل التلقائي
                 startSlideInterval();
-            } else {
-                showError('لا توجد اقتباسات متاحة', document.getElementById('quotesSlider'));
             }
         }
         
         function showQuote(index) {
-            // التأكد من أن الفهرس صالح
-            if (index < 0 || index >= quotes.length) return;
+            // إيقاف المؤقت المؤقت قبل التغيير
+            clearInterval(slideInterval);
             
             // إخفاء جميع الاقتباسات
             quotes.forEach(quote => quote.classList.remove('active'));
@@ -664,20 +526,73 @@
             
             // إظهار الاقتباس المحدد
             quotes[index].classList.add('active');
+            
+            // تنشيط النقطة المقابلة
             dots[index].classList.add('active');
+            
+            // تحديث المؤشر الحالي
             currentQuote = index;
+            
+            // إعادة تشغيل المؤقت
+            startSlideInterval();
         }
         
         function startSlideInterval() {
+            // التأكد من إيقاف أي مؤقت سابق
             clearInterval(slideInterval);
             
-            // بدء مؤقت جديد فقط إذا كان هناك أكثر من اقتباس
-            if (quotes.length > 1) {
-                slideInterval = setInterval(() => {
-                    const nextIndex = (currentQuote + 1) % quotes.length;
-                    showQuote(nextIndex);
-                }, 5000);
+            // بدء مؤقت جديد للتبديل التلقائي
+            slideInterval = setInterval(() => {
+                nextQuote();
+            }, 5000);
+        }
+        
+        function nextQuote() {
+            const nextIndex = (currentQuote + 1) % quotes.length;
+            showQuote(nextIndex);
+        }
+
+        // دالة لتحميل صفحة البحث
+        async function loadSearchPage() {
+            const searchContainer = document.getElementById('searchContainer');
+            const mainContent = document.getElementById('mainContent');
+            
+            try {
+                const response = await fetch('search.html');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load search page');
+                }
+                
+                const html = await response.text();
+                searchContainer.innerHTML = html;
+                searchContainer.style.display = 'block';
+                mainContent.style.display = 'none';
+            } catch (error) {
+                console.error('Error loading search page:', error);
+                searchContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h3>حدث خطأ في تحميل صفحة البحث</h3>
+                        <button onclick="hideSearch()" style="
+                            background-color: var(--primary-color);
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            margin-top: 15px;
+                        ">
+                            العودة
+                        </button>
+                    </div>
+                `;
+                searchContainer.style.display = 'block';
             }
+        }
+
+        // دالة لإخفاء صفحة البحث
+        function hideSearch() {
+            document.getElementById('searchContainer').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
         }
 
         // دالة لإنشاء عنصر في القوائم
@@ -686,79 +601,88 @@
             div.className = 'item ' + type + '-item';
             div.innerHTML = `
                 <a href="${type}.html?id=${id}">
-                    <img src="${item.image || 'assets/images/default.jpg'}" 
-                         alt="${item.title || 'عنصر بدون عنوان'}"
-                         onerror="this.src='assets/images/default.jpg'">
+                    <img src="${item.image || 'assets/images/default.jpg'}" alt="${item.title || 'عنصر بدون عنوان'}">
                     <div class="item-title">${item.title || 'عنصر بدون عنوان'}</div>
                 </a>
             `;
             return div;
         }
 
-        // دالة لتحميل المحتوى من Firebase
-        async function loadFirebaseContent(refName, elementId, type) {
-            const element = document.getElementById(elementId);
-            
-            try {
-                if (!db) {
-                    throw new Error('لا يوجد اتصال بقاعدة البيانات');
-                }
-                
-                element.innerHTML = '<div class="loader"></div>';
-                
-                const snapshot = await db.ref(refName).once('value');
-                const data = snapshot.val();
-                
-                element.innerHTML = '';
-                
-                if (data) {
-                    Object.entries(data).forEach(([id, item]) => {
-                        element.appendChild(createItem(item, type, id));
-                    });
-                } else {
-                    element.innerHTML = '<p style="text-align:center;color:#666;">لا توجد بيانات متاحة</p>';
-                }
-            } catch (error) {
-                console.error(`خطأ في تحميل ${refName}:`, error);
-                showError(`حدث خطأ في تحميل ${type}`, element);
-            }
-        }
-
         // دالة رئيسية لتحميل المحتوى
         async function loadContent() {
-            try {
-                // تحميل الاقتباسات أولاً
-                await loadQuotes();
-                
-                // تحميل المحتوى من Firebase إذا كان متاحاً
-                if (db) {
-                    await Promise.all([
-                        loadFirebaseContent("mtnbi_video", "videoList", "video"),
-                        loadFirebaseContent("mtnbi_sound", "audioList", "audio"),
-                        loadFirebaseContent("mtnbi_book", "bookGrid", "book"),
-                        loadFirebaseContent("mtnbi_sh3er", "bookList", "poem")
-                    ]);
-                } else {
-                    showError("تعذر الاتصال بقاعدة البيانات");
+            // تحميل الاقتباسات أولاً
+            await loadQuotes();
+            
+            // تحميل المحتوى من Firebase إذا كان متاحاً
+            if (db) {
+                try {
+                    // تحميل المرئيات
+                    const videoSnapshot = await db.ref("mtnbi_video").once("value");
+                    const videos = videoSnapshot.val();
+                    if (videos) {
+                        const videoList = document.getElementById('videoList');
+                        videoList.innerHTML = '';
+                        Object.entries(videos).forEach(([id, video]) => {
+                            videoList.appendChild(createItem(video, 'video', id));
+                        });
+                    }
+                    
+                    // تحميل الصوتيات
+                    const audioSnapshot = await db.ref("mtnbi_sound").once("value");
+                    const audios = audioSnapshot.val();
+                    if (audios) {
+                        const audioList = document.getElementById('audioList');
+                        audioList.innerHTML = '';
+                        Object.entries(audios).forEach(([id, audio]) => {
+                            audioList.appendChild(createItem(audio, 'audio', id));
+                        });
+                    }
+                    
+                    // تحميل الكتب
+                    const bookSnapshot = await db.ref("mtnbi_book").once("value");
+                    const books = bookSnapshot.val();
+                    if (books) {
+                        const bookGrid = document.getElementById('bookGrid');
+                        bookGrid.innerHTML = '';
+                        Object.entries(books).forEach(([id, book]) => {
+                            bookGrid.appendChild(createItem(book, 'book', id));
+                        });
+                    }
+                    
+                    // تحميل الأشعار
+                    const poemSnapshot = await db.ref("mtnbi_sh3er").once("value");
+                    const poems = poemSnapshot.val();
+                    if (poems) {
+                        const bookList = document.getElementById('bookList');
+                        bookList.innerHTML = '';
+                        Object.entries(poems).forEach(([id, poem]) => {
+                            const div = document.createElement('div');
+                            div.className = 'item';
+                            div.innerHTML = `
+                                <a href="poem.html?id=${id}">
+                                    <div class="item-title">${poem.title || 'شعر بدون عنوان'}</div>
+                                </a>
+                            `;
+                            bookList.appendChild(div);
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error loading content from Firebase:", error);
                 }
-            } catch (error) {
-                console.error("حدث خطأ غير متوقع:", error);
-                showError("حدث خطأ في تحميل المحتوى");
             }
         }
 
         // عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', () => {
+            // تحميل المحتوى الرئيسي
             loadContent();
             
-            // تحديث البيانات كل دقيقة (اختياري)
-            setInterval(() => {
-                loadQuotes();
-            }, 60000);
+            // إضافة حدث النقر على أيقونة البحث
+            document.getElementById('searchBtn').addEventListener('click', loadSearchPage);
         });
 
-        // جعل الدوال متاحة للاستخدام من قبل العناصر الأخرى
-        window.showQuote = showQuote;
+        // جعل دالة hideSearch متاحة globally للاستخدام من ملف search.html
+        window.hideSearch = hideSearch;
     </script>
 </body>
 </html>
