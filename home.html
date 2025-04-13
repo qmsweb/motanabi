@@ -201,16 +201,6 @@
             to { opacity: 1; }
         }
         
-        /* تنسيقات صفحة البحث */
-        #searchContainer {
-            display: none;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            margin: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
         /* تنسيقات باقي الأقسام */
         .section {
             margin-bottom: 25px;
@@ -380,9 +370,6 @@
             </div>
         </div>
     </nav>
-
-    <!-- حاوية البحث -->
-    <div id="searchContainer"></div>
 
     <!-- المحتوى الرئيسي -->
     <div class="container" id="mainContent">
@@ -613,49 +600,6 @@
             showQuote(nextIndex);
         }
 
-        // دالة لتحميل صفحة البحث
-        async function loadSearchPage() {
-            const searchContainer = document.getElementById('searchContainer');
-            const mainContent = document.getElementById('mainContent');
-            
-            try {
-                const response = await fetch('search.html');
-                
-                if (!response.ok) {
-                    throw new Error('Failed to load search page');
-                }
-                
-                const html = await response.text();
-                searchContainer.innerHTML = html;
-                searchContainer.style.display = 'block';
-                mainContent.style.display = 'none';
-            } catch (error) {
-                console.error('Error loading search page:', error);
-                searchContainer.innerHTML = `
-                    <div style="text-align: center; padding: 20px;">
-                        <h3>حدث خطأ في تحميل صفحة البحث</h3>
-                        <button onclick="hideSearch()" style="
-                            background-color: var(--primary-color);
-                            border: none;
-                            padding: 10px 20px;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            margin-top: 15px;
-                        ">
-                            العودة
-                        </button>
-                    </div>
-                `;
-                searchContainer.style.display = 'block';
-            }
-        }
-
-        // دالة لإخفاء صفحة البحث
-        function hideSearch() {
-            document.getElementById('searchContainer').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-        }
-
         // دالة لإنشاء عنصر في القوائم
         function createItem(item, type, id) {
             const div = document.createElement('div');
@@ -766,12 +710,11 @@
             // تحميل المحتوى الرئيسي
             loadContent();
             
-            // إضافة حدث النقر على أيقونة البحث
-            document.getElementById('searchBtn').addEventListener('click', loadSearchPage);
+            // إضافة حدث النقر على أيقونة البحث لفتح صفحة البحث
+            document.getElementById('searchBtn').addEventListener('click', () => {
+                window.location.href = 'search.html';
+            });
         });
-
-        // جعل دالة hideSearch متاحة globally للاستخدام من ملف search.html
-        window.hideSearch = hideSearch;
     </script>
 </body>
 </html>
