@@ -177,9 +177,28 @@
             font-style: italic;
         }
         
+        .quote-nav-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .slider-control {
+            display: inline-block;
+            margin-right: 15px;
+            cursor: pointer;
+            color: var(--desert-color);
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        
+        .slider-control:hover {
+            color: var(--text-color);
+        }
+        
         .quote-nav {
             text-align: center;
-            margin-top: 15px;
         }
         
         .quote-dot {
@@ -382,8 +401,13 @@
             <div class="quotes-slider" id="quotesSlider">
                 <div class="loading-icon"><i class="fas fa-spinner"></i></div>
             </div>
-            <div class="quote-nav" id="quoteNav">
-                <!-- سيتم ملؤه ديناميكيًا -->
+            <div class="quote-nav-container">
+                <div class="slider-control" id="sliderControl">
+                    <i class="fas fa-pause"></i>
+                </div>
+                <div class="quote-nav" id="quoteNav">
+                    <!-- سيتم ملؤه ديناميكيًا -->
+                </div>
             </div>
         </div>
         
@@ -459,6 +483,24 @@
         let quotes = [];
         let dots = [];
         let slideInterval;
+        let isSliderPlaying = true;
+
+        // دالة للتحكم في التشغيل/الإيقاف
+        function toggleSlider() {
+            const controlIcon = document.getElementById('sliderControl').querySelector('i');
+            
+            if (isSliderPlaying) {
+                clearInterval(slideInterval);
+                controlIcon.classList.remove('fa-pause');
+                controlIcon.classList.add('fa-play');
+            } else {
+                startSlideInterval();
+                controlIcon.classList.remove('fa-play');
+                controlIcon.classList.add('fa-pause');
+            }
+            
+            isSliderPlaying = !isSliderPlaying;
+        }
 
         // دالة لتحميل الاقتباسات (النسخة المعدلة)
         async function loadQuotes() {
@@ -487,7 +529,6 @@
                     text: "أعزُّ مكانٍ في الدُنى سَرجُ سابحٍ وخَيرُ جليسٍ في الزمانِ كِتابُ",
                     author: "المتنبي"
                 }
-
             ];
 
             try {
@@ -514,7 +555,7 @@
                         
                         const dot = document.createElement('span');
                         dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
-                        dot.addEventListener('click', () => showQuote(index));
+                        dot.addEventListener('click', () => showQuote(index, true));
                         quoteNav.appendChild(dot);
                     });
                 } else {
@@ -539,7 +580,7 @@
                     
                     const dot = document.createElement('span');
                     dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
-                    dot.addEventListener('click', () => showQuote(index));
+                    dot.addEventListener('click', () => showQuote(index, true));
                     quoteNav.appendChild(dot);
                 });
             }
@@ -559,10 +600,13 @@
                 
                 // بدء التبديل التلقائي
                 startSlideInterval();
+                
+                // ربط حدث النقر على أيقونة التحكم
+                document.getElementById('sliderControl').addEventListener('click', toggleSlider);
             }
         }
         
-        function showQuote(index) {
+        function showQuote(index, isManual = false) {
             // إيقاف المؤقت المؤقت قبل التغيير
             clearInterval(slideInterval);
             
@@ -581,8 +625,10 @@
             // تحديث المؤشر الحالي
             currentQuote = index;
             
-            // إعادة تشغيل المؤقت
-            startSlideInterval();
+            // إعادة تشغيل المؤقت فقط إذا لم يكن التحكم يدوياً أو إذا كان السلايدر يعمل
+            if (!isManual || isSliderPlaying) {
+                startSlideInterval();
+            }
         }
         
         function startSlideInterval() {
