@@ -3,53 +3,764 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصّة رحلة المتنبي</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>منصة رحلة المتنبي</title>
+    
+    <!-- خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        body {
+        :root {
+            --primary-color: #d2b48c;
+            --text-color: #000000;
+            --light-bg: #f5e7d6;
+            --desert-color: #a78a6f;
+            --desert-light: #e3d5b8;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
             font-family: 'Cairo', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-container {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropbtn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            left: 0;
+            z-index: 1;
+            border: 1px solid #ddd;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .logo {
+            flex-grow: 1;
             text-align: center;
         }
         
-        .content {
+        .logo img {
+            height: 50px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .search-icon {
+            font-size: 20px;
+            color: var(--text-color);
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 90px;
+            direction: rtl;
+        }
+        
+        a {
+            color: #000 !important;
+            text-decoration: none !important;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 1px;
+        }
+        
+        /* تنسيقات سلايد بار الاقتباسات */
+        .quotes-section {
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+        
+        .quotes-header {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            max-width: 80%;
+            margin-bottom: 15px;
         }
         
-        .main-text {
-            font-size: 3rem;
+        .quotes-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: 8px;
+        }
+        
+        .quotes-title {
+            font-size: 20px;
+            color: var(--text-color);
+            margin: 0;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
-            line-height: 1.5;
         }
         
-        .sub-text {
-            font-size: 1.2rem;
-            color: #666;
+        .quotes-slider {
+            background-color: var(--desert-light);
+            border: 1px solid var(--desert-color);
+            border-radius: 8px;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quote {
+            text-align: center;
+            padding: 10px;
+            display: none;
+            animation: fadeIn 1.5s;
+            width: 100%;
+        }
+        
+        .quote.active {
+            display: block;
+        }
+        
+        .quote-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 10px;
             line-height: 1.6;
-            max-width: 80%;
+        }
+        
+        .quote-author {
+            font-size: 14px;
+            color: var(--text-color);
+            font-style: italic;
+        }
+        
+        .quote-nav-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .slider-control {
+            display: inline-block;
+            margin-right: 15px;
+            cursor: pointer;
+            color: var(--desert-color);
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        
+        .slider-control:hover {
+            color: var(--text-color);
+        }
+        
+        .quote-nav {
+            text-align: center;
+        }
+        
+        .quote-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #ccc;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        
+        .quote-dot.active {
+            background-color: var(--desert-color);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* تنسيقات باقي الأقسام */
+        .section {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            margin-bottom: 15px;
+        }
+        
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: 8px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: var(--text-color);
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .horizontal-list {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 5px 10px;
+            scrollbar-width: none;
+            min-height: 240px;
+        }
+        
+        .horizontal-list::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .item {
+            flex: 0 0 auto;
+            width: 160px;
+            text-align: center;
+            background-color: white;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .poem-item {
+            width: auto;
+            min-width: 160px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .audio-item img {
+            height: 160px;
+        }
+        
+        .item-title {
+            padding: 8px;
+            font-size: 15px;
+            color: #000;
+        }
+        
+        .poem-title {
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            text-align: center;
+        }
+        
+        .loading-icon {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-size: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .item {
+                width: 140px;
+            }
+            
+            .poem-item {
+                min-width: 140px;
+                padding: 10px;
+            }
+            
+            .item img {
+                height: 180px;
+            }
+            
+            .audio-item img {
+                height: 140px;
+            }
+            
+            body {
+                padding-top: 80px;
+            }
+            
+            .quote-text {
+                font-size: 15px;
+            }
+            
+            .quote-author {
+                font-size: 13px;
+            }
+            
+            .quotes-slider {
+                min-height: 140px;
+            }
+            
+            .horizontal-list {
+                min-height: 200px;
+            }
+            
+            .poem-title {
+                font-size: 15px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <div class="main-text">
-          الموقع قيد الصيانة، انتظرونا قريبًا
+    <!-- NavBar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- أيقونة البحث -->
+            <div class="search-icon" id="searchBtn">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <!-- الشعار في الوسط -->
+            <div class="logo">
+                <img src="assets/images/logo.png" alt="رحلة المتنبي">
+            </div>
+            
+            <!-- القائمة المنسدلة في اليمين -->
+            <div class="dropdown">
+                <button class="dropbtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="index.html">الرئيسية</a>
+                    <a href="about.html">من نحن</a>
+                    <a href="contact.html">اتصل بنا</a>
+                </div>
+            </div>
         </div>
-        <div class="sub-text">
-نعتذر على الإزعاج        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container" id="mainContent">
+        <!-- قسم مختارات اليوم -->
+        <div class="quotes-section">
+            <div class="quotes-header">
+                <img src="assets/icons/quote.png" alt="مختارات اليوم" class="quotes-icon">
+                <h2 class="quotes-title">مختارات اليوم</h2>
+            </div>
+            <div class="quotes-slider" id="quotesSlider">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
+            <div class="quote-nav-container">
+                <div class="slider-control" id="sliderControl">
+                    <i class="fas fa-pause"></i>
+                </div>
+                <div class="quote-nav" id="quoteNav">
+                    <!-- سيتم ملؤه ديناميكيًا -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- باقي الأقسام -->
+        <div class="section">
+            <div class="section-header">
+                <img src="assets/icons/video.png" alt="مرئيات" class="section-icon">
+                <h2 class="section-title">المرئيات</h2>
+            </div>
+            <div class="horizontal-list" id="videoList">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <img src="assets/icons/audio.png" alt="صوتيات" class="section-icon">
+                <h2 class="section-title">الصوتيات</h2>
+            </div>
+            <div class="horizontal-list" id="audioList">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <img src="assets/icons/book.png" alt="كتب" class="section-icon">
+                <h2 class="section-title">الكتب</h2>
+            </div>
+            <div class="horizontal-list" id="bookGrid">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <img src="assets/icons/poem.png" alt="أشعار" class="section-icon">
+                <h2 class="section-title">الأشعار</h2>
+            </div>
+            <div class="horizontal-list" id="poemList">
+                <div class="loading-icon"><i class="fas fa-spinner"></i></div>
+            </div>
+        </div>
     </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+
+    <script>
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDErdK7mjrXUtBYR28U7JIpbFi5RHWM9zM",
+            authDomain: "momentschat.firebaseapp.com",
+            databaseURL: "https://momentschat.firebaseio.com",
+            projectId: "momentschat",
+            storageBucket: "momentschat.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "1:866549697398:android:024dd3bf3b81d1adf78857"
+        };
+        
+        // Initialize Firebase
+        let db;
+        try {
+            const app = firebase.initializeApp(firebaseConfig);
+            db = firebase.database(app);
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+
+        // متغيرات السلايدر
+        let currentQuote = 0;
+        let quotes = [];
+        let dots = [];
+        let slideInterval;
+        let isSliderPlaying = true;
+
+        // دالة للتحكم في التشغيل/الإيقاف
+        function toggleSlider() {
+            const controlIcon = document.getElementById('sliderControl').querySelector('i');
+            
+            if (isSliderPlaying) {
+                clearInterval(slideInterval);
+                controlIcon.classList.remove('fa-pause');
+                controlIcon.classList.add('fa-play');
+            } else {
+                startSlideInterval();
+                controlIcon.classList.remove('fa-play');
+                controlIcon.classList.add('fa-pause');
+            }
+            
+            isSliderPlaying = !isSliderPlaying;
+        }
+
+        // دالة لتحميل الاقتباسات (النسخة المعدلة)
+        async function loadQuotes() {
+            const quotesSlider = document.getElementById('quotesSlider');
+            const quoteNav = document.getElementById('quoteNav');
+            
+            // اقتباسات افتراضية في حالة فشل التحميل
+            const defaultQuotes = [
+                {
+                    text: "أنا الذي نظر الأعمى إلى أدبي وأسمعت كلماتي من به صمم",
+                    author: "المتنبي"
+                },
+                {
+                    text: "على قدر أهل العزم تأتي العزائم وتأتي على قدر الكرام المكارم",
+                    author: "المتنبي"
+                },
+                {
+                    text: "لا تلقَ دهرك إلّا غير مكترث ما دام يصحب فيه روحك البدن",
+                    author: "المتنبي"
+                },
+                {
+                    text: "إذا غامرت في شرف مرومٍ فلا تقنع بما دونَ النجومِ",
+                    author: "المتنبي"
+                },
+                {
+                    text: "أعزُّ مكانٍ في الدُنى سَرجُ سابحٍ وخَيرُ جليسٍ في الزمانِ كِتابُ",
+                    author: "المتنبي"
+                }
+            ];
+
+            try {
+                // محاولة جلب الاقتباسات من ملف quote.html
+                const response = await fetch('quote.html');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch quotes');
+                }
+                
+                const text = await response.text();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
+                
+                const quoteElements = tempDiv.querySelectorAll('.quote');
+                
+                if (quoteElements.length > 0) {
+                    // استخدام الاقتباسات من الملف
+                    quotesSlider.innerHTML = '';
+                    quoteNav.innerHTML = '';
+                    
+                    quoteElements.forEach((quote, index) => {
+                        quotesSlider.appendChild(quote.cloneNode(true));
+                        
+                        const dot = document.createElement('span');
+                        dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
+                        dot.addEventListener('click', () => showQuote(index, true));
+                        quoteNav.appendChild(dot);
+                    });
+                } else {
+                    // إذا كان الملف موجوداً ولكن لا يحتوي على اقتباسات
+                    throw new Error('No quotes found in file');
+                }
+            } catch (error) {
+                console.error('Error loading quotes:', error);
+                
+                // استخدام الاقتباسات الافتراضية
+                quotesSlider.innerHTML = '';
+                quoteNav.innerHTML = '';
+                
+                defaultQuotes.forEach((quote, index) => {
+                    const quoteDiv = document.createElement('div');
+                    quoteDiv.className = 'quote' + (index === 0 ? ' active' : '');
+                    quoteDiv.innerHTML = `
+                        <p class="quote-text">"${quote.text}"</p>
+                        <p class="quote-author">— ${quote.author}</p>
+                    `;
+                    quotesSlider.appendChild(quoteDiv);
+                    
+                    const dot = document.createElement('span');
+                    dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
+                    dot.addEventListener('click', () => showQuote(index, true));
+                    quoteNav.appendChild(dot);
+                });
+            }
+            
+            // تهيئة السلايدر بعد تحميل الاقتباسات
+            initSlider();
+        }
+
+        // دالة لتهيئة السلايدر
+        function initSlider() {
+            quotes = document.querySelectorAll('#quotesSlider .quote');
+            dots = document.querySelectorAll('#quoteNav .quote-dot');
+            
+            if (quotes.length > 0) {
+                // إظهار أول اقتباس
+                showQuote(0);
+                
+                // بدء التبديل التلقائي
+                startSlideInterval();
+                
+                // ربط حدث النقر على أيقونة التحكم
+                document.getElementById('sliderControl').addEventListener('click', toggleSlider);
+            }
+        }
+        
+        function showQuote(index, isManual = false) {
+            // إيقاف المؤقت المؤقت قبل التغيير
+            clearInterval(slideInterval);
+            
+            // إخفاء جميع الاقتباسات
+            quotes.forEach(quote => quote.classList.remove('active'));
+            
+            // إلغاء تنشيط جميع النقاط
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // إظهار الاقتباس المحدد
+            quotes[index].classList.add('active');
+            
+            // تنشيط النقطة المقابلة
+            dots[index].classList.add('active');
+            
+            // تحديث المؤشر الحالي
+            currentQuote = index;
+            
+            // إعادة تشغيل المؤقت فقط إذا لم يكن التحكم يدوياً أو إذا كان السلايدر يعمل
+            if (!isManual || isSliderPlaying) {
+                startSlideInterval();
+            }
+        }
+        
+        function startSlideInterval() {
+            // التأكد من إيقاف أي مؤقت سابق
+            clearInterval(slideInterval);
+            
+            // بدء مؤقت جديد للتبديل التلقائي
+            slideInterval = setInterval(() => {
+                nextQuote();
+            }, 5000);
+        }
+        
+        function nextQuote() {
+            const nextIndex = (currentQuote + 1) % quotes.length;
+            showQuote(nextIndex);
+        }
+
+        // دالة لإنشاء عنصر في القوائم
+        function createItem(item, type, id) {
+            const div = document.createElement('div');
+            div.className = 'item ' + type + '-item';
+            
+            if (type === 'poem') {
+                div.innerHTML = `
+                    <a href="${type}.html?id=${id}">
+                        <div class="poem-title">${item.title || 'شعر بدون عنوان'}</div>
+                    </a>
+                `;
+            } else {
+                div.innerHTML = `
+                    <a href="${type}.html?id=${id}">
+                        <img src="${item.image || 'assets/images/default.jpg'}" alt="${item.title || 'عنصر بدون عنوان'}">
+                        <div class="item-title">${item.title || 'عنصر بدون عنوان'}</div>
+                    </a>
+                `;
+            }
+            return div;
+        }
+
+        // دالة لإزالة أيقونة التحميل
+        function removeLoadingIcon(elementId) {
+            const element = document.getElementById(elementId);
+            const loadingIcon = element.querySelector('.loading-icon');
+            if (loadingIcon) {
+                loadingIcon.remove();
+            }
+        }
+
+        // دالة رئيسية لتحميل المحتوى
+        async function loadContent() {
+            // تحميل الاقتباسات أولاً
+            await loadQuotes();
+            removeLoadingIcon('quotesSlider');
+            
+            // تحميل المحتوى من Firebase إذا كان متاحاً
+            if (db) {
+                try {
+                    // تحميل المرئيات
+                    const videoSnapshot = await db.ref("mtnbi_video").once("value");
+                    const videos = videoSnapshot.val();
+                    if (videos) {
+                        const videoList = document.getElementById('videoList');
+                        videoList.innerHTML = '';
+                        Object.entries(videos).forEach(([id, video]) => {
+                            videoList.appendChild(createItem(video, 'video', id));
+                        });
+                    }
+                    removeLoadingIcon('videoList');
+                    
+                    // تحميل الصوتيات
+                    const audioSnapshot = await db.ref("mtnbi_sound").once("value");
+                    const audios = audioSnapshot.val();
+                    if (audios) {
+                        const audioList = document.getElementById('audioList');
+                        audioList.innerHTML = '';
+                        Object.entries(audios).forEach(([id, audio]) => {
+                            audioList.appendChild(createItem(audio, 'audio', id));
+                        });
+                    }
+                    removeLoadingIcon('audioList');
+                    
+                    // تحميل الكتب
+                    const bookSnapshot = await db.ref("mtnbi_book").once("value");
+                    const books = bookSnapshot.val();
+                    if (books) {
+                        const bookGrid = document.getElementById('bookGrid');
+                        bookGrid.innerHTML = '';
+                        Object.entries(books).forEach(([id, book]) => {
+                            bookGrid.appendChild(createItem(book, 'book', id));
+                        });
+                    }
+                    removeLoadingIcon('bookGrid');
+                    
+                    // تحميل الأشعار
+                    const poemSnapshot = await db.ref("mtnbi_sh3er").once("value");
+                    const poems = poemSnapshot.val();
+                    if (poems) {
+                        const poemList = document.getElementById('poemList');
+                        poemList.innerHTML = '';
+                        Object.entries(poems).forEach(([id, poem]) => {
+                            poemList.appendChild(createItem(poem, 'poem', id));
+                        });
+                    }
+                    removeLoadingIcon('poemList');
+                } catch (error) {
+                    console.error("Error loading content from Firebase:", error);
+                    
+                    // إزالة أيقونات التحميل في حالة الخطأ
+                    removeLoadingIcon('videoList');
+                    removeLoadingIcon('audioList');
+                    removeLoadingIcon('bookGrid');
+                    removeLoadingIcon('poemList');
+                }
+            } else {
+                // إزالة أيقونات التحميل إذا لم يكن Firebase متاحاً
+                removeLoadingIcon('videoList');
+                removeLoadingIcon('audioList');
+                removeLoadingIcon('bookGrid');
+                removeLoadingIcon('poemList');
+            }
+        }
+
+        // عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            // تحميل المحتوى الرئيسي
+            loadContent();
+            
+            // إضافة حدث النقر على أيقونة البحث لفتح صفحة البحث
+            document.getElementById('searchBtn').addEventListener('click', () => {
+                window.location.href = 'search.html';
+            });
+        });
+    </script>
 </body>
 </html>
