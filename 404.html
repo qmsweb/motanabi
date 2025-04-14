@@ -45,10 +45,25 @@
 </head>
 <body>
     <div class="content">
-        <div class="main-text">
-هذه الصفحة غير موجودة        </div>
-        <div class="sub-text">
+        <div class="main-text" id="main-text">
+            هذه الصفحة غير موجودة
+        </div>
+        <div class="sub-text" id="sub-text">
         </div>
     </div>
+
+    <script>
+        const path = window.location.pathname;
+        const sections = ['video', 'audio', 'poem', 'book'];
+
+        for (const section of sections) {
+            if (path.startsWith(`/${section}/`)) {
+                const id = path.split(`/${section}/`)[1];
+                if (id) {
+                    window.location.href = `/${section}.html?id=${id}`;
+                }
+            }
+        }
+    </script>
 </body>
 </html>
