@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - منصّة رحلة المتنبي</title>
+    
+    <!-- خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #d2b48c; /* لون الخشب الفاتح */
+            --text-color: #000000;
+            --light-bg: #f5e7d6; /* خلفية فاتحة */
+            --desert-color: #a78a6f; /* لون الصحراء */
+            --desert-light: #e3d5b8; /* لون فاتح للصحراء */
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 80px;
+            direction: rtl;
+        }
+        
+        /* تصميم الهيدر */
+        .about-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--desert-color) 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('assets/images/arabesque-pattern.png') repeat;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .about-header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            position: relative;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .about-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 15px auto 0;
+            position: relative;
+        }
+        
+        /* تصميم محتوى الصفحة */
+        .about-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .about-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-section::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--desert-color));
+        }
+        
+        .section-title {
+            color: var(--desert-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            border-bottom: 2px dashed var(--primary-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .team-member {
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid var(--desert-light);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .member-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .member-info {
+            padding: 15px;
+        }
+        
+        .member-name {
+            font-weight: 700;
+            margin: 0 0 5px;
+            color: var(--desert-color);
+        }
+        
+        .member-role {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0 0 10px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .social-links a {
+            color: var(--desert-color);
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* تصميم فوتر الصفحة */
+        .about-footer {
+            background-color: var(--desert-color);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .footer-links a {
+            color: white;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--light-bg);
+        }
+        
+        /* تأثيرات للقراءة */
+        .highlight-text {
+            background: linear-gradient(to right, transparent 50%, var(--desert-light) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all 0.5s ease;
+            padding: 0 3px;
+        }
+        
+        .highlight-text:hover {
+            background-position: left bottom;
+        }
+        
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .about-header h1 {
+                font-size: 2rem;
+            }
+            
+            .about-header p {
+                font-size: 1rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+    <link rel="icon" href="assets/icons/favicon.jpg" type="image/jpg">
+<body>
+    <!-- هيدر الصفحة -->
+    <header class="about-header">
+        <h1>منصة رحلة المتنبي</h1>
+        <p>نافذتك إلى عالم الشعر والأدب العربي الأصيل</p>
+    </header>
+
+    <!-- محتوى الصفحة -->
+    <div class="about-container">
+        <!-- قسم الرؤية -->
+        <section class="about-section">
+            <h2 class="section-title">رؤيتنا</h2>
+            <p>نحن في <span class="highlight-text">منصة رحلة المتنبي</span> نؤمن بأن الشعر العربي هو كنز ثقافي وحضاري يجب الحفاظ عليه ونشره. نسعى إلى جعل التراث الأدبي العربي في متناول الجميع بطريقة <span class="highlight-text">حديثة</span> و<span class="highlight-text">جذابة</span>.</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <i class="fas fa-quote-right" style="font-size: 3rem; color: var(--primary-color); opacity: 0.3;"></i>
+                <blockquote style="font-size: 1.2rem; font-style: italic; margin: 15px 0;">
+                    "أنا الذي نظر الأعمى إلى أدبي وأسمعت كلماتي من به صمم"
+                    <footer style="margin-top: 10px; color: var(--desert-color);">- المتنبي</footer>
+                </blockquote>
+            </div>
+        </section>
+
+        <!-- قسم الفريق -->
+        <section class="about-section">
+            <h2 class="section-title">فريقنا</h2>
+            <p>يعمل فريقنا المكون من <span class="highlight-text">طلبة من جامعة الشرقية</span> على تقديم محتوى مميز يليق بتاريخ الشعر العربي.</p>
+            
+            <div class="team-grid">
+                <!-- عضو الفريق 1 -->
+                <div class="team-member">
+                    <div class="member-info">
+                        <h3 class="member-name">جاسم الفارسي</h3>
+                        <p class="member-role">مبرمج ومطور المنصّة</p>
+                        
+                    </div>
+                </div>
+                
+                <!-- عضو الفريق 2 -->
+                <div class="team-member">
+                    <div class="member-info">
+                        <h3 class="member-name">ليث الخاطري</h3>
+                        <p class="member-role">تجميع محتوى المنصّة</p>
+                        
+                    </div>
+                </div>
+                
+                <!-- عضو الفريق 3 -->
+                <div class="team-member">
+                    <div class="member-info">
+                        <h3 class="member-name">سالم باعلوي</h3>
+                        <p class="member-role">تجميع محتوى المنصّة</p>
+                        
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-info">
+                        <h3 class="member-name">أحمد الجهضمي</h3>
+                        <p class="member-role">تجميع محتوى المنصّة</p>
+                      
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الإنجازات -->
+        <section class="about-section">
+            <h2 class="section-title">إنجازاتنا</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around; margin-top: 30px;">
+                <div style="text-align: center; flex: 1; min-width: 150px;">
+                    <div style="background-color: var(--primary-color); color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem;">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 style="color: var(--desert-color);">محتوى منوّع</h3>
+                    <p>عن شعر المتنبي وحياته</p>
+                </div>
+                
+                <div style="text-align: center; flex: 1; min-width: 150px;">
+                    <div style="background-color: var(--primary-color); color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 style="color: var(--desert-color);">3000+ زيارة</h3>
+                    <p>في الإطلاق التجريبي للمنصة</p>
+                </div>
+                
+                <div style="text-align: center; flex: 1; min-width: 150px;">
+                    <div style="background-color: var(--primary-color); color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem;">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3 style="color: var(--desert-color);">جائزة واحدة</h3>
+                    <p>لمشاركتنا في "يوم اللغة العربية والذكاء الاصطناعي" بجامعة الشرقية</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- فوتر الصفحة -->
+    <footer class="about-footer">
+        <div class="footer-links">
+            <a href="https://www.motanabi.com">الرئيسية</a>
+            <a href="contact.html">اتصل بنا</a>
+        </div>
+        <p>© 2025 منصة رحلة المتنبي. جميع الحقوق محفوظة.</p>
+    </footer>
+</body>
+</html>
