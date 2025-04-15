@@ -355,9 +355,9 @@
     <nav class="navbar">
         <div class="navbar-container">
             <!-- أيقونة البحث -->
-            <div class="search-icon" id="searchBtn">
-                <i class="fas fa-search"></i>
-            </div>
+            <div class="search-icon" id="searchBtn" onclick="history.back()">
+    <i class="fas fa-times"></i>
+</div>
             
             <!-- الشعار في الوسط -->
             <div class="logo">
@@ -370,9 +370,9 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="index.html">الرئيسية</a>
+                    <a href="https://www.motanabi.com">الرئيسية</a>
                     <a href="about.html">من نحن</a>
-                    <a href="contact.html">اتصل بنا</a>
+            
                 </div>
             </div>
         </div>
@@ -441,10 +441,10 @@
 
             // البحث في جميع الأقسام
             Promise.all([
-                searchInCategory('mtnbi_video', 'video', 'مرئيات'),
-                searchInCategory('mtnbi_sound', 'audio', 'صوتيات'),
-                searchInCategory('mtnbi_book', 'book', 'كتب'),
-                searchInCategory('mtnbi_sh3er', 'poem', 'أشعار')
+                searchInCategory('mtnbi_video', 'video', 'المرئيات'),
+                searchInCategory('mtnbi_sound', 'audio', 'الصوتيات'),
+                searchInCategory('mtnbi_book', 'book', 'الكتب'),
+                searchInCategory('mtnbi_sh3er', 'poem', 'الأشعار')
             ]).then(() => {
                 const hasResults = searchResults.querySelector('.category-section');
                 
