@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>رحلة المتنبي</title>
+  <title>منصة رحلة المتنبي</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -34,55 +34,205 @@
     }
 
     h1 {
-      margin: 10px 0 20px;
+      margin: 10px 0 30px;
       font-size: 2em;
+      color: #3a2c1a;
     }
 
     .countdown-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
-      flex-direction: row;
+      gap: 20px;
+      direction: rtl; /* التأكد من أن الاتجاه من اليمين لليسار */
     }
 
     .flip-card {
+      perspective: 1000px;
+      width: 100px;
+      height: 120px;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
       background: #a78a6f;
       border-radius: 10px;
-      padding: 20px;
-      width: 80px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+
+    .flip-card-back {
+      transform: rotateX(180deg);
+      background: #8a6d52;
     }
 
     .flip-inner {
-      display: block;
-      font-size: 1.5em;
+      font-size: 2.5em;
       font-weight: bold;
+      color: #fff;
     }
 
     .label {
-      margin-top: 10px;
-      font-size: 0.9em;
+      margin-top: 5px;
+      font-size: 1em;
+      color: #f5e7d6;
     }
 
-    @media (max-width: 600px) {
-      .flip-card {
-        width: 60px;
-        padding: 15px;
-      }
+    /* تأثير التقليب */
+    .flip {
+      animation: flip 0.6s ease-in-out;
+    }
 
-      .flip-inner {
-        font-size: 1.2em;
-      }
+    @keyframes flip {
+      0% { transform: rotateX(0deg); }
+      50% { transform: rotateX(90deg); }
+      100% { transform: rotateX(0deg); }
+    }
 
+    /* التعديلات للهواتف */
+    @media (max-width: 768px) {
       h1 {
         font-size: 1.5em;
+        margin-bottom: 20px;
+      }
+      
+      .countdown-container {
+        gap: 10px;
+      }
+      
+      .flip-card {
+        width: 80px;
+        height: 100px;
+      }
+      
+      .flip-inner {
+        font-size: 2em;
+      }
+      
+      .label {
+        font-size: 0.8em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.3em;
+      }
+      
+      .flip-card {
+        width: 70px;
+        height: 90px;
+      }
+      
+      .flip-inner {
+        font-size: 1.8em;
+      }
+      
+      .label {
+        font-size: 0.7em;
       }
     }
   </style>
+</head>
+<body>
+  <img src="assets/images/old-logo.png" alt="Logo" class="logo">
+  <h1>العدُّ التنازليّ لإطلاق النسخة الثانية من منصّة رحلة المتنبي</h1>
+  <div class="countdown-container">
+    <!-- الأيام أولاً (أقصى اليمين) -->
+    <div class="flip-card">
+      <div class="flip-card-inner" id="days-card">
+        <div class="flip-card-front">
+          <div class="flip-inner" id="days">0</div>
+          <div class="label">يوم</div>
+        </div>
+        <div class="flip-card-back">
+          <div class="flip-inner" id="days-back">0</div>
+          <div class="label">يوم</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ثم الساعات -->
+    <div class="flip-card">
+      <div class="flip-card-inner" id="hours-card">
+        <div class="flip-card-front">
+          <div class="flip-inner" id="hours">0</div>
+          <div class="label">ساعة</div>
+        </div>
+        <div class="flip-card-back">
+          <div class="flip-inner" id="hours-back">0</div>
+          <div class="label">ساعة</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ثم الدقائق -->
+    <div class="flip-card">
+      <div class="flip-card-inner" id="minutes-card">
+        <div class="flip-card-front">
+          <div class="flip-inner" id="minutes">0</div>
+          <div class="label">دقيقة</div>
+        </div>
+        <div class="flip-card-back">
+          <div class="flip-inner" id="minutes-back">0</div>
+          <div class="label">دقيقة</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- الثواني أخيراً (أقصى اليسار) -->
+    <div class="flip-card">
+      <div class="flip-card-inner" id="seconds-card">
+        <div class="flip-card-front">
+          <div class="flip-inner" id="seconds">0</div>
+          <div class="label">ثانية</div>
+        </div>
+        <div class="flip-card-back">
+          <div class="flip-inner" id="seconds-back">0</div>
+          <div class="label">ثانية</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const targetDate = new Date('2025-05-01T10:00:00');
-
+    
+    // عناصر DOM
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    
+    const daysBackEl = document.getElementById('days-back');
+    const hoursBackEl = document.getElementById('hours-back');
+    const minutesBackEl = document.getElementById('minutes-back');
+    const secondsBackEl = document.getElementById('seconds-back');
+    
+    const daysCard = document.getElementById('days-card');
+    const hoursCard = document.getElementById('hours-card');
+    const minutesCard = document.getElementById('minutes-card');
+    const secondsCard = document.getElementById('seconds-card');
+    
+    // القيم السابقة للمقارنة
+    let prevDays, prevHours, prevMinutes, prevSeconds;
+    let interval;
+    
     window.onload = function () {
       const now = new Date();
       if (now >= targetDate) {
@@ -91,53 +241,95 @@
         startCountdown();
       }
     };
-
+    
     function startCountdown() {
-      const update = () => {
-        const now = new Date();
-        const diff = targetDate - now;
-
-        if (diff <= 0) {
-          clearInterval(interval);
-          window.location.href = "index.html";
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-
-        document.getElementById('days').textContent = days;
-        document.getElementById('hours').textContent = hours;
-        document.getElementById('minutes').textContent = minutes;
-        document.getElementById('seconds').textContent = seconds;
-      };
-
-      update();
-      const interval = setInterval(update, 1000);
+      // تهيئة القيم السابقة
+      updateCountdown();
+      setInitialValues();
+      
+      interval = setInterval(() => {
+        updateCountdown();
+      }, 1000);
+    }
+    
+    function setInitialValues() {
+      const now = new Date();
+      const diff = targetDate - now;
+      
+      prevDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+      prevHours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      prevMinutes = Math.floor((diff / (1000 * 60)) % 60);
+      prevSeconds = Math.floor((diff / 1000) % 60);
+      
+      daysEl.textContent = prevDays;
+      daysBackEl.textContent = prevDays;
+      hoursEl.textContent = prevHours;
+      hoursBackEl.textContent = prevHours;
+      minutesEl.textContent = prevMinutes;
+      minutesBackEl.textContent = prevMinutes;
+      secondsEl.textContent = prevSeconds;
+      secondsBackEl.textContent = prevSeconds;
+    }
+    
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+      
+      if (diff <= 0) {
+        clearInterval(interval);
+        window.location.href = "index.html";
+        return;
+      }
+      
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      
+      // تحديث الأيام مع التأثير
+      if (days !== prevDays) {
+        daysBackEl.textContent = days;
+        daysCard.classList.add('flip');
+        setTimeout(() => {
+          daysEl.textContent = days;
+          daysCard.classList.remove('flip');
+        }, 300);
+        prevDays = days;
+      }
+      
+      // تحديث الساعات مع التأثير
+      if (hours !== prevHours) {
+        hoursBackEl.textContent = hours;
+        hoursCard.classList.add('flip');
+        setTimeout(() => {
+          hoursEl.textContent = hours;
+          hoursCard.classList.remove('flip');
+        }, 300);
+        prevHours = hours;
+      }
+      
+      // تحديث الدقائق مع التأثير
+      if (minutes !== prevMinutes) {
+        minutesBackEl.textContent = minutes;
+        minutesCard.classList.add('flip');
+        setTimeout(() => {
+          minutesEl.textContent = minutes;
+          minutesCard.classList.remove('flip');
+        }, 300);
+        prevMinutes = minutes;
+      }
+      
+      // تحديث الثواني مع التأثير
+      if (seconds !== prevSeconds) {
+        secondsBackEl.textContent = seconds;
+        secondsCard.classList.add('flip');
+        setTimeout(() => {
+          secondsEl.textContent = seconds;
+          secondsCard.classList.remove('flip');
+        }, 300);
+        prevSeconds = seconds;
+      }
     }
   </script>
-</head>
-<body>
-  <img src="A_digital_countdown_timer_in_Arabic_language_is_di.png" alt="Logo" class="logo">
-  <h1>العد التنازلي حتى افتتاح الموقع</h1>
-  <div class="countdown-container">
-    <div class="flip-card">
-      <div class="flip-inner" id="hours">0</div>
-      <div class="label">ساعة</div>
-    </div>
-    <div class="flip-card">
-      <div class="flip-inner" id="minutes">0</div>
-      <div class="label">دقيقة</div>
-    </div>
-    <div class="flip-card">
-      <div class="flip-inner" id="seconds">0</div>
-      <div class="label">ثانية</div>
-    </div>
-    <div class="flip-card">
-      <div class="flip-inner" id="days">0</div>
-      <div class="label">يوم</div>
-    </div>
-  </div>
 </body>
 </html>
