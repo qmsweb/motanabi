@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>ريلز إنستجرام</title>
+    <title>لحظات</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -397,175 +397,35 @@
                 </button>
             </div>
         </div>
-        
-        <!-- Reel 4 -->
-        <div class="reel">
-            <div class="progress-container">
-                <div class="progress-bar" id="progress4"></div>
-            </div>
-            <div class="logo">
-                <i class="fab fa-instagram"></i>
-            </div>
-            <div class="video-container">
-                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video4">
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1232-large.mp4" type="video/mp4">
-                </video>
-                <div class="seek-container">
-                    <div class="seek-bar" id="seekBar4">
-                        <div class="seek-progress" id="seekProgress4">
-                            <div class="seek-handle"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="video-controls">
-                    <button class="play-pause-btn" id="playPauseBtn4">
-                        <i class="fas fa-pause"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="user-info">
-                <div class="username">@dancer_girl</div>
-                <div class="description">رقص تحت الأضواء النيونية 💃 #رقص #فن</div>
-                <div class="music">
-                    <i class="fas fa-music"></i>
-                    <span>الصوت الأصلي - dance_beat</span>
-                </div>
-            </div>
-            <div class="controls">
-                <button class="control-btn">
-                    <i class="fas fa-heart"></i>
-                    <span>12K</span>
-                </button>
-                <button class="control-btn">
-                    <i class="fas fa-comment"></i>
-                    <span>876</span>
-                </button>
-                <button class="control-btn">
-                    <i class="fas fa-share"></i>
-                    <span>مشاركة</span>
-                </button>
-                <button class="control-btn">
-                    <i class="fas fa-ellipsis-h"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Reel 5 -->
-        <div class="reel">
-            <div class="progress-container">
-                <div class="progress-bar" id="progress5"></div>
-            </div>
-            <div class="logo">
-                <i class="fab fa-instagram"></i>
-            </div>
-            <div class="video-container">
-                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video5">
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-man-under-multicolored-lights-1237-large.mp4" type="video/mp4">
-                </video>
-                <div class="seek-container">
-                    <div class="seek-bar" id="seekBar5">
-                        <div class="seek-progress" id="seekProgress5">
-                            <div class="seek-handle"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="video-controls">
-                    <button class="play-pause-btn" id="playPauseBtn5">
-                        <i class="fas fa-pause"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="user-info">
-                <div class="username">@artist_vision</div>
-                <div class="description">جلسة تصوير فنية تحت الأضواء الملونة 📸 #فن #تصوير</div>
-                <div class="music">
-                    <i class="fas fa-music"></i>
-                    <span>الصوت الأصلي - artistic_vibes</span>
-                </div>
-            </div>
-            <div class="controls">
-                <button class="control-btn">
-                    <i class="fas fa-heart"></i>
-                    <span>9.3K</span>
-                </button>
-                <button class="control-btn">
-                    <i class="fas fa-comment"></i>
-                    <span>1.5K</span>
-                </button>
-                <button class="control-btn">
-                    <i class="fas fa-share"></i>
-                    <span>مشاركة</span>
-                </button>
-                <button class="control-btn">
-                    <i class="fas fa-ellipsis-h"></i>
-                </button>
-            </div>
-        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // منع انطفاء الشاشة
-            let wakeLock = null;
-            const requestWakeLock = async () => {
-                try {
-                    if ('wakeLock' in navigator) {
-                        wakeLock = await navigator.wakeLock.request('screen');
-                        console.log('تم تفعيل Wake Lock');
-                        wakeLock.addEventListener('release', () => {
-                            console.log('تم تحرير Wake Lock');
-                        });
-                    }
-                } catch (err) {
-                    console.error('فشل في تنشيط Wake Lock:', err);
-                }
-            };
-            
-            // إعادة طلب Wake Lock عندما تعود الصفحة للظهور
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible' && wakeLock === null) {
-                    requestWakeLock();
-                }
-            });
-            
-            // طلب Wake Lock عند تحميل الصفحة
-            requestWakeLock();
-            
             const reelsContainer = document.getElementById('reelsContainer');
             const videos = [
                 document.getElementById('video1'),
                 document.getElementById('video2'),
-                document.getElementById('video3'),
-                document.getElementById('video4'),
-                document.getElementById('video5')
+                document.getElementById('video3')
             ];
             const progressBars = [
                 document.getElementById('progress1'),
                 document.getElementById('progress2'),
-                document.getElementById('progress3'),
-                document.getElementById('progress4'),
-                document.getElementById('progress5')
+                document.getElementById('progress3')
             ];
             const seekBars = [
                 document.getElementById('seekBar1'),
                 document.getElementById('seekBar2'),
-                document.getElementById('seekBar3'),
-                document.getElementById('seekBar4'),
-                document.getElementById('seekBar5')
+                document.getElementById('seekBar3')
             ];
             const seekProgresses = [
                 document.getElementById('seekProgress1'),
                 document.getElementById('seekProgress2'),
-                document.getElementById('seekProgress3'),
-                document.getElementById('seekProgress4'),
-                document.getElementById('seekProgress5')
+                document.getElementById('seekProgress3')
             ];
             const playPauseBtns = [
                 document.getElementById('playPauseBtn1'),
                 document.getElementById('playPauseBtn2'),
-                document.getElementById('playPauseBtn3'),
-                document.getElementById('playPauseBtn4'),
-                document.getElementById('playPauseBtn5')
+                document.getElementById('playPauseBtn3')
             ];
             const reelElements = document.querySelectorAll('.reel');
             
@@ -583,7 +443,7 @@
                 
                 controlsTimeout = setTimeout(() => {
                     reelElements[reelIndex].classList.remove('show-controls');
-                }, 5000);
+                }, 3000);
             }
             
             // إصلاح خاص لـ iOS لمنع فتح مشغل الفيديو
@@ -633,14 +493,8 @@
                     });
                     
                     video.addEventListener('ended', function() {
-                        if (index < videos.length - 1) {
-                            setTimeout(() => {
-                                scrollToReel(index + 1);
-                            }, 500);
-                        } else {
-                            video.currentTime = 0;
-                            video.play();
-                        }
+                        video.currentTime = 0;
+                        video.play();
                     });
                 });
             }
@@ -798,8 +652,11 @@
                     behavior: 'smooth'
                 });
                 
-                playVideo(index);
-                showControls(index);
+                // Pause current video before playing the new one
+                pauseVideo(currentReel);
+                currentReel = index;
+                playVideo(currentReel);
+                showControls(currentReel);
             }
             
             function updateActiveVideo() {
@@ -816,14 +673,24 @@
             }
             
             function playVideo(index) {
+                // Pause all other videos first
+                videos.forEach((video, i) => {
+                    if (i !== index && !video.paused) {
+                        video.pause();
+                        playPauseBtns[i].innerHTML = '<i class="fas fa-play"></i>';
+                    }
+                });
+                
                 videos[index].play().catch(e => console.error("فشل تشغيل الفيديو:", e));
                 playPauseBtns[index].innerHTML = '<i class="fas fa-pause"></i>';
                 updateProgressBars(index);
             }
             
             function pauseVideo(index) {
-                videos[index].pause();
-                playPauseBtns[index].innerHTML = '<i class="fas fa-play"></i>';
+                if (!videos[index].paused) {
+                    videos[index].pause();
+                    playPauseBtns[index].innerHTML = '<i class="fas fa-play"></i>';
+                }
             }
             
             function togglePlayPause(index) {
@@ -864,6 +731,15 @@
             
             reelsContainer.addEventListener('mousemove', function() {
                 showControls(currentReel);
+            });
+            
+            // إدارة حالة الفيديوهات عند تغيير تبويب المتصفح
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    pauseVideo(currentReel);
+                } else {
+                    playVideo(currentReel);
+                }
             });
         });
     </script>
