@@ -372,7 +372,7 @@
       <script>
         // تحقق مما إذا كان المستخدم قد جاء من صفحة الدخول أو لديه تصريح
         const isAuthorized = localStorage.getItem('authenticated') === 'true' || 
-                            document.referrer.includes('index.html');
+                            document.referrer.includes('pass.html');
         
         if (!isAuthorized) {
             // مسح أي بيانات دخول قديمة (حماية إضافية)
