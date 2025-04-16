@@ -2,8 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>العد التنازلي</title>
+  <title>رحلة المتنبي</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
@@ -16,8 +17,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
       text-align: center;
+      padding: 20px;
     }
 
     @keyframes gradientBG {
@@ -38,31 +40,44 @@
 
     .countdown-container {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 15px;
-      flex-direction: row-reverse;
+      flex-direction: row;
     }
 
     .flip-card {
-      background: #fff;
+      background: #a78a6f;
       border-radius: 10px;
       padding: 20px;
+      width: 80px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      width: 100px;
-      perspective: 1000px;
     }
 
     .flip-inner {
       display: block;
       font-size: 1.5em;
       font-weight: bold;
-      transform-origin: bottom;
-      transition: transform 0.7s ease;
-      transform-style: preserve-3d;
     }
 
     .label {
       margin-top: 10px;
       font-size: 0.9em;
+    }
+
+    @media (max-width: 600px) {
+      .flip-card {
+        width: 60px;
+        padding: 15px;
+      }
+
+      .flip-inner {
+        font-size: 1.2em;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
     }
   </style>
   <script>
@@ -108,10 +123,6 @@
   <h1>العد التنازلي حتى افتتاح الموقع</h1>
   <div class="countdown-container">
     <div class="flip-card">
-      <div class="flip-inner" id="days">0</div>
-      <div class="label">يوم</div>
-    </div>
-    <div class="flip-card">
       <div class="flip-inner" id="hours">0</div>
       <div class="label">ساعة</div>
     </div>
@@ -122,6 +133,10 @@
     <div class="flip-card">
       <div class="flip-inner" id="seconds">0</div>
       <div class="label">ثانية</div>
+    </div>
+    <div class="flip-card">
+      <div class="flip-inner" id="days">0</div>
+      <div class="label">يوم</div>
     </div>
   </div>
 </body>
