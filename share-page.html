@@ -317,6 +317,33 @@
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
+        /* تنسيقات الشريط السفلي */
+        .footer {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            margin-top: 20px;
+            border-top: 1px solid var(--desert-color);
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .footer-names {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .footer-name {
+            font-weight: 600;
+        }
+        
         @media (max-width: 768px) {
             .item {
                 width: 140px;
@@ -358,6 +385,20 @@
             .poem-title {
                 font-size: 15px;
                 padding: 10px;
+            }
+            
+            .footer-names {
+                gap: 10px;
+            }
+            
+            .footer p {
+                font-size: 12px;
+            }
+             }
+            
+            .footer p4 {
+                font-size: 14px;
+                font-weight: bold;
             }
         }
     </style>
@@ -475,6 +516,18 @@
             </div>
         </div>
     </div>
+
+    <!-- الشريط السفلي -->
+    <footer class="footer">
+        <p>برمجة وتصميم جاسم الفارسي لصالح منصة رحلة المتنبي &copy; 2025</p>
+        <p4>فريق العمل</p4>
+        <div class="footer-names">
+            <span class="footer-name">جاسم الفارسي</span>
+            <span class="footer-name">ليث الخاطري</span>
+            <span class="footer-name">أحمد الجهضمي</span>
+            <span class="footer-name">سالم باعلوي</span>
+        </div>
+    </footer>
 
     <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
