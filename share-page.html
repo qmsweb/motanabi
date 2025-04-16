@@ -369,6 +369,23 @@
 <link rel="apple-touch-icon" href="assets/icons/fullicon.jpeg">
     <link rel="icon" href="assets/icons/favicon.jpg" type="image/jpg">
 <body>
+      <script>
+        // تحقق مما إذا كان المستخدم قد جاء من صفحة الدخول أو لديه تصريح
+        const isAuthorized = localStorage.getItem('authenticated') === 'true' || 
+                            document.referrer.includes('index.html');
+        
+        if (!isAuthorized) {
+            // مسح أي بيانات دخول قديمة (حماية إضافية)
+            localStorage.removeItem('authenticated');
+            
+            // توجيه فوري إلى صفحة إدخال الرمز
+            window.location.replace('index.html');
+            
+            // إيقاف تحميل باقي الصفحة
+            document.write('');
+            throw new Error('وصول غير مصرح به');
+        }
+    </script>
     <!-- NavBar -->
     <nav class="navbar">
         <div class="navbar-container">
