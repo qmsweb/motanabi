@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>رحلة المتنبي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <title>العد التنازلي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: 'Cairo', sans-serif;
-      color: #000000;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
       background: linear-gradient(-45deg, #f5e7d6, #a78a6f, #f5e7d6, #a78a6f);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
     }
 
     @keyframes gradientBG {
@@ -26,18 +26,43 @@
       100% {background-position: 0% 50%;}
     }
 
-    h1 {
-      font-size: 2.5em;
+    img.logo {
+      width: 100px;
       margin-bottom: 20px;
     }
 
-    #countdown {
-      font-size: 1.8em;
-      background: rgba(255, 255, 255, 0.4);
-      padding: 20px 30px;
-      border-radius: 12px;
+    h1 {
+      margin: 10px 0 20px;
+      font-size: 2em;
+    }
+
+    .countdown-container {
+      display: flex;
+      gap: 15px;
+      flex-direction: row-reverse;
+    }
+
+    .flip-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      backdrop-filter: blur(5px);
+      width: 100px;
+      perspective: 1000px;
+    }
+
+    .flip-inner {
+      display: block;
+      font-size: 1.5em;
+      font-weight: bold;
+      transform-origin: bottom;
+      transition: transform 0.7s ease;
+      transform-style: preserve-3d;
+    }
+
+    .label {
+      margin-top: 10px;
+      font-size: 0.9em;
     }
   </style>
   <script>
@@ -46,15 +71,14 @@
     window.onload = function () {
       const now = new Date();
       if (now >= targetDate) {
-        window.location.href = "index.html"; // عدّل حسب اسم الصفحة الرئيسية لاحقًا
+        window.location.href = "index.html";
       } else {
         startCountdown();
       }
     };
 
     function startCountdown() {
-      const countdown = document.getElementById('countdown');
-      const interval = setInterval(() => {
+      const update = () => {
         const now = new Date();
         const diff = targetDate - now;
 
@@ -68,16 +92,37 @@
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
 
-        countdown.innerHTML = `
-          ${days} يوم &nbsp; ${hours} ساعة &nbsp; 
-          ${minutes} دقيقة &nbsp; ${seconds} ثانية
-        `;
-      }, 1000);
+        document.getElementById('days').textContent = days;
+        document.getElementById('hours').textContent = hours;
+        document.getElementById('minutes').textContent = minutes;
+        document.getElementById('seconds').textContent = seconds;
+      };
+
+      update();
+      const interval = setInterval(update, 1000);
     }
   </script>
 </head>
 <body>
-  <h1>العد التنازلي لإطلاق النسخة الرسمية من المنصة</h1>
-  <div id="countdown">جارٍ التحميل...</div>
+  <img src="A_digital_countdown_timer_in_Arabic_language_is_di.png" alt="Logo" class="logo">
+  <h1>العد التنازلي حتى افتتاح الموقع</h1>
+  <div class="countdown-container">
+    <div class="flip-card">
+      <div class="flip-inner" id="days">0</div>
+      <div class="label">يوم</div>
+    </div>
+    <div class="flip-card">
+      <div class="flip-inner" id="hours">0</div>
+      <div class="label">ساعة</div>
+    </div>
+    <div class="flip-card">
+      <div class="flip-inner" id="minutes">0</div>
+      <div class="label">دقيقة</div>
+    </div>
+    <div class="flip-card">
+      <div class="flip-inner" id="seconds">0</div>
+      <div class="label">ثانية</div>
+    </div>
+  </div>
 </body>
 </html>
