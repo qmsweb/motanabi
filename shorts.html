@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>لحظات</title>
+    <title>ريلز إنستجرام</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -203,12 +203,14 @@
         .user-info .description {
             font-size: 14px;
             margin-bottom: 10px;
+            line-height: 1.4;
         }
         
         .music {
             display: flex;
             align-items: center;
             font-size: 14px;
+            margin-top: 8px;
         }
         
         .music i {
@@ -237,6 +239,14 @@
             .video-container video {
                 -webkit-transform: translateZ(0);
             }
+            
+            .user-info, .controls {
+                bottom: calc(100px + env(safe-area-inset-bottom));
+            }
+            
+            .seek-container {
+                bottom: calc(70px + env(safe-area-inset-bottom));
+            }
         }
     </style>
 </head>
@@ -251,7 +261,7 @@
                 <i class="fab fa-instagram"></i>
             </div>
             <div class="video-container">
-                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video1">
+                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video1" preload="auto">
                     <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
                 </video>
                 <div class="seek-container">
@@ -303,7 +313,7 @@
                 <i class="fab fa-instagram"></i>
             </div>
             <div class="video-container">
-                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video2">
+                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video2" preload="auto">
                     <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
                 </video>
                 <div class="seek-container">
@@ -355,7 +365,7 @@
                 <i class="fab fa-instagram"></i>
             </div>
             <div class="video-container">
-                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video3">
+                <video loop playsinline webkit-playsinline x-webkit-airplay="allow" id="video3" preload="auto">
                     <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
                 </video>
                 <div class="seek-container">
@@ -435,6 +445,7 @@
             let isSeeking = false;
             let controlsTimeout;
             let isDragging = false;
+            let isUserInteracted = false;
             
             // إظهار/إخفاء عناصر التحكم
             function showControls(reelIndex) {
@@ -470,6 +481,7 @@
                     // Set up play/pause button
                     playPauseBtns[index].addEventListener('click', function(e) {
                         e.stopPropagation();
+                        isUserInteracted = true;
                         togglePlayPause(index);
                         showControls(index);
                     });
@@ -481,6 +493,7 @@
                     video.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
+                        isUserInteracted = true;
                         togglePlayPause(index);
                         showControls(index);
                     }, false);
@@ -495,6 +508,13 @@
                     video.addEventListener('ended', function() {
                         video.currentTime = 0;
                         video.play();
+                    });
+                    
+                    // Auto play when ready
+                    video.addEventListener('canplaythrough', function() {
+                        if (!isUserInteracted && index === currentReel) {
+                            playVideo(index);
+                        }
                     });
                 });
             }
@@ -546,12 +566,6 @@
                     }
                 });
             }
-            
-            // Play first video when metadata is loaded
-            videos[0].addEventListener('loadedmetadata', function() {
-                playVideo(0);
-                showControls(0);
-            });
             
             // Handle scroll events
             reelsContainer.addEventListener('scroll', function() {
@@ -606,6 +620,7 @@
                 
                 // إذا كانت مدة اللمس قصيرة، اعتبرها نقرة وليس سحباً
                 if (touchDuration < 200 && Math.abs(touchStartY - touchEndY) < 10) {
+                    isUserInteracted = true;
                     togglePlayPause(currentReel);
                     showControls(currentReel);
                 } else {
@@ -681,9 +696,17 @@
                     }
                 });
                 
-                videos[index].play().catch(e => console.error("فشل تشغيل الفيديو:", e));
-                playPauseBtns[index].innerHTML = '<i class="fas fa-pause"></i>';
-                updateProgressBars(index);
+                videos[index].play()
+                    .then(() => {
+                        playPauseBtns[index].innerHTML = '<i class="fas fa-pause"></i>';
+                        updateProgressBars(index);
+                    })
+                    .catch(e => {
+                        console.error("فشل تشغيل الفيديو:", e);
+                        // إذا فشل التشغيل التلقائي، ننتظر تفاعل المستخدم
+                        playPauseBtns[index].innerHTML = '<i class="fas fa-play"></i>';
+                        reelElements[index].classList.add('show-controls');
+                    });
             }
             
             function pauseVideo(index) {
@@ -741,6 +764,13 @@
                     playVideo(currentReel);
                 }
             });
+            
+            // Auto play first video after a short delay
+            setTimeout(() => {
+                if (!isUserInteracted) {
+                    playVideo(0);
+                }
+            }, 500);
         });
     </script>
 </body>
