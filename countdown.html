@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>منصة رحلة المتنبي</title>
+  <title>رحلة المتنبي</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -28,13 +28,8 @@
       100% {background-position: 0% 50%;}
     }
 
-    img.logo {
-      width: 100px;
-      margin-bottom: 20px;
-    }
-
     h1 {
-      margin: 10px 0 30px;
+      margin: 0 0 30px;
       font-size: 2em;
       color: #3a2c1a;
     }
@@ -44,7 +39,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
-      direction: rtl; /* التأكد من أن الاتجاه من اليمين لليسار */
+      direction: rtl;
     }
 
     .flip-card {
@@ -93,7 +88,6 @@
       color: #f5e7d6;
     }
 
-    /* تأثير التقليب */
     .flip {
       animation: flip 0.6s ease-in-out;
     }
@@ -104,7 +98,6 @@
       100% { transform: rotateX(0deg); }
     }
 
-    /* التعديلات للهواتف */
     @media (max-width: 768px) {
       h1 {
         font-size: 1.5em;
@@ -150,10 +143,8 @@
   </style>
 </head>
 <body>
-  <img src="assets/images/old-logo.png" alt="Logo" class="logo">
-  <h1>العدُّ التنازليّ لإطلاق النسخة الثانية من منصّة رحلة المتنبي</h1>
+  <h1>العد التنازلي حتى افتتاح الموقع</h1>
   <div class="countdown-container">
-    <!-- الأيام أولاً (أقصى اليمين) -->
     <div class="flip-card">
       <div class="flip-card-inner" id="days-card">
         <div class="flip-card-front">
@@ -167,7 +158,6 @@
       </div>
     </div>
     
-    <!-- ثم الساعات -->
     <div class="flip-card">
       <div class="flip-card-inner" id="hours-card">
         <div class="flip-card-front">
@@ -181,7 +171,6 @@
       </div>
     </div>
     
-    <!-- ثم الدقائق -->
     <div class="flip-card">
       <div class="flip-card-inner" id="minutes-card">
         <div class="flip-card-front">
@@ -195,7 +184,6 @@
       </div>
     </div>
     
-    <!-- الثواني أخيراً (أقصى اليسار) -->
     <div class="flip-card">
       <div class="flip-card-inner" id="seconds-card">
         <div class="flip-card-front">
@@ -213,7 +201,6 @@
   <script>
     const targetDate = new Date('2025-05-01T10:00:00');
     
-    // عناصر DOM
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minutesEl = document.getElementById('minutes');
@@ -229,7 +216,6 @@
     const minutesCard = document.getElementById('minutes-card');
     const secondsCard = document.getElementById('seconds-card');
     
-    // القيم السابقة للمقارنة
     let prevDays, prevHours, prevMinutes, prevSeconds;
     let interval;
     
@@ -243,7 +229,6 @@
     };
     
     function startCountdown() {
-      // تهيئة القيم السابقة
       updateCountdown();
       setInitialValues();
       
@@ -286,7 +271,6 @@
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
       
-      // تحديث الأيام مع التأثير
       if (days !== prevDays) {
         daysBackEl.textContent = days;
         daysCard.classList.add('flip');
@@ -297,7 +281,6 @@
         prevDays = days;
       }
       
-      // تحديث الساعات مع التأثير
       if (hours !== prevHours) {
         hoursBackEl.textContent = hours;
         hoursCard.classList.add('flip');
@@ -308,7 +291,6 @@
         prevHours = hours;
       }
       
-      // تحديث الدقائق مع التأثير
       if (minutes !== prevMinutes) {
         minutesBackEl.textContent = minutes;
         minutesCard.classList.add('flip');
@@ -319,7 +301,6 @@
         prevMinutes = minutes;
       }
       
-      // تحديث الثواني مع التأثير
       if (seconds !== prevSeconds) {
         secondsBackEl.textContent = seconds;
         secondsCard.classList.add('flip');
