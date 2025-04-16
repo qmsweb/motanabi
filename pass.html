@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رحلة المتنبي - الدخول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #d2b48c;
+            --text-color: #000000;
+            --light-bg: #f5e7d6;
+            --desert-color: #a78a6f;
+            --desert-light: #e3d5b8;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(-45deg, #f5e7d6, #a78a6f, #f5e7d6, #a78a6f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            direction: rtl;
+        }
+        
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+        }
+        
+        .logo img {
+            height: 80px;
+            width: auto;
+        }
+        
+        h1 {
+            color: var(--desert-color);
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--desert-color);
+            font-size: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 2px solid var(--desert-light);
+            border-radius: 8px;
+            font-size: 18px;
+            font-family: 'Cairo', sans-serif;
+            text-align: right;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--desert-color);
+        }
+        
+        button {
+            background-color: var(--desert-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            input, button {
+                padding: 12px 12px 12px 45px;
+                font-size: 16px;
+            }
+            
+            .input-group i {
+                font-size: 18px;
+                left: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="assets/images/logo.png" alt="رحلة المتنبي">
+        </div>
+        
+        <h1>أدخل رمز الدخول للوصول إلى المنصة</h1>
+        
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="رمز الدخول" autocomplete="off">
+        </div>
+        
+        <button id="loginBtn">دخول</button>
+        
+        <div class="error-message" id="errorMessage">رمز الدخول غير صحيح، يرجى المحاولة مرة أخرى</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // الحد من إدخال الأرقام فقط
+            passwordInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+            
+            // التحقق من كلمة المرور عند النقر على زر الدخول
+            loginBtn.addEventListener('click', function() {
+                const enteredPassword = passwordInput.value;
+                
+                if (enteredPassword === '5125') {
+                    // تخزين حالة المصادقة في localStorage
+                    localStorage.setItem('authenticated', 'true');
+                    
+                    // توجيه المستخدم إلى الصفحة الرئيسية
+                    window.location.href = 'share-page.html';
+                } else {
+                    // عرض رسالة الخطأ
+                    errorMessage.style.display = 'block';
+                    passwordInput.focus();
+                    
+                    // اهتزاز حقل الإدخال للإشارة إلى الخطأ
+                    passwordInput.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        passwordInput.style.animation = '';
+                    }, 500);
+                }
+            });
+            
+            // السماح بالدخول باستخدام زر Enter
+            passwordInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    loginBtn.click();
+                }
+            });
+            
+            // إضافة تأثير الاهتزاز
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    20%, 60% { transform: translateX(-5px); }
+                    40%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
