@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة رحلة المتنبي</title>
+    
+    <!-- خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #d2b48c;
+            --text-color: #000000;
+            --light-bg: #f5e7d6;
+            --desert-color: #a78a6f;
+            --desert-light: #e3d5b8;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+        
+        a {
+            color: var(--text-color) !important;
+            text-decoration: none !important;
+        }
+        
+        /* التصميم الجديد للشريط العلوي */
+        .app-header {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 40px;
+            margin-left: 10px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        /* القائمة الجانبية الجديدة */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: var(--primary-color);
+            z-index: 1100;
+            transition: right 0.3s ease;
+            padding-top: 70px;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar.open {
+            right: 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            font-size: 16px;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: var(--desert-light);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1050;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* المحتوى الرئيسي الجديد */
+        .main-content {
+            margin-top: 70px;
+            padding: 20px;
+        }
+        
+        /* بطاقة الاقتباس الجديدة */
+        .quote-card {
+            background-color: var(--desert-light);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quote-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .quote-icon {
+            width: 28px;
+            height: 28px;
+            margin-left: 10px;
+        }
+        
+        .quote-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .quote-content {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .quote-author {
+            font-size: 16px;
+            color: var(--desert-color);
+            font-style: italic;
+        }
+        
+        .quote-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .quote-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--desert-color);
+            cursor: pointer;
+            margin: 0 15px;
+        }
+        
+        .quote-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: #ccc;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dot.active {
+            background-color: var(--desert-color);
+            transform: scale(1.2);
+        }
+        
+        /* أقسام المحتوى الجديدة */
+        .content-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--desert-color);
+        }
+        
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .view-all {
+            margin-right: auto;
+            font-size: 14px;
+            color: var(--desert-color);
+            cursor: pointer;
+        }
+        
+        /* شبكة المحتوى الجديدة */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+        
+        .content-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .card-body {
+            padding: 12px;
+        }
+        
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+            text-align: center;
+        }
+        
+        /* بطاقة الشعر الخاصة */
+        .poem-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 100px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .poem-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+            
+            .card-image {
+                height: 150px;
+            }
+            
+            .quote-card {
+                padding: 20px;
+            }
+            
+            .quote-content {
+                font-size: 16px;
+            }
+            
+            .sidebar {
+                width: 250px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .card-image {
+                height: 130px;
+            }
+            
+            .logo-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط العلوي الجديد -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="assets/images/logo.png" alt="رحلة المتنبي" class="logo-img">
+                <span class="logo-text">رحلة المتنبي</span>
+            </div>
+            <div class="header-actions">
+                <i class="fas fa-search header-icon" id="searchBtn"></i>
+                <i class="fas fa-bars header-icon" id="menuBtn"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- القائمة الجانبية الجديدة -->
+    <div class="overlay" id="overlay"></div>
+    <div class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="about.html">من نحن</a></li>
+            <li><a href="contact.html">اتصل بنا</a></li>
+            <li><a href="videos.html">المرئيات</a></li>
+            <li><a href="audios.html">الصوتيات</a></li>
+            <li><a href="books.html">الكتب</a></li>
+            <li><a href="poems.html">الأشعار</a></li>
+        </ul>
+    </div>
+    
+    <!-- المحتوى الرئيسي الجديد -->
+    <div class="main-content">
+        <!-- بطاقة الاقتباس الجديدة -->
+        <div class="quote-card">
+            <div class="quote-header">
+                <img src="assets/icons/quote.png" alt="اقتباس اليوم" class="quote-icon">
+                <h2 class="quote-title">اقتباس اليوم</h2>
+            </div>
+            <div id="quoteContainer">
+                <div class="loading-icon"><i class="fas fa-spinner fa-spin"></i></div>
+            </div>
+            <div class="quote-controls">
+                <button class="quote-btn" id="prevQuote"><i class="fas fa-chevron-right"></i></button>
+                <button class="quote-btn" id="playPauseQuote"><i class="fas fa-pause"></i></button>
+                <button class="quote-btn" id="nextQuote"><i class="fas fa-chevron-left"></i></button>
+            </div>
+            <div class="quote-dots" id="quoteDots">
+                <!-- سيتم إضافة النقاط ديناميكيًا -->
+            </div>
+        </div>
+        
+        <!-- قسم المرئيات الجديد -->
+        <div class="content-section">
+            <div class="section-header">
+                <img src="assets/icons/video.png" alt="المرئيات" class="section-icon">
+                <h3 class="section-title">المرئيات</h3>
+                <span class="view-all">عرض الكل</span>
+            </div>
+            <div class="content-grid" id="videoGrid">
+                <div class="loading-icon"><i class="fas fa-spinner fa-spin"></i></div>
+            </div>
+        </div>
+        
+        <!-- قسم الصوتيات الجديد -->
+        <div class="content-section">
+            <div class="section-header">
+                <img src="assets/icons/audio.png" alt="الصوتيات" class="section-icon">
+                <h3 class="section-title">الصوتيات</h3>
+                <span class="view-all">عرض الكل</span>
+            </div>
+            <div class="content-grid" id="audioGrid">
+                <div class="loading-icon"><i class="fas fa-spinner fa-spin"></i></div>
+            </div>
+        </div>
+        
+        <!-- قسم الكتب الجديد -->
+        <div class="content-section">
+            <div class="section-header">
+                <img src="assets/icons/book.png" alt="الكتب" class="section-icon">
+                <h3 class="section-title">الكتب</h3>
+                <span class="view-all">عرض الكل</span>
+            </div>
+            <div class="content-grid" id="bookGrid">
+                <div class="loading-icon"><i class="fas fa-spinner fa-spin"></i></div>
+            </div>
+        </div>
+        
+        <!-- قسم الأشعار الجديد -->
+        <div class="content-section">
+            <div class="section-header">
+                <img src="assets/icons/poem.png" alt="الأشعار" class="section-icon">
+                <h3 class="section-title">الأشعار</h3>
+                <span class="view-all">عرض الكل</span>
+            </div>
+            <div class="content-grid" id="poemGrid">
+                <div class="loading-icon"><i class="fas fa-spinner fa-spin"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+
+    <script>
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDErdK7mjrXUtBYR28U7JIpbFi5RHWM9zM",
+            authDomain: "momentschat.firebaseapp.com",
+            databaseURL: "https://momentschat.firebaseio.com",
+            projectId: "momentschat",
+            storageBucket: "momentschat.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "1:866549697398:android:024dd3bf3b81d1adf78857"
+        };
+        
+        // Initialize Firebase
+        let db;
+        try {
+            const app = firebase.initializeApp(firebaseConfig);
+            db = firebase.database(app);
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+
+        // متغيرات الاقتباسات
+        let quotes = [];
+        let currentQuoteIndex = 0;
+        let quoteInterval;
+        let isPlaying = true;
+        
+        // عناصر واجهة المستخدم
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuBtn = document.getElementById('menuBtn');
+        const searchBtn = document.getElementById('searchBtn');
+        const prevQuoteBtn = document.getElementById('prevQuote');
+        const nextQuoteBtn = document.getElementById('nextQuote');
+        const playPauseBtn = document.getElementById('playPauseQuote');
+        const quoteContainer = document.getElementById('quoteContainer');
+        const quoteDots = document.getElementById('quoteDots');
+        
+        // أحداث القائمة الجانبية
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        // حدث البحث
+        searchBtn.addEventListener('click', () => {
+            window.location.href = 'search.html';
+        });
+        
+        // دالة لتحميل الاقتباسات
+        async function loadQuotes() {
+            // اقتباسات افتراضية
+            const defaultQuotes = [
+                {
+                    text: "أنا الذي نظر الأعمى إلى أدبي وأسمعت كلماتي من به صمم",
+                    author: "المتنبي"
+                },
+                {
+                    text: "على قدر أهل العزم تأتي العزائم وتأتي على قدر الكرام المكارم",
+                    author: "المتنبي"
+                },
+                {
+                    text: "لا تلقَ دهرك إلّا غير مكترث ما دام يصحب فيه روحك البدن",
+                    author: "المتنبي"
+                },
+                {
+                    text: "إذا غامرت في شرف مرومٍ فلا تقنع بما دونَ النجومِ",
+                    author: "المتنبي"
+                },
+                {
+                    text: "أعزُّ مكانٍ في الدُنى سَرجُ سابحٍ وخَيرُ جليسٍ في الزمانِ كِتابُ",
+                    author: "المتنبي"
+                }
+            ];
+            
+            try {
+                // محاولة جلب الاقتباسات من ملف
+                const response = await fetch('quote.html');
+                if (response.ok) {
+                    const text = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+                    const quoteElements = doc.querySelectorAll('.quote');
+                    
+                    if (quoteElements.length > 0) {
+                        quotes = Array.from(quoteElements).map(quote => ({
+                            text: quote.querySelector('.quote-text')?.textContent || '',
+                            author: quote.querySelector('.quote-author')?.textContent || 'المتنبي'
+                        }));
+                    } else {
+                        quotes = defaultQuotes;
+                    }
+                } else {
+                    quotes = defaultQuotes;
+                }
+            } catch (error) {
+                console.error('Error loading quotes:', error);
+                quotes = defaultQuotes;
+            }
+            
+            // عرض الاقتباسات
+            displayQuote(currentQuoteIndex);
+            createDots();
+            startQuoteInterval();
+        }
+        
+        // دالة لعرض اقتباس معين
+        function displayQuote(index) {
+            if (quotes.length === 0) return;
+            
+            currentQuoteIndex = index;
+            const quote = quotes[index];
+            
+            quoteContainer.innerHTML = `
+                <p class="quote-content">"${quote.text}"</p>
+                <p class="quote-author">— ${quote.author}</p>
+            `;
+            
+            // تحديث النقاط النشطة
+            updateDots();
+        }
+        
+        // دالة لإنشاء نقاط التنقل
+        function createDots() {
+            quoteDots.innerHTML = '';
+            quotes.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === currentQuoteIndex) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    displayQuote(index);
+                    resetQuoteInterval();
+                });
+                quoteDots.appendChild(dot);
+            });
+        }
+        
+        // دالة لتحديث النقاط النشطة
+        function updateDots() {
+            const dots = quoteDots.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                if (index === currentQuoteIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        // دالة للانتقال للاقتباس التالي
+        function nextQuote() {
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            displayQuote(currentQuoteIndex);
+        }
+        
+        // دالة للانتقال للاقتباس السابق
+        function prevQuote() {
+            currentQuoteIndex = (currentQuoteIndex - 1 + quotes.length) % quotes.length;
+            displayQuote(currentQuoteIndex);
+        }
+        
+        // دالة لبدء التبديل التلقائي
+        function startQuoteInterval() {
+            quoteInterval = setInterval(nextQuote, 5000);
+            isPlaying = true;
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+        
+        // دالة لإيقاف التبديل التلقائي
+        function stopQuoteInterval() {
+            clearInterval(quoteInterval);
+            isPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+        
+        // دالة لإعادة تعيين المؤقت
+        function resetQuoteInterval() {
+            stopQuoteInterval();
+            startQuoteInterval();
+        }
+        
+        // دالة للتحكم في التشغيل/الإيقاف
+        function togglePlayPause() {
+            if (isPlaying) {
+                stopQuoteInterval();
+            } else {
+                startQuoteInterval();
+            }
+        }
+        
+        // أحداث التحكم في الاقتباسات
+        prevQuoteBtn.addEventListener('click', () => {
+            prevQuote();
+            resetQuoteInterval();
+        });
+        
+        nextQuoteBtn.addEventListener('click', () => {
+            nextQuote();
+            resetQuoteInterval();
+        });
+        
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        
+        // دالة لإنشاء بطاقة محتوى
+        function createContentCard(item, type, id) {
+            const card = document.createElement('div');
+            card.className = 'content-card';
+            
+            if (type === 'poem') {
+                card.innerHTML = `
+                    <a href="${type}.html?id=${id}">
+                        <div class="poem-card">
+                            <h4 class="poem-title">${item.title || 'شعر بدون عنوان'}</h4>
+                        </div>
+                    </a>
+                `;
+            } else {
+                card.innerHTML = `
+                    <a href="${type}.html?id=${id}">
+                        <img src="${item.image || 'assets/images/default.jpg'}" alt="${item.title || 'عنصر بدون عنوان'}" class="card-image">
+                        <div class="card-body">
+                            <h4 class="card-title">${item.title || 'عنصر بدون عنوان'}</h4>
+                        </div>
+                    </a>
+                `;
+            }
+            
+            return card;
+        }
+        
+        // دالة لتحميل المحتوى من Firebase
+        async function loadContent() {
+            if (!db) return;
+            
+            try {
+                // تحميل المرئيات
+                const videoSnapshot = await db.ref("mtnbi_video").once("value");
+                const videos = videoSnapshot.val();
+                if (videos) {
+                    const videoGrid = document.getElementById('videoGrid');
+                    videoGrid.innerHTML = '';
+                    Object.entries(videos).forEach(([id, video]) => {
+                        videoGrid.appendChild(createContentCard(video, 'video', id));
+                    });
+                }
+                
+                // تحميل الصوتيات
+                const audioSnapshot = await db.ref("mtnbi_sound").once("value");
+                const audios = audioSnapshot.val();
+                if (audios) {
+                    const audioGrid = document.getElementById('audioGrid');
+                    audioGrid.innerHTML = '';
+                    Object.entries(audios).forEach(([id, audio]) => {
+                        audioGrid.appendChild(createContentCard(audio, 'audio', id));
+                    });
+                }
+                
+                // تحميل الكتب
+                const bookSnapshot = await db.ref("mtnbi_book").once("value");
+                const books = bookSnapshot.val();
+                if (books) {
+                    const bookGrid = document.getElementById('bookGrid');
+                    bookGrid.innerHTML = '';
+                    Object.entries(books).forEach(([id, book]) => {
+                        bookGrid.appendChild(createContentCard(book, 'book', id));
+                    });
+                }
+                
+                // تحميل الأشعار
+                const poemSnapshot = await db.ref("mtnbi_sh3er").once("value");
+                const poems = poemSnapshot.val();
+                if (poems) {
+                    const poemGrid = document.getElementById('poemGrid');
+                    poemGrid.innerHTML = '';
+                    Object.entries(poems).forEach(([id, poem]) => {
+                        poemGrid.appendChild(createContentCard(poem, 'poem', id));
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading content:", error);
+            }
+        }
+        
+        // عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            loadQuotes();
+            loadContent();
+            
+            // أحداث عرض الكل
+            document.querySelectorAll('.view-all').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.closest('.content-section').querySelector('.section-title').textContent;
+                    switch(type) {
+                        case 'المرئيات': window.location.href = 'videos.html'; break;
+                        case 'الصوتيات': window.location.href = 'audios.html'; break;
+                        case 'الكتب': window.location.href = 'books.html'; break;
+                        case 'الأشعار': window.location.href = 'poems.html'; break;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
