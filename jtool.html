@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة إنشاء JSON</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 28px;
+        }
+
+        .editor-section, .output-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        button.secondary {
+            background: #95a5a6;
+        }
+
+        button.secondary:hover {
+            background: #7f8c8d;
+        }
+
+        button.danger {
+            background: #e74c3c;
+        }
+
+        button.danger:hover {
+            background: #c0392b;
+        }
+
+        .fields-container {
+            margin-top: 20px;
+        }
+
+        .field-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        .field-item input {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .json-output {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f8f8f8;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .record-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .record-item h3 {
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .record-item p {
+            margin-bottom: 5px;
+        }
+
+        .record-actions {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid #3498db;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            button {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-code"></i> أداة إنشاء وتعديل ملفات JSON</h1>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="editor">إضافة بيانات</div>
+            <div class="tab" data-tab="view">عرض البيانات</div>
+            <div class="tab" data-tab="export">تصدير JSON</div>
+        </div>
+        
+        <div class="tab-content active" id="editor">
+            <div class="editor-section">
+                <h2><i class="fas fa-plus-circle"></i> إضافة سجل جديد</h2>
+                
+                <div class="form-group">
+                    <label for="name">الاسم:</label>
+                    <input type="text" id="name" placeholder="أدخل الاسم هنا">
+                </div>
+                
+                <div class="form-group">
+                    <label for="id">المعرف (سيتم توليده تلقائياً):</label>
+                    <input type="text" id="id" readonly>
+                </div>
+                
+                <h3><i class="fas fa-list-ul"></i> حقول إضافية</h3>
+                <div class="fields-container" id="fieldsContainer">
+                    <!-- الحقول الإضافية ستضاف هنا -->
+                </div>
+                
+                <button type="button" id="addFieldBtn"><i class="fas fa-plus"></i> إضافة حقل جديد</button>
+                
+                <div class="actions">
+                    <button type="button" id="addRecordBtn"><i class="fas fa-save"></i> حفظ السجل</button>
+                    <button type="button" id="resetFormBtn" class="secondary"><i class="fas fa-redo"></i> مسح النموذج</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="view">
+            <div class="output-section">
+                <h2><i class="fas fa-database"></i> السجلات المحفوظة</h2>
+                <div id="recordsList">
+                    <!-- السجلات ستظهر هنا -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="export">
+            <div class="output-section">
+                <h2><i class="fas fa-file-export"></i> تصدير JSON</h2>
+                <textarea class="json-output" id="jsonOutput" readonly></textarea>
+                <div class="actions">
+                    <button type="button" id="copyJsonBtn"><i class="fas fa-copy"></i> نسخ JSON</button>
+                    <button type="button" id="downloadJsonBtn"><i class="fas fa-download"></i> تنزيل كملف</button>
+                    <button type="button" id="clearAllBtn" class="danger"><i class="fas fa-trash"></i> مسح كل البيانات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // عناصر DOM
+            const nameInput = document.getElementById('name');
+            const idInput = document.getElementById('id');
+            const fieldsContainer = document.getElementById('fieldsContainer');
+            const addFieldBtn = document.getElementById('addFieldBtn');
+            const addRecordBtn = document.getElementById('addRecordBtn');
+            const resetFormBtn = document.getElementById('resetFormBtn');
+            const recordsList = document.getElementById('recordsList');
+            const jsonOutput = document.getElementById('jsonOutput');
+            const copyJsonBtn = document.getElementById('copyJsonBtn');
+            const downloadJsonBtn = document.getElementById('downloadJsonBtn');
+            const clearAllBtn = document.getElementById('clearAllBtn');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // بيانات التطبيق
+            let records = JSON.parse(localStorage.getItem('jsonRecords')) || [];
+            
+            // توليد معرف عشوائي
+            function generateRandomId() {
+                return Math.floor(100000 + Math.random() * 900000).toString();
+            }
+            
+            // تحديث المعرف عند تحميل الصفحة
+            idInput.value = generateRandomId();
+            
+            // إضافة حقل جديد
+            function addField(key = '', value = '') {
+                const fieldId = 'field_' + Date.now();
+                const fieldItem = document.createElement('div');
+                fieldItem.className = 'field-item';
+                fieldItem.innerHTML = `
+                    <button type="button" class="danger remove-field-btn" data-field="${fieldId}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <input type="text" class="field-key" placeholder="اسم الحقل" value="${key}">
+                    <input type="text" class="field-value" placeholder="قيمة الحقل" value="${value}">
+                `;
+                fieldsContainer.appendChild(fieldItem);
+                
+                // إضافة حدث لحذف الحقل
+                fieldItem.querySelector('.remove-field-btn').addEventListener('click', function() {
+                    fieldItem.remove();
+                });
+            }
+            
+            // تبديل التبويبات
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // إزالة النشاط من جميع التبويبات والمحتويات
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // إضافة النشاط للتبويب والمحتوى المحدد
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // إذا كان تبويب العرض، قم بتحديث القائمة
+                    if (tabId === 'view') {
+                        updateRecordsList();
+                    }
+                    
+                    // إذا كان تبويب التصدير، قم بتحديث JSON
+                    if (tabId === 'export') {
+                        updateJsonOutput();
+                    }
+                });
+            });
+            
+            // أحداث الأزرار
+            addFieldBtn.addEventListener('click', function() {
+                addField();
+            });
+            
+            resetFormBtn.addEventListener('click', function() {
+                nameInput.value = '';
+                idInput.value = generateRandomId();
+                fieldsContainer.innerHTML = '';
+            });
+            
+            addRecordBtn.addEventListener('click', function() {
+                const name = nameInput.value.trim();
+                const id = idInput.value.trim();
+                
+                if (!name) {
+                    alert('الرجاء إدخال اسم');
+                    return;
+                }
+                
+                // جمع الحقول الإضافية
+                const additionalFields = {};
+                const fieldItems = fieldsContainer.querySelectorAll('.field-item');
+                
+                fieldItems.forEach(item => {
+                    const key = item.querySelector('.field-key').value.trim();
+                    const value = item.querySelector('.field-value').value.trim();
+                    
+                    if (key) {
+                        additionalFields[key] = value || '';
+                    }
+                });
+                
+                // إنشاء السجل الجديد
+                const newRecord = {
+                    id,
+                    name,
+                    ...additionalFields
+                };
+                
+                // إضافة السجل إلى المصفوفة
+                records.push(newRecord);
+                localStorage.setItem('jsonRecords', JSON.stringify(records));
+                
+                // إعادة تعيين النموذج
+                resetFormBtn.click();
+                
+                // الانتقال إلى تبويب العرض
+                document.querySelector('.tab[data-tab="view"]').click();
+            });
+            
+            copyJsonBtn.addEventListener('click', function() {
+                jsonOutput.select();
+                document.execCommand('copy');
+                alert('تم نسخ JSON إلى الحافظة');
+            });
+            
+            downloadJsonBtn.addEventListener('click', function() {
+                const blob = new Blob([jsonOutput.value], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'data.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+            
+            clearAllBtn.addEventListener('click', function() {
+                if (confirm('هل أنت متأكد أنك تريد حذف جميع السجلات؟')) {
+                    records = [];
+                    localStorage.removeItem('jsonRecords');
+                    updateRecordsList();
+                    updateJsonOutput();
+                    alert('تم حذف جميع السجلات');
+                }
+            });
+            
+            // تحديث قائمة السجلات
+            function updateRecordsList() {
+                if (records.length === 0) {
+                    recordsList.innerHTML = '<p>لا توجد سجلات متاحة</p>';
+                    return;
+                }
+                
+                recordsList.innerHTML = '';
+                
+                records.forEach((record, index) => {
+                    const recordItem = document.createElement('div');
+                    recordItem.className = 'record-item';
+                    
+                    let fieldsHtml = '';
+                    for (const [key, value] of Object.entries(record)) {
+                        if (key !== 'id' && key !== 'name') {
+                            fieldsHtml += `<p><strong>${key}:</strong> ${value}</p>`;
+                        }
+                    }
+                    
+                    recordItem.innerHTML = `
+                        <div class="record-actions">
+                            <button type="button" class="danger" data-index="${index}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <h3>${record.name}</h3>
+                        <p><strong>ID:</strong> ${record.id}</p>
+                        ${fieldsHtml}
+                    `;
+                    
+                    recordsList.appendChild(recordItem);
+                    
+                    // إضافة حدث لحذف السجل
+                    recordItem.querySelector('button').addEventListener('click', function() {
+                        if (confirm('هل أنت متأكد أنك تريد حذف هذا السجل؟')) {
+                            records.splice(index, 1);
+                            localStorage.setItem('jsonRecords', JSON.stringify(records));
+                            updateRecordsList();
+                            updateJsonOutput();
+                        }
+                    });
+                });
+            }
+            
+            // تحديث ناتج JSON
+            function updateJsonOutput() {
+                jsonOutput.value = JSON.stringify({ records }, null, 2);
+            }
+            
+            // التهيئة الأولية
+            updateRecordsList();
+            updateJsonOutput();
+        });
+    </script>
+</body>
+</html>
