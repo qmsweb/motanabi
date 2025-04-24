@@ -448,7 +448,7 @@
                     recordItem.querySelector('button').addEventListener('click', function() {
                         if (confirm('هل أنت متأكد أنك تريد حذف هذا السجل؟')) {
                             records.splice(index, 1);
-                            localStorage.setItem('jsonRecords', JSON.stringify(records));
+                            localStorage.setItem('jsonRecords', JSON.stringify(guests));
                             updateRecordsList();
                             updateJsonOutput();
                         }
