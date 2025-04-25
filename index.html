@@ -659,13 +659,13 @@
             
             if (type === 'poem') {
                 div.innerHTML = `
-                    <a href="${type}.html?id=${id}">
+                    <a href="${type}?id=${id}">
                         <div class="poem-title">${item.title || 'شعر بدون عنوان'}</div>
                     </a>
                 `;
             } else {
                 div.innerHTML = `
-                    <a href="${type}.html?id=${id}">
+                    <a href="${type}?id=${id}">
                         <img src="${item.image || 'assets/images/default.jpg'}" alt="${item.title || 'عنصر بدون عنوان'}">
                         <div class="item-title">${item.title || 'عنصر بدون عنوان'}</div>
                     </a>
