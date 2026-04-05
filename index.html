@@ -16,6 +16,7 @@
             --light-bg: #f5e7d6;
             --desert-color: #a78a6f;
             --desert-light: #e3d5b8;
+            --alert-color: #b8865b; /* لون تنبيه متناسق مع الهوية */
         }
         
         .navbar {
@@ -111,24 +112,24 @@
             padding: 0 1px;
         }
 
-        /* تنسيقات إشعار الأرشيف */
+        /* تنسيقات إشعار الأرشيف (المحدثة) */
         .archive-notice {
-            background-color: var(--desert-light);
-            border: 1px solid var(--desert-color);
-            border-right: 5px solid var(--desert-color);
-            border-radius: 8px;
-            padding: 15px 20px;
-            margin: 15px 10px 25px 10px;
+            background-color: rgba(227, 213, 184, 0.6); /* خلفية أفتح قليلاً */
+            border: 1px solid var(--alert-color);
+            border-right: 4px solid var(--alert-color);
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin: 10px 10px 20px 10px;
             display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            align-items: flex-start;
+            gap: 12px;
             animation: fadeIn 1s;
         }
 
         .archive-icon {
-            font-size: 28px;
-            color: var(--desert-color);
+            font-size: 20px;
+            color: var(--alert-color);
+            margin-top: 3px;
         }
 
         .archive-text-content {
@@ -137,16 +138,16 @@
 
         .archive-title {
             font-weight: 700;
-            font-size: 18px;
+            font-size: 15px;
             color: #000;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             margin-top: 0;
         }
 
         .archive-desc {
-            font-size: 15px;
+            font-size: 13px;
             color: #333;
-            line-height: 1.6;
+            line-height: 1.5;
             margin: 0;
         }
         
@@ -356,11 +357,8 @@
         
         @media (max-width: 768px) {
             .archive-notice {
-                flex-direction: column;
-                text-align: center;
-                border-right: 1px solid var(--desert-color);
-                border-top: 5px solid var(--desert-color);
-                padding: 15px;
+                padding: 10px;
+                border-right: 3px solid var(--alert-color);
             }
 
             .item {
@@ -441,11 +439,11 @@
         
         <div class="archive-notice">
             <div class="archive-icon">
-                <i class="fas fa-box-archive"></i>
+                <i class="fas fa-exclamation-triangle"></i>
             </div>
             <div class="archive-text-content">
-                <h3 class="archive-title">إشعار أرشفة المشروع</h3>
-                <p class="archive-desc">نود لفت انتباهكم إلى أنه قد تم إيقاف العمل والتحديث على مشروع "رحلة المتنبي" اعتباراً من <strong>أبريل 2026</strong>. الموقع يعمل حالياً كأرشيف رقمي لحفظ المحتوى السابق ليبقى مرجعاً متاحاً لمحبي الأدب والشعر.</p>
+                <h3 class="archive-title">تنبيه أرشفة الموقع</h3>
+                <p class="archive-desc">تم إيقاف العمل على مشروع "رحلة المتنبي" اعتباراً من أبريل 2026. الموقع يعمل حالياً كأرشيف رقمي، ويرجى العلم أن بعض الوظائف قد لا تعمل بشكل صحيح.</p>
             </div>
         </div>
 
